@@ -80,11 +80,28 @@ class WatchlistConfig:
     """Parsed configuration from tickers.yaml."""
 
     tickers: list[str] = field(default_factory=list)
+    tickers_ljse: list[str] = field(default_factory=list)
     manual_events: list[EarningsEvent] = field(default_factory=list)
     ljse_issuers: dict[str, str] = field(default_factory=dict)
 
 
-ALLOWED_CONFIG_KEYS = {"tickers", "manual_events", "ljse_issuers"}
+ALLOWED_CONFIG_KEYS = {"tickers", "tickers-ljse", "manual_events", "ljse_issuers"}
+
+
+def _parse_ticker_list(raw_value: Any, field_name: str) -> list[str]:
+    if raw_value is None:
+        return []
+    if not isinstance(raw_value, list):
+        raise ValueError(f"'{field_name}' in configuration must be a list of ticker symbols")
+
+    tickers: list[str] = []
+    seen: set[str] = set()
+    for item in raw_value:
+        symbol = str(item).strip().upper()
+        if symbol and symbol not in seen:
+            tickers.append(symbol)
+            seen.add(symbol)
+    return tickers
 
 
 def _parse_ljse_issuers(raw_issuers: Any) -> dict[str, str]:
@@ -141,17 +158,8 @@ def load_config(path: Path | str) -> WatchlistConfig:
             f"Unknown configuration key(s) in {config_path}: {', '.join(unknown_keys)}"
         )
 
-    raw_tickers = raw.get("tickers") or []
-    if not isinstance(raw_tickers, list):
-        raise ValueError("'tickers' in configuration must be a list of ticker symbols")
-
-    tickers: list[str] = []
-    seen_tickers: set[str] = set()
-    for item in raw_tickers:
-        symbol = str(item).strip().upper()
-        if symbol and symbol not in seen_tickers:
-            tickers.append(symbol)
-            seen_tickers.add(symbol)
+    tickers = _parse_ticker_list(raw.get("tickers"), "tickers")
+    tickers_ljse = _parse_ticker_list(raw.get("tickers-ljse"), "tickers-ljse")
 
     raw_manual = raw.get("manual_events") or []
     if not isinstance(raw_manual, list):
@@ -187,6 +195,7 @@ def load_config(path: Path | str) -> WatchlistConfig:
 
     return WatchlistConfig(
         tickers=tickers,
+        tickers_ljse=tickers_ljse,
         manual_events=manual_events,
         ljse_issuers=ljse_issuers,
     )

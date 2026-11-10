@@ -1,0 +1,1532 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>LJUBLJANSKA BORZA - SEOnet</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="format-detection" content="telephone=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link href="js/modal/modal.css" rel="stylesheet">
+<script type="text/javascript" src="js/date.js"></script>
+<script type="text/javascript" src="js/locale.js"></script>
+<script type="text/javascript" src="js/script.js?v=v3.22.97"></script>
+<link type="text/css" rel="stylesheet" href="js/dynarch_calendar/calendar-blue2.css" />
+<script type="text/javascript" src="js/dynarch_calendar/calendar.js"></script>
+<script type="text/javascript" src="js/dynarch_calendar/lang/calendar-sl.js"></script>
+<script type="text/javascript" src="js/dynarch_calendar/calendar-setup.js"></script>
+<link rel="alternate" title="seonet.ljse.si" type="application/rss+xml" href="rss" />
+<link rel="alternate" title="seonet.ljse.si - sl" type="application/rss+xml" href="rss/default.aspx?lang=sl" />
+<link rel="alternate" title="seonet.ljse.si - en" type="application/rss+xml" href="rss/default.aspx?lang=en" />
+
+    <script type="text/javascript" src="js/modal/modal.js"></script>
+    <link href="design/doc/doc_style.css" rel="stylesheet" type="text/css" />
+    <link href="design/style.css" rel="stylesheet" type="text/css"/>
+    <link href="design/print_style.css" rel="stylesheet" type="text/css" media="print"/>
+    <script type="text/javascript">
+
+// Prevodi za JS in AJAX odgovore.
+const translations = {
+    CLOSE: "Zapri"
+};
+
+var message = "";
+var alert_message = "";
+var debug_message = "";
+
+var global_locale_constant = "sl_SI";
+var form_variables = {"doc_num":null, "words":"a29sZWRhcg==", "date_from":null, "date_to":null, "issuer":null, "lei":null, "doc_type":null, "doc_class":null, "language":"TkVV", "country":null, "page_no":null, "sort_field":"cHVibGlzaGVk", "sort_field_direction":"REVTQw==", "selected_year":null, "market_segment":null, "selected_month":null, "selected_doc_ids":null, "symbol":"MzA1", "isin":null};
+
+    </script>
+  </head>
+  <body>
+
+    <table border="0" cellpadding="0" cellspacing="0" align="center" id="page_header">
+      <tr>
+        <td width="220" align="right" valign="top">
+          <img src="design/seonet_logo.png" width="196" height="68" border="0" /></td>
+        <td width="453" valign="top">
+          <img src="design/portal.jpg" width="453" height="68" alt="" />
+        </td>
+        <td width="120" height="69" valign="top">
+          <a href="http://www.ljse.si"><img src="design/borza_logo.png" alt="Ljubljanska borza d.d." width="258" height="68" border="0" /></a>
+        </td>
+        <td align="center">
+          <div style="padding: 10px 0 0 20px;">
+<a href="/default_en.aspx?language=en">English</a>
+            <a href="/rss?lang="
+               style="display: block; margin-top: 8px;">
+              <img src="design/feed-icon_orange-16px.png"
+                   width="16" height="16"
+                              alt="RSS" border="0" />
+            </a>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table id="MainTable" align="center" cellpadding="0" cellspacing="0" height="100%">
+      <tr>
+        <td valign="top">
+
+          <table border="0" align="center" cellpadding="0" cellspacing="0" id="page_header" width="100%">
+            <tr>
+              <td colspan="3">
+
+                <table id="TableMenu" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="border-left: 1px solid white;" class="TabOn"><a href="?doc=PUBLIC_ANNOUNCMENTS">JAVNE OBJAVE</a></td><td><a href="?doc=ANNUAL_AND_SEMI_ANNUAL_REPORTS">POROČILA</a></td><td><a href="?doc=PROSPECTUSES_AND_ANNUAL_INFORMATION_UPDATES">PROSPEKTI</a></td><td><a href="?doc=SEARCH">ISKANJE</a></td><td><a href="?doc=SUBSCRIPTION_TO_SEONET_MESSAGES">NAROČANJE</a></td><td><a href="?doc=ISSUERS">IZDAJATELJI</a></td><td><a href="?doc=TERMS_OF_USE">Pogoji uporabe</a></td><td><a href="?doc=HELP">POMOČ</a></td>
+                    
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+          <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+              <td valign="top" width="183">
+
+                <table border="0" cellspacing="0" cellpadding="0" width="183">
+                  <tr>
+                    <td><img src="design/pix-bel.gif" width="183" height="1" alt="" /></td>
+                  </tr>
+                  <tr id="left_menu_table1">
+                    <td align="right" style="border-left:1px solid white"><img src="design/zavihek-bel.gif" width="12" height="19" alt="" /></td>
+                  </tr>
+                  <tr id="left_menu_table2">
+                    <td style="border-left: 1px solid white; border-bottom: 1px solid white" valign="top">
+                      <div id="lef_menu_main_div">
+                        <div><a href="?doc=LATEST_PUBLIC_ANNOUNCEMENTS" class="menuOn">Zadnje objave</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENTS_BY_PRIME_MARKET_ISSUERS" >Prva kotacija</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENT_BY_STANDARD_MARKET_ISSUERS" >Standardna kotacija</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENT_BY_BOND_ISSUERS" >Obveznice</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_FOUND_MARKET_ISSUERS" >Investicijski kuponi</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_CLOSED_END_FOUND_MARKET_ISSUERS" >Delnice ID</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_STRUCTURED_PRODUCTS_MARKET_ISSUERS" >Strukturirani produkti</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENTS_SI_ENTER" >SI ENTER</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENTS_PROGRESS" >Progress</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_LJSE" >Ljubljanska borza</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_LJSE_MEMBERS" >Člani Ljubljanske borze</a></div><div><a href="?doc=OTHER_ANNOUNCEMENTS" >Druge objave</a></div>
+                        
+                      </div>
+                    </td>
+                  </tr>
+                  <tr style="display: none">
+                    <td align="right" style="border-left:1px solid white"><img src="design/zavihek-bel.gif" width="12" height="19" alt="" /></td>
+                  </tr>
+                  <tr style="display: none">
+                    <td style="border-left: 1px solid white; border-bottom: 1px solid white" align="center" valign="top">
+
+                      <div class="title">Hitro iskanje</div>
+
+                      <form id="fast_search_form" name="fast_search_form" action="/default.aspx" method="post">
+
+                        <input type="hidden" name="doc" value="BASIC_SEARCH" />
+                        <input type="hidden" name="fast_search_date_from" id="FSSelectedDateFrom" />
+                        <input type="hidden" name="fast_search_date_to" id="FSSelectedDateTo" />
+
+                        Iskane besede<br />
+                        <input type="text" name="fast_search_words" /><br />
+                        Obdobje<br />
+                        <select size="1" name="FSs_date_range" id="FSs_date_range" onchange="change_range('FSs_date_range', 'FSSelectedDateFrom', 'FSSelectedDateTo', '%Y-%m-%d')">
+                          <option value="">&nbsp;</option>
+                          <option value="this_week">tekoči teden</option>
+                          <option value="previous_week">prejšnji teden</option>
+                          <option value="this_month">tekoči mesec</option>
+                          <option value="previous_month">prejšnji mesec</option>
+                          <option value="half_year">zadnjih 6 mesecev</option>
+                          <option value="last_year">zadnje leto</option>
+                          <option value="this_year">tekoče leto</option>
+                          <option value="previous_year">lani</option>
+                        </select><br />
+
+                        Družba<br />
+                        <select name="fast_search_issuer"  style="width: 140px">
+                          <option>&nbsp;</option>
+ <option value="51">ABANKA d.d., Ljubljana</option>
+ <option value="344">ACH, d. d., Ljubljana</option>
+ <option value="1107">Actual I.T. d.d.</option>
+ <option value="1139">ADRIA MOBIL, d.o.o. Novo mesto</option>
+ <option value="1070">AERO, d. d., Celje</option>
+ <option value="345">AERODROM LJUBLJANA, d.o.o.</option>
+ <option value="1095">AG d. d., Kamnik</option>
+ <option value="1">AGENCIJA ZA TRG VREDNOSTNIH PAPIRJEV</option>
+ <option value="346">AGROKOMBINAT MARIBOR d. d., Maribor</option>
+ <option value="979">AHA ALUMINIJ d.o.o., Ljubljana</option>
+ <option value="341">AKTIVA AVANT I, d.d., Ljubljana</option>
+ <option value="708">AKTIVA AVANT, d.d., Ljubljana</option>
+ <option value="744">AKTIVA FIN, d.d., Ljubljana</option>
+ <option value="797">AKTIVA INVEST d.d., Ljubljana</option>
+ <option value="842">AKTIVA NALOŽBE, d.d., Ljubljana</option>
+ <option value="611">ALPDOM, d.d., RADOVLJICA, Radovljica</option>
+ <option value="628">ALPETOUR POTOVALNA AGENCIJA, d. d., Kranj</option>
+ <option value="831">ALPOS, d.d., Šentjur</option>
+ <option value="1100">ALTA Invest d.d., Ljubljana</option>
+ <option value="1099">ALTA Skladi, d.d., Ljubljana</option>
+ <option value="1105">ALTA Skupina d. d., Ljubljana</option>
+ <option value="1165">ANTEAM TECHNOLOGY d.o.o.</option>
+ <option value="1170">AP KAPITAL 2 d.o.o.</option>
+ <option value="1169">AP KAPITAL 4 d.o.o.</option>
+ <option value="1188">AP KAPITAL 6 d.o.o.</option>
+ <option value="1193">AREX d.o.o. Šentjernej</option>
+ <option value="152">ARGONOS BPH d.o.o., Ljubljana</option>
+ <option value="349">ARKADA DVA, PID, d.d., Ljubljana</option>
+ <option value="348">ARKADA ENA, PID, d.d., Ljubljana</option>
+ <option value="826">ARKADA HOLDING, d.d., Ljubljana</option>
+ <option value="350">ARKADA TRI, PID, d.d., Ljubljana</option>
+ <option value="352">ATENA 1. SKLAD, pooblaščena investicijska družba, d.d., Ljubljana</option>
+ <option value="748">ATENA PID, d.d., Ljubljana</option>
+ <option value="612">AVANT HOLDING, d.d., Ljubljana</option>
+ <option value="353">AVTO CELJE d.d., Celje</option>
+ <option value="351">AVTOPREVOZNIŠTVO IN SERVISI, d.d., Velenje</option>
+ <option value="1005">AVTOTEHNA, d.d., Ljubljana</option>
+ <option value="354">BANKA CELJE, d.d., Celje</option>
+ <option value="39">Banka Intesa Sanpaolo d.d.</option>
+ <option value="542">BANKA VIPA, d. d., Nova Gorica</option>
+ <option value="1022">BATAGEL & Co., d.o.o., Postojna</option>
+ <option value="654">BELINKA, d.d., Ljubljana</option>
+ <option value="356">BOHOR d.d. ŠENTJUR, Šentjur</option>
+ <option value="1192">BOSQAR d.d.</option>
+ <option value="360">BTC, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="822">C2 NALOŽBE, d.d., Ljubljana</option>
+ <option value="1173">Calcit d.o.o.</option>
+ <option value="901">CAP NALOŽBE, d.d., Ljubljana</option>
+ <option value="363">CAPINVEST 2, PID, d.d., Ljubljana</option>
+ <option value="364">CAPITA d.d. Ljubljana</option>
+ <option value="1016">CBH d.d., Celje</option>
+ <option value="1116">CEESEG Aktiengesellschaft</option>
+ <option value="617">CEMENTARNA TRBOVLJE, d.d., Trbovlje</option>
+ <option value="870">CENTER NALOŽBE d.d., Maribor</option>
+ <option value="1149">Certa d.d.</option>
+ <option value="967">CERTA d.d., Cerkno</option>
+ <option value="1146">Certa Holding d.d.</option>
+ <option value="111">CERTIUS BPH d. o. o., Ljubljana</option>
+ <option value="674">CERTIUS HOLDING, d.d., Ljubljana</option>
+ <option value="809">CERTIUS INVEST d.d., Ljubljana</option>
+ <option value="366">CETIS, grafične in dokumentacijske storitve, d.d.</option>
+ <option value="928">CIMOS d.d., Koper</option>
+ <option value="368">CINKARNA CELJE, d.d., Celje</option>
+ <option value="685">CM CELJE, d. d., Celje</option>
+ <option value="369">COLOR, d.d., Medvode</option>
+ <option value="367">COMET, d.d., Zreče</option>
+ <option value="1030">CPM, d.d., Maribor</option>
+ <option value="597">CREINA d.d. KRANJ, Kranj</option>
+ <option value="900">D HOLDING, d.d.</option>
+ <option value="1035">D NALOŽBE d.d., Ljubljana</option>
+ <option value="372">DANA, d.d., Mirna</option>
+ <option value="899">DARS d.d., Celje</option>
+ <option value="1053">DATALAB, d.d., Ljubljana</option>
+ <option value="1201">DBS d.d.</option>
+ <option value="1141">Debitel telekomunikacije d.d.</option>
+ <option value="1118">DEBITEL telekomunikacije d.d., Ljubljana</option>
+ <option value="1162">DecaCare, poslovno svetovanje, d.o.o.</option>
+ <option value="1066">DELNIŠKI VZAJEMNI SKLAD INFOND DYNAMIC</option>
+ <option value="931">DELNIŠKI VZAJEMNI SKLAD TRIGLAV STEBER I</option>
+ <option value="678">DELO PRODAJA, d.d., Ljubljana</option>
+ <option value="371">DELO, d.d., Ljubljana</option>
+ <option value="935">DEOS, d.d., Ljubljana</option>
+ <option value="554">DEŽELNA BANKA SLOVENIJE d. d.</option>
+ <option value="21">DEŽELNA BANKA SLOVENIJE d. d., Ljubljana</option>
+ <option value="1195">DH d.d.</option>
+ <option value="375">DOM SMREKA, d.d., Maribor</option>
+ <option value="1174">DP JUB d.d.</option>
+ <option value="547">DPB VIZIJA, PID, d.d., Novo mesto</option>
+ <option value="615">DRAVINJSKI DOM, d.d., Slovenjske Konjice</option>
+ <option value="374">DROGA d.d., Izola</option>
+ <option value="934">DROGA KOLINSKA, d.d., Ljubljana</option>
+ <option value="1131">DUTB, d. d.</option>
+ <option value="377">DZS založništvo in trgovina, d.d., Ljubljana</option>
+ <option value="1130">DZS, d. d., Ljubljana</option>
+ <option value="1007">EBS GROUP d.o.o., Kranj</option>
+ <option value="1163">EChem d.o.o.</option>
+ <option value="1186">ECM Partnerji, d.d.</option>
+ <option value="386">EGOLES, d.d. Škofja Loka - v likvidaciji</option>
+ <option value="971">ELEKTRO GORENJSKA d.d. KRANJ</option>
+ <option value="1184">ELEKTRO LJUBLJANA d.d.</option>
+ <option value="683">ELMO, d. d., Ljubljana</option>
+ <option value="378">EMONA OBALA d.d., Koper</option>
+ <option value="1171">Equinox d.d.</option>
+ <option value="379">ETOL, d. d., Škofja vas</option>
+ <option value="770">ETRA 33, d.d., Ljubljana</option>
+ <option value="1175">Europe Nuoli International Holding d.o.o.</option>
+ <option value="18">FACTOR BANKA d. d., Ljubljana</option>
+ <option value="1015">FIDINA d.d., Ljubljana</option>
+ <option value="999">FINETOL d.d., Celje</option>
+ <option value="763">FINIRA, d.d., Ljubljana</option>
+ <option value="1143">FMR HOLDING d.d.</option>
+ <option value="922">FMR, d.d., Idrija</option>
+ <option value="680">FOND INVEST, d.d., Ljubljana</option>
+ <option value="974">FOTONA, d.d., Ljubljana</option>
+ <option value="383">FRUCTAL, d.d., Ajdovščina</option>
+ <option value="1113">FZU MONETA A.D., Podgorica</option>
+ <option value="122">GBD BPD, d. d., Kranj</option>
+ <option value="384">GEA COLLEGE, d.d., Ljubljana</option>
+ <option value="1126">GEN-I, d.o.o., Krško</option>
+ <option value="671">GEODETSKI ZAVOD SLOVENIJE, d.d., Ljubljana</option>
+ <option value="389">GORENJE, d.o.o.</option>
+ <option value="36">GORENJSKA BANKA d.d., Kranj</option>
+ <option value="1122">Gorenjski tisk, d. d.</option>
+ <option value="397">GORENJSKI TISK, d.d., Kranj</option>
+ <option value="388">GORIŠKE OPEKARNE, d.d., Renče</option>
+ <option value="1150">Gozdarstvo Grča, d. d., Kočevje</option>
+ <option value="583">GOZDNO GOSPODARSTVO BLED, d.d., Bled</option>
+ <option value="398">GOZDNO GOSPODARSTVO POSTOJNA, d.d., Postojna</option>
+ <option value="390">GPG, d.d., Ljubljana</option>
+ <option value="594">GRAD PRESTRANEK, d.d., Prestranek</option>
+ <option value="387">GRADIS, GP LJUBLJANA, d.d., Ljubljana</option>
+ <option value="1144">GRUPA PLASTOFORM upravljanje podjetij d.o.o.</option>
+ <option value="1157">H &amp; R d.d.</option>
+ <option value="1145">HALCOM, d.d.</option>
+ <option value="1025">HAT, d. o. o., Ljubljana</option>
+ <option value="401">HELIOS, DOMŽALE, d.o.o., Domžale</option>
+ <option value="541">HIDROTEHNIK d.d. LJUBLJANA, Ljubljana</option>
+ <option value="1037">HOLDING PMP d. d., Ljubljana</option>
+ <option value="1140">HOLDING PMP, naložbena dejavnost, d.d.</option>
+ <option value="404">HOTELI BERNARDIN, d.d. PORTOROŽ, Portorož</option>
+ <option value="484">HOTELI PALACE, d.d., Portorož</option>
+ <option value="832">HRAM HOLDING, d.d., Ljubljana</option>
+ <option value="1200">ILIRIKA SKLADI d.d.</option>
+ <option value="1172">IMO-RENT INVEST d.o.o.</option>
+ <option value="405">IMP ČRPALKE LJUBLJANA, d.d., Ljubljana</option>
+ <option value="742">IMP KLIMAT, d.d., Ljubljana</option>
+ <option value="1135">Impol 2000, d. d., Slovenska Bistrica</option>
+ <option value="1191">INCOM d.o.o.</option>
+ <option value="1051">INDEKSNI VZAJEMNI SKLAD PB AGRICULTURE INDEX</option>
+ <option value="1049">INDEKSNI VZAJEMNI SKLAD PB BIOTECH INDEX</option>
+ <option value="1050">INDEKSNI VZAJEMNI SKLAD PB URANIUM INDEX</option>
+ <option value="756">INFOND HOLDING, d.d., Maribor</option>
+ <option value="875">INFOND ID 1, d.d., Maribor</option>
+ <option value="758">INFOND ID, d.d., Maribor</option>
+ <option value="757">INFOND PID, d.d., Maribor</option>
+ <option value="414">INFOND ZLAT PID, d.d., Maribor</option>
+ <option value="407">INLES, d.d., Ribnica</option>
+ <option value="411">INTARA, d. d., Ljubljana</option>
+ <option value="409">INTEGRAL JESENICE, d.d., Jesenice</option>
+ <option value="1085">INTERENERGO, d. d., Ljubljana</option>
+ <option value="406">INTEREUROPA, d.d., Koper</option>
+ <option value="410">INTERTRADE ITA, d.o.o., Ljubljana</option>
+ <option value="413">INTERTRADE ITS, d.d., Ljubljana</option>
+ <option value="412">ISTRABENZ, d.d., Portorož</option>
+ <option value="415">JADRAN  d.d. SEŽANA, Sežana</option>
+ <option value="726">JATA EMONA, d.d., Ljubljana</option>
+ <option value="416">JATA, d.d., Ljubljana</option>
+ <option value="1190">Javna razsvetljava d.d.</option>
+ <option value="1134 658">Javor Pivka, d.d. - v likvidaciji</option>
+ <option value="576">JELEN GOSTINSKO PODJETJE, d.d., Slovenske Konjice</option>
+ <option value="970">JELOVICA d.d. ŠKOFJA LOKA</option>
+ <option value="418">JUTEKS, d.d., Žalec</option>
+ <option value="438">KAPITALSKA DRUŽBA, d. d., Ljubljana</option>
+ <option value="1017">KB1909 SOCIETA' PER AZIONI - DELNIŠKA DRUŽBA, Gorica</option>
+ <option value="600">KBS BANKA d.d., Maribor</option>
+ <option value="666">KD d.d., Ljubljana</option>
+ <option value="677">KD Group, d.d., Ljubljana</option>
+ <option value="682">KD ID, delniška ID, d.d.</option>
+ <option value="421">KD INVESTMENTS d.o.o., Ljubljana</option>
+ <option value="1098">KD Kapital, d.o.o., Ljubljana</option>
+ <option value="814">KD NALOŽBE d.d., Ljubljana</option>
+ <option value="681">KD PID, d.d., Ljubljana</option>
+ <option value="1029">KDD d. d., Ljubljana</option>
+ <option value="422">KEMA PUCONCI, d.d., Puconci</option>
+ <option value="424">KLASJE CELJE, d.d., Celje</option>
+ <option value="1114">Kmetijska zadruga Vipava, z.o.o., Vipava</option>
+ <option value="427">KMETIJSKI KOMBINAT PTUJ, d.d., Ptuj</option>
+ <option value="428">KOLINSKA, d.d., Ljubljana</option>
+ <option value="1032">KOLONEL d.o.o., Ljubljana</option>
+ <option value="425">KOLONIALE, d.d., Maribor</option>
+ <option value="423">KOMPAS HOTELI, d.d.,  Kranjska Gora</option>
+ <option value="969">KOMPAS RAC d.d. Ljubljana - v likvidaciji</option>
+ <option value="663">KOMPAS SHOP d.d., Ljubljana</option>
+ <option value="529">KOŠAKI TMI, d.d., Maribor</option>
+ <option value="1031">KOTO d.d., Ljubljana</option>
+ <option value="1147">Kovinoplastika Lož d.d.</option>
+ <option value="1151">Kovinoplastika Lož družba pooblaščenka d.d.</option>
+ <option value="430">KOVINOTEHNA, d.d., Celje</option>
+ <option value="1155">KOVINTRADE D.D. CELJE</option>
+ <option value="1088">KRAS, d. d., Sežana</option>
+ <option value="434">KRKA, d. d., Novo mesto</option>
+ <option value="743">KRONA HOLDING, d.d., Ljubljana</option>
+ <option value="432">KRONA KRONA, d.d., Ljubljana</option>
+ <option value="517">KRONA SENIOR, ID prilagodljive sestave naložb, d.d., Ljubljana</option>
+ <option value="431">KRUH - PECIVO, d.d., Maribor</option>
+ <option value="741">KS - SKLAD 4, d.d.,   Ljubljana</option>
+ <option value="437">KS - SKLAD 4, D.D., Ljubljana</option>
+ <option value="1010">KS NALOŽBE d.d., Ljubljana</option>
+ <option value="706">KS1 - Naložbe, d.d., Ljubljana</option>
+ <option value="820">KS2 NALOŽBE, d.d., Ljubljana</option>
+ <option value="740">KS4 Naložbe, d.d., Ljubljana</option>
+ <option value="436">KS-sklad 2, pooblaščena investicijska družba, d.d., Ljubljana</option>
+ <option value="898">L EGOLES, d.d., Škofja Loka</option>
+ <option value="440">LEK d.d.</option>
+ <option value="444">LESNINA EMMI, d.d., Slovenska Bistrica</option>
+ <option value="727">LESNINA, d.d., Ljubljana</option>
+ <option value="887">LETRIKA, d. d., Šempeter pri Gorici</option>
+ <option value="590">LIP BLED, d.d., Bled</option>
+ <option value="570">LIV POSTOJNA, d.d., Postojna</option>
+ <option value="441">LIZ INŽENIRING, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="98">Ljubljanska borza, d. d., Ljubljana</option>
+ <option value="1123">LJUBLJANSKE MLEKARNE, d.d., Ljubljana</option>
+ <option value="442">LUKA KOPER, d.d., Koper</option>
+ <option value="876">M1, d.d., Ljubljana</option>
+ <option value="466">MAKSIMA 1 d.d., Ljubljana</option>
+ <option value="794">MAKSIMA HOLDING d.d., Ljubljana</option>
+ <option value="888">MAKSIMA INVEST, d.d., Ljubljana - v stečaju</option>
+ <option value="796">Maksima, delniška ID, d.d., Ljubljana</option>
+ <option value="448">MARINA PORTOROŽ, d.d., Portorož</option>
+ <option value="450">MEDALJON, d.d., Maribor</option>
+ <option value="1073">MEDEX, d. d., Ljubljana</option>
+ <option value="454">MELAMIN, d.d., Kočevje</option>
+ <option value="1124">MENINA d.d.</option>
+ <option value="734">MERCATA 1 PID, d.d., Ljubljana</option>
+ <option value="679">MERCATA HOLDING, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="463">MERCATA PID, d.d., Ljubljana</option>
+ <option value="874">MERCATA, d.d., Ljubljana</option>
+ <option value="451">MERCATOR, d.d., Ljubljana</option>
+ <option value="1021">MERFIN,  d.o.o., Ljubljana</option>
+ <option value="452">MERKUR trgovina, d.d., Naklo</option>
+ <option value="891">MEŠANI VZAJEMNI SKLAD TRIGLAV EVROPA</option>
+ <option value="867">METALKA TRGOVINA, d.d., Ljubljana</option>
+ <option value="1160">MINERVO D.D.</option>
+ <option value="618">MIP, d.d. Nova Gorica</option>
+ <option value="453">MITOL, d.d., Sežana</option>
+ <option value="455">MKT PRINT proizvodnja knjig d.d., Ljubljana</option>
+ <option value="694">MLAJ Zadobrova, d.d., Ljubljana-Polje</option>
+ <option value="1161">Mlinotest d.d.</option>
+ <option value="610">MLINOTEST, d.d., Ajdovščina</option>
+ <option value="772">MODRA LINIJA HOLDING, d.d., Koper</option>
+ <option value="458">MODRA LINIJA, d.d., Koper</option>
+ <option value="984">MONTER INVESTITOR d.o.o., Šentjanž pri Dravogradu</option>
+ <option value="957">MP FINANCE d.d. - v likvidaciji, Ljubljana</option>
+ <option value="135">MP NALOŽBE, d. d., Ljubljana</option>
+ <option value="686">MURALES d.d. LJUTOMER, Ljutomer</option>
+ <option value="580">NAMA d.d. LJUBLJANA</option>
+ <option value="468">NFD 1 DELNIŠKI INVESTICIJSKI SKLAD, ID, d.d., Ljubljana</option>
+ <option value="467">NFD 2 INVESTICIJSKI SKLAD, d.d. Ljubljana</option>
+ <option value="819">NFD HOLDING, d.d., Ljubljana</option>
+ <option value="581">NFD INVESTICIJSKO SVETOVANJE, d.o.o., Ljubljana</option>
+ <option value="469 1153 1180">Nika d.d., Brežice</option>
+ <option value="471">NIKA, PID 1, d. d.</option>
+ <option value="472">NIKA, PID 2, d. d.</option>
+ <option value="470">NIKA, PID, d. d.</option>
+ <option value="473">NIKO d.d., Železniki, ŽELEZNIKI</option>
+ <option value="1110">NIVO INVESTICIJE d.d.</option>
+ <option value="1102">NIVO, d. d., Celje</option>
+ <option value="836">NK NALOŽBE, d.d.</option>
+ <option value="835">NK2 NALOŽBE, d.d.</option>
+ <option value="362">NLB BANKA ZASAVJE d. d., Trbovlje</option>
+ <option value="1196">NLB Skladi – Nepremičnine d.d.</option>
+ <option value="32">NLB, d. d., Ljubljana</option>
+ <option value="1158">NOVATV24.SI, informativna televizija, d.d.</option>
+ <option value="475">NOVOLIT NOVA VAS NA BLOKAH d.d., Nova vas na Blokah</option>
+ <option value="461">OLJARICA, KRANJ, d.d., Kranj</option>
+ <option value="993">ORBICO d.o.o., Ljubljana</option>
+ <option value="134">OTP banka d.d.</option>
+ <option value="1148">Paloma d.d.</option>
+ <option value="1028">PAPIR SERVIS d.d., Ljubljana</option>
+ <option value="978">PEKARNA BLATNIK d.o.o., Videm-Dobrepolje</option>
+ <option value="1027">PERUTNINA PTUJ d. d.</option>
+ <option value="487">PETROL d.d., Ljubljana</option>
+ <option value="795">PID MAKSIMA, d.d., Ljubljana</option>
+ <option value="728">PID VIPA INVEST d.d., Nova Gorica</option>
+ <option value="561">PID ZVON DVA, d.d., Maribor</option>
+ <option value="560">PID ZVON ENA, d.d., Maribor</option>
+ <option value="495">PINUS TKI d.d., Rače</option>
+ <option value="446">PIVOVARNA LAŠKO, d.d., Laško</option>
+ <option value="605">PIVOVARNA UNION, d.d., Ljubljana</option>
+ <option value="577">PLAMA - PUR, d.d., Podgrad</option>
+ <option value="491">PLOD, PID, d.d., Ljubljana</option>
+ <option value="1203">Pokojninska družba A, d.d.</option>
+ <option value="1189">POLFIN d.o.o.</option>
+ <option value="1013">POMHOLD, naložbena dejavnost, d.o.o., Maribor</option>
+ <option value="716">POM-INVEST d.d., Maribor</option>
+ <option value="862">POM-NALOŽBE d.d., Maribor</option>
+ <option value="494">POMURSKA INVESTICIJSKA DRUŽBA 1, d.d., Murska Sobota</option>
+ <option value="718">POOBLAŠČENA POMURSKA INVESTICIJSKA DRUŽBA d.d., Murska Sobota</option>
+ <option value="485">POŠTNA BANKA SLOVENIJE, d. d., Maribor</option>
+ <option value="145">POTEZA d.d., LJUBLJANA</option>
+ <option value="882">POTEZA NALOŽBE, d. o. o., Ljubljana - v stečaju</option>
+ <option value="1067">POTEZA SKUPINA, d.d. - v stečaju, Ljubljana</option>
+ <option value="355">POTEZA, BPD d.d., Ljubljana</option>
+ <option value="497">POTROŠNIK d.d. CELJE, Celje</option>
+ <option value="394">PPC GORENJSKI SEJEM KRANJ, d. d.</option>
+ <option value="752">PPS - PTUJSKE PEKARNE IN SLAŠČIČARNE, d.d., Ptuj</option>
+ <option value="982">PROBANKA UPRAVLJANJE d.o.o., Maribor</option>
+ <option value="23">PROBANKA, d. d., Maribor</option>
+ <option value="1011">PROFECTUS, finančna in poslovna družba, d.o.o., Maribor</option>
+ <option value="927">PRVA GROUP PLC. - SKUPINA PRVA d.d., Ljubljana</option>
+ <option value="849">PSZ d.d., Celje</option>
+ <option value="148">PUBLIKUM INVESTICIJSKE STORITVE, d.d.</option>
+ <option value="707">PULSAR HOLDING, d.d., Ljubljana</option>
+ <option value="1036">PZP z.o.o., Ptuj</option>
+ <option value="501">RADENSKA d.d. RADENCI</option>
+ <option value="433">RAIFFEISEN KREKOVA BANKA, d.d., Maribor</option>
+ <option value="502">RAZVOJNA DRUŽBA, d.d., Ljubljana</option>
+ <option value="1187">Relax d.d.</option>
+ <option value="506">REPUBLIKA SLOVENIJA</option>
+ <option value="505">RTC KRVAVEC, d.d.</option>
+ <option value="507">RUDIS, d.d., TRBOVLJE, Trbovlje</option>
+ <option value="1159">S8 d.d.</option>
+ <option value="975">SALONIT ANHOVO, d.d.</option>
+ <option value="509">SALUS, LJUBLJANA, d.d., Ljubljana</option>
+ <option value="1101">SANOLABOR,  d. d., Ljubljana</option>
+ <option value="1004">SARINI, svetovanje in investiranje, d.o.o., Ljubljana</option>
+ <option value="508">SATURNUS - AVTOOPREMA, d.d., Ljubljana</option>
+ <option value="510">SATURNUS - VOGEL & NOOT, d.d., Ljubljana</option>
+ <option value="1038">Sava Re, d.d.</option>
+ <option value="587">SAVA, d. d., Ljubljana</option>
+ <option value="464">SAVINJA MOZIRJE, d.d., Mozirje</option>
+ <option value="968">SEMENARNA Ljubljana, d.d.</option>
+ <option value="521">SETEV, PID, d.d., Ljubljana</option>
+ <option value="1024">SGP KOGRAD - IGEM DRAVOGRAD, d. d.</option>
+ <option value="1138">SGP POMGRAD D.D.</option>
+ <option value="516">SI.MOBIL, d.d., Ljubljana</option>
+ <option value="1074">SID banka, d. d., Ljubljana</option>
+ <option value="1137">SIJ - Slovenska industrija jekla, d. d., Ljubljana</option>
+ <option value="511">SIJAJ HRASTNIK, d.d., Hrastnik</option>
+ <option value="1093">SIP, d. d., Šempeter v Savinjski dolini</option>
+ <option value="619">SIP, d.d., Šempeter v Savinjski dolini</option>
+ <option value="764">SIVENT, d.d., Ljubljana</option>
+ <option value="513">SKB d.d., Ljubljana</option>
+ <option value="1136">Skupna pokojninska družba d.d., Ljubljana</option>
+ <option value="515">SLOVENIJALES d. d., Ljubljana</option>
+ <option value="514">SLOVENSKA RAZVOJNA DRUŽBA d.d., Ljubljana</option>
+ <option value="518">SLOVENSKI DRŽAVNI HOLDING, d.d., Ljubljana</option>
+ <option value="1108">SONČNI VRT, d.o.o., Murska Sobota</option>
+ <option value="520">STANOVANJSKI SKLAD REPUBLIKE SLOVENIJE, JAVNI SKLAD, Ljubljana</option>
+ <option value="951">STOLARNA DOBREPOLJE d.d.</option>
+ <option value="1076">SUROVINA d.d., Maribor</option>
+ <option value="1072">SUROVINA HOLDING d. d., Ptuj</option>
+ <option value="522">SVILA, d.d., Maribor</option>
+ <option value="512">SVILANIT KAMNIK, d.d., Kamnik</option>
+ <option value="537">SWATY, d.d., Maribor</option>
+ <option value="1176">TBP d.d.</option>
+ <option value="1008">TDR-METALURGIJA d.d., Ruše</option>
+ <option value="525">TEHNOUNION, d.d., Ljubljana</option>
+ <option value="1129 524">Tekstina, d. d., Ajdovščina</option>
+ <option value="976">TELEKOM SLOVENIJE, d.d., Ljubljana</option>
+ <option value="559">TERME 3000 d.d., Moravske Toplice</option>
+ <option value="523">TERME ČATEŽ, d.d., Čatež ob Savi</option>
+ <option value="553">TERME DOBRNA, d.d., Dobrna</option>
+ <option value="1168">TERME OLIMIA D.D.</option>
+ <option value="1182">Titus Group d.o.o.</option>
+ <option value="1179">Tivoli, Razvoj rezidenc, d.o.o.</option>
+ <option value="1152">TKI Hrastnik, d.d.</option>
+ <option value="1164">TOKUEI d.o.o.</option>
+ <option value="1068">TOPRO d.o.o., Sežana</option>
+ <option value="531">TOSAMA, d.d., Domžale</option>
+ <option value="393">TOVARNA OLJA GEA d.d., Slovenska Bistrica</option>
+ <option value="536">TOVARNA SLADKORJA ORMOŽ, d. d., Ormož</option>
+ <option value="850">TRDNJAVA HOLDING, d. d., Celje</option>
+ <option value="535">TRDNJAVA I, PID, d.d., Velenje</option>
+ <option value="534">TRDNJAVA, PID, d.d., Velenje</option>
+ <option value="396">TRGATEV, PID, d.d., Ljubljana</option>
+ <option value="852">TRIGLAV NALOŽBE, d.d., Ljubljana</option>
+ <option value="527">TRIGLAV STEBER I, ID, d.d., Ljubljana</option>
+ <option value="791">TRIGLAV STEBER, PID, d.d., Ljubljana</option>
+ <option value="528">TRIGLAV, finančna družba, d.d., Ljubljana</option>
+ <option value="1106">TRUBAR, d. d., Kranj</option>
+ <option value="606">TUS KO-SI, d.d., Slovenj Gradec</option>
+ <option value="1128">TUŠMOBIL, d.o.o.</option>
+ <option value="586">Union Hotels Collection d.d. - v likvidaciji</option>
+ <option value="1112">UNIOR d.d., Zreče</option>
+ <option value="790">UNIT-AS NEPREMIČNINE d.d., Ljubljana</option>
+ <option value="540">UNITAS, d.d., Šmartno pri Litiji</option>
+ <option value="1167">UNITED CAPITAL d.o.o.</option>
+ <option value="737">URAD RS ZA VARSTVO KONKURENCE</option>
+ <option value="1064">URAVNOTEŽENI VZAJEMNI SKLAD INFOND GLOBAL</option>
+ <option value="800">URAVNOTEŽENI VZAJEMNI SKLAD TRIGLAV RENTA</option>
+ <option value="543">VALKARTON, d.d., Logatec</option>
+ <option value="1132">Varstroj d. d.</option>
+ <option value="775">VELANA d.o.o.</option>
+ <option value="498">VELETRGOVINA POTROŠNIK, d. d., Murska Sobota</option>
+ <option value="1133 813">VIPA HOLDING d.d., v likvidaciji</option>
+ <option value="816">VIPA INVEST, d.d., Nova Gorica</option>
+ <option value="1115">VIPAVA 1894, d. d., Vipava</option>
+ <option value="833">VIZIJA HOLDING ENA, d.d., Ljubljana</option>
+ <option value="792">VIZIJA HOLDING, d.d., Ljubljana</option>
+ <option value="793">VIZIJA I., PID, d.d., Ljubljana</option>
+ <option value="1194">Vzajemna zdravstvena zavarovalnica d. d.</option>
+ <option value="1033">VZAJEMNI SKLAD ALTA EUROSTOCK</option>
+ <option value="1034">VZAJEMNI SKLAD MP-BALKAN.SI</option>
+ <option value="1052">VZAJEMNI SKLAD PROBANKA GLOBALNI NALOŽBENI SKLAD</option>
+ <option value="890">VZAJEMNI SKLAD TRIGLAV OBVEZNIŠKI</option>
+ <option value="1006">W & P PROFIL - SOLARVALUE HOLDING, družba za upravljanje, d.o.o., Ruše</option>
+ <option value="1154">WOOD & Company Financial Services, a.s.</option>
+ <option value="1177">Xinzhou International Group Co., d.o.o.</option>
+ <option value="1166">YGM d.o.o.</option>
+ <option value="1109">ZAVAROVALNICA MARIBOR d.d., Maribor</option>
+ <option value="1127">ZAVAROVALNICA MARIBOR, d. d., Maribor</option>
+ <option value="865">ZAVAROVALNICA TRIGLAV, d.d., Ljubljana</option>
+ <option value="503">ZDRAVILIŠČE ROGAŠKA, d.d., Rogaška Slatina</option>
+ <option value="1125">ZIF MONETA A.D., Podgorica - u postupku transformacije</option>
+ <option value="556">ZLATA MONETA I, posebna delniška ID, d.d., Maribor</option>
+ <option value="817">ZLATA MONETA II d.d., Maribor</option>
+ <option value="557">ZLATA MONETA II, PID, d.d., Maribor</option>
+ <option value="584">ZRC, d.d., TRBOVLJE, Trbovlje</option>
+ <option value="840">ZVON DVA HOLDING, d.d., Maribor</option>
+ <option value="812">ZVON ENA HOLDING, d.d., Maribor</option>
+ <option value="818">ZVON ENA ID, d.d., Maribor</option>
+ <option value="558">ŽELEZARNA RAVNE - MONTER DRAVOGRAD, d.d., Šentjanž pri Dravogradu</option>
+ <option value="607">ŽITO INTES, d.d., Maribor</option>
+ <option value="609">ŽITO, d.d., Ljubljana</option>
+ <option value="614">ŽIVILA KRANJ, d.d., Naklo</option>
+
+                        </select>
+
+                        <br />
+                        <br />
+
+                        <input type="hidden" name="fast_search_submition" value="true" />
+                        <input name="fast_search_submit_button" value="Iskanje" type="submit" /><br />
+
+                        <br />
+
+                      </form>
+
+                      <a href="?doc=ADVANCED_SEARCH">Podrobno iskanje</a>
+                      <br />&nbsp;
+
+                    </td>
+                  </tr>
+                  <tr id="fast_language_change_r1">
+                    <td align="right" style="border-left:1px solid white"><img src="design/zavihek-bel.gif" width="12" height="19" alt="" /></td>
+                  </tr>
+                  <tr id="fast_language_change_r2">
+                    <td style="border-left: 1px solid white; border-bottom: 1px solid white" align="center" valign="top">
+                      Objave v jeziku:<br />
+                      <select id="fast_langugae_change" onchange="change_lang_and_submit()">
+                        <option value="">vse objave</option>
+<option value="en">Angleški</option>
+<option value="sl">Slovenski</option>
+
+                      </select><br />
+                      &nbsp;
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+              <td valign="top">
+
+                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                  <tr>
+                    <td style="PADDING-RIGHT: 15px; PADDING-LEFT: 15px; PADDING-BOTTOM: 15px; PADDING-TOP: 9px" valign="top">
+                      <div id="alert"></div>
+                      <div id="message"></div>
+<script type="text/javascript" src="js/wz_tooltip/wz_tooltip.js"></script>
+<script type="text/javascript">
+
+function after_load()
+{
+    Calendar.setup({
+        inputField     :    "SelectedDateFrom",
+        ifFormat       :    "%e. %m. %Y",
+        showsTime      :    false,
+        button         :    "SelectedDataFromButton",
+        singleClick    :    true,
+        step           :    1,
+        weekNumbers    :    false,
+        firstDay       :    1
+    });
+
+    Calendar.setup({
+        inputField     :    "SelectedDateTo",
+        ifFormat       :    "%e. %m. %Y",
+        showsTime      :    false,
+        button         :    "SelectedDataToButton",
+        singleClick    :    true,
+        step           :    1,
+        weekNumbers    :    false,
+        firstDay       :    1
+    });
+
+    countries.fix($("country"), "sl");
+}
+
+</script>
+
+<h1> Zadnje objave </h1>
+
+
+
+<script type="text/javascript">
+
+    function formatDate(date, format_string)
+    {
+        day = date.getDate();
+        month = date.getMonth() + 1;
+        year = "" +  date.getFullYear();
+        sOutput = format_string;
+        sOutput = sOutput.replace(/j/,day);                                 // day NLZ
+        sOutput = sOutput.replace(/d/,(day<10?"0":"")+day);                 // day LZ
+        sOutput = sOutput.replace(/Y/,year);                                // year, 4 digit
+        sOutput = sOutput.replace(/y/,year.substring(year.length-2));       // year, 2 digit
+        sOutput = sOutput.replace(/n/,month);                               // month NLZ
+        sOutput = sOutput.replace(/m/,(month<10?"0":"")+month);             // month LZ
+        sOutputBefore = sOutput;
+        sOutput = sOutput.replace(/F/,MonthNames[m-1]);                     // month Name Long
+        if(sOutputBefore == sOutput)
+        {
+            sOutput = sOutput.replace(/M/,MonthNames[m-1].substring(3,0));  // month Name Short
+        }
+
+        return sOutput;
+    }
+
+    function clear_search_easy_form()
+    {
+        document.getElementsByName("field.words")[0].value = "";
+        document.getElementsByName("field.issuer")[0].value = "";
+        document.getElementsByName("field.lei")[0].value = "";
+        document.getElementsByName("field.symbol")[0].value = "";
+        document.getElementsByName("s_date_range")[0].value = "";
+        document.getElementsByName("field.date_from")[0].value = "";
+        document.getElementsByName("field.date_to")[0].value = "";
+        document.getElementsByName("field.doc_class")[0].value = "";
+        document.getElementsByName("field.doc_type")[0].value = "";
+        document.getElementsByName("field.doc_num")[0].value = "";
+        document.getElementsByName("field.market_segment")[0].value = "";
+        document.getElementsByName("field.isin")[0].value = "";
+        document.getElementsByName("field.doc_num")[0].value = "";
+        document.getElementsByName("field.language")[0].value = "";
+        document.getElementsByName("field.country")[0].value = "";
+    }
+
+    function page(i)
+    {
+        var page_el = document.getElementById("page_no");
+        page_el.value = i;
+        document.main_form.submit();
+    }
+
+    function do_submit()
+    {
+        var page_el = document.getElementById("page_no");
+        page_el.value = 1;
+        document.main_form.submit();
+    }
+
+    function select_month(i)
+    {
+        var page_el = document.getElementById("selected_month");
+        page_el.value = i;
+        page_el = document.getElementById("page_no");
+        page_el.value = 1;
+        document.main_form.submit();
+    }
+
+    function select_year(i)
+    {
+        var page_el = document.getElementById("selected_year");
+        page_el.value = i;
+        page_el = document.getElementById("page_no");
+        page_el.value = 1;
+        document.main_form.submit();
+    }
+
+    function change_lang_and_submit()
+    {
+        var language_src = document.getElementById("fast_langugae_change");
+        var language_dst = document.getElementById("language");
+
+        language_dst.value = language_src.value;
+
+        var selected_doc_ids = document.getElementById("selected_doc_ids");
+        selected_doc_ids.value = "";
+
+        document.main_form.submit();
+    }
+
+    function sort(i)
+    {
+        var page_el = document.getElementById("sort_field");
+        var direction = document.getElementById("sort_field_direction");
+        if (page_el.value == i)
+        {
+            if (direction.value == "ASC")
+            {
+                direction.value = "DESC";
+            }
+            else
+            {
+                direction.value = "ASC";
+            }
+        }
+        else
+        {
+            direction.value = "ASC";
+        }
+
+        page_el.value = i;
+
+        document.main_form.submit();
+    }
+
+</script>
+
+
+
+
+
+
+
+<div id="pager">
+  <span>Stran:&nbsp;&nbsp;</span>
+  
+  <span class="page current">1</span><a href="javascript:page(2)" class="page">2</a>
+  
+  
+</div>
+
+
+
+<br style="clear: both">
+
+
+
+<div id="records">
+
+  <!--<a href="rss/default.aspx?query=koledar+language%3aNEU+sort%3apublished+DESC+symbol_id%3a305+max_results_special%3a20+age_in_days_special%3a2+doc_type_id%3a+-1220+sort%3apublished+DESC">RSS</a>-->
+  <table width="100%" class="data_table">
+    <thead>
+      <tr>
+        <td class="clickable_header">&nbsp;</td>
+        <td class="clickable_header" width="60"><a href="javascript:sort('published')">Datum in čas</a></td>
+        <td class="clickable_header"><a href="javascript:sort('party_description')">Družba</a></td>
+        <td>&nbsp;</td>
+        <td class="clickable_header"><a href="javascript:sort('title')">Naslov objave</a></td>
+        <td class="clickable_header" width="70"><a href="javascript:sort('public_id')">Št.dok.</a></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="odd " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=91972')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">12. 11. 2025 08:20</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td></td>
+        <td>Finančni koledar za leto 2026</td>
+        <td>INI-479/25</td>
+      </tr><tr class="even " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=90780')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">29. 11. 2024 08:15</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td></td>
+        <td>Finančni koledar za leto 2025</td>
+        <td>INI-629/24</td>
+      </tr><tr class="odd " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=89249')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">30. 11. 2023 08:39</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td></td>
+        <td>Finančni koledar družbe za leto 2024</td>
+        <td>INI-693/23</td>
+      </tr><tr class="even " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=88315')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">19. 04. 2023 09:00</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td><a class="symbol_tooltip" href="?doc_id=87699" onmouseover="Tip('<table width=&quot;280px&quot; border=&quot;0&quot; style=&quot;margin: 10px 10px 10px 10px&quot;>  <tbody>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>Dokument se navezuje na:</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;center&quot;>        <b>Finančni koledar družbe za leto 2023</b>      </td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;center&quot;>        CINKARNA CELJE, d.d., Celje      </td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td>Datum in čas:</td>      <td>30. 11. 2022 08:15</td>    </tr>    <tr>      <td>Št.dok.:</td>      <td>INI-774/22</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;right&quot;>        <a href=&quot;?doc_id=87699&quot;>več...</a>      </td>    </tr>  </tbody></table>',STICKY, true, CLICKCLOSE, true, DURATION, 7000, WIDTH, 300)" onmouseout="UnTip()">&nbsp;!&nbsp;</a></td>
+        <td>Sklic na dokument: Finančni koledar družbe za leto 2023</td>
+        <td>INI-244/23</td>
+      </tr><tr class="odd " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=87699')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">30. 11. 2022 08:15</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td>&nbsp;*&nbsp;</td>
+        <td>Finančni koledar družbe za leto 2023</td>
+        <td>INI-774/22</td>
+      </tr><tr class="even " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=80014')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">26. 11. 2021 09:00</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td></td>
+        <td>Finančni koledar 2022</td>
+        <td>INI-728/21</td>
+      </tr><tr class="odd " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=73825')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">10. 03. 2021 09:05</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td><a class="symbol_tooltip" href="?doc_id=72515" onmouseover="Tip('<table width=&quot;280px&quot; border=&quot;0&quot; style=&quot;margin: 10px 10px 10px 10px&quot;>  <tbody>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>Dokument se navezuje na:</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;center&quot;>        <b>Objava finančnega koledarja 2021</b>      </td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;center&quot;>        CINKARNA CELJE, d.d., Celje      </td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td>Datum in čas:</td>      <td>9. 12. 2020 08:07</td>    </tr>    <tr>      <td>Št.dok.:</td>      <td>INI-816/20</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;right&quot;>        <a href=&quot;?doc_id=72515&quot;>več...</a>      </td>    </tr>  </tbody></table>',STICKY, true, CLICKCLOSE, true, DURATION, 7000, WIDTH, 300)" onmouseout="UnTip()">&nbsp;!&nbsp;</a></td>
+        <td>Sklic na dokument: Objava finančnega koledarja 2021</td>
+        <td>INI-107/21</td>
+      </tr><tr class="even " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=72515')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">9. 12. 2020 08:07</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td>&nbsp;*&nbsp;</td>
+        <td>Objava finančnega koledarja 2021</td>
+        <td>INI-816/20</td>
+      </tr><tr class="odd " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=70455')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">13. 05. 2020 13:21</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td><a class="symbol_tooltip" href="?doc_id=69232" onmouseover="Tip('<table width=&quot;280px&quot; border=&quot;0&quot; style=&quot;margin: 10px 10px 10px 10px&quot;>  <tbody>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>Dokument se navezuje na:</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;center&quot;>        <b>Sprememba in dopolnitev finančnega koledarja 2020</b>      </td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;center&quot;>        CINKARNA CELJE, d.d., Celje      </td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td>Datum in čas:</td>      <td>30. 03. 2020 14:09</td>    </tr>    <tr>      <td>Št.dok.:</td>      <td>INI-185/20</td>    </tr>    <tr>      <td colspan=&quot;2&quot;>&nbsp;</td>    </tr>    <tr>      <td colspan=&quot;2&quot; align=&quot;right&quot;>        <a href=&quot;?doc_id=69232&quot;>več...</a>      </td>    </tr>  </tbody></table>',STICKY, true, CLICKCLOSE, true, DURATION, 7000, WIDTH, 300)" onmouseout="UnTip()">&nbsp;!&nbsp;</a></td>
+        <td>SPREMEMBA FINANČNEGA KOLEDARJA DRUŽBE CINKARNA CELJE, d.d., za leto 2020</td>
+        <td>INI-299/20</td>
+      </tr><tr class="even " onmouseover="hilite(this)" onmouseout="lolite(this)" onclick="go_to(null, 'doc=LATEST_PUBLIC_ANNOUNCEMENTS&amp;doc_id=69232')">
+        <td class="the_s">S<br/>E<br/>O</td>
+        <td width="60">30. 03. 2020 14:09</td>
+        <td>CINKARNA CELJE, d.d., Celje</td>
+        <td>&nbsp;*&nbsp;</td>
+        <td>Sprememba in dopolnitev finančnega koledarja 2020</td>
+        <td>INI-185/20</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br />
+
+  <p id="disclaimer_but">Opozorilo: Objave v angleškem jeziku so zgolj informativne narave in ne predstavljajo uradne objave po ZTFI in Pravilih Ljubljanske borze d.d..</p>
+  <p>Znak <span class="simbol_tooltip yellow_bg">!</span> pojasnjuje, na katero predhodno objavo, označeno z znakom <span class="yellow_bg">*</span>, se veže ta objava.</p>
+  <p>Logotip <span class="the_s">SEO</span> pomeni, da je objavljen celotni tekst obvestila, sicer gre le za obvestilo o objavi v drugem mediju.</p>
+
+</div>
+
+<br />
+
+
+
+
+
+
+
+<div style="visibility: hidden">
+  <form id="main_form" name="main_form" action="/default.aspx" method="post" onsubmit="">
+    <input type="hidden" name="doc" value="LATEST_PUBLIC_ANNOUNCEMENTS" />
+    <input type="hidden" id="page_no" name="field.page_no" />
+    <input type="hidden" id="sort_field" name="field.sort_field" value="published" />
+    <input type="hidden" id="sort_field_direction" name="field.sort_field_direction" value="DESC" />
+    <input type="hidden" id="selected_year" name="field.selected_year" />
+    <input type="hidden" id="selected_month" name="field.selected_month" />
+    <input type="hidden" id="selected_doc_ids" name="field.selected_doc_ids" />
+    <table id="field_table" border="0" cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td align="right">
+            Iskane besede:
+          </td>
+          <td colspan="2">
+            <input name="field.words" size="64" value="" type="text" />*
+          </td>
+        </tr>
+        <tr>
+          <td align="right" >
+            Družba:
+          </td>
+          <td>
+            <select style="width: 450px" size="1" id="issuer" name="field.issuer">
+              <option value="">&nbsp;</option>
+               <option value="51">ABANKA d.d., Ljubljana</option>
+ <option value="344">ACH, d. d., Ljubljana</option>
+ <option value="1107">Actual I.T. d.d.</option>
+ <option value="1139">ADRIA MOBIL, d.o.o. Novo mesto</option>
+ <option value="1070">AERO, d. d., Celje</option>
+ <option value="345">AERODROM LJUBLJANA, d.o.o.</option>
+ <option value="1095">AG d. d., Kamnik</option>
+ <option value="1">AGENCIJA ZA TRG VREDNOSTNIH PAPIRJEV</option>
+ <option value="346">AGROKOMBINAT MARIBOR d. d., Maribor</option>
+ <option value="979">AHA ALUMINIJ d.o.o., Ljubljana</option>
+ <option value="341">AKTIVA AVANT I, d.d., Ljubljana</option>
+ <option value="708">AKTIVA AVANT, d.d., Ljubljana</option>
+ <option value="744">AKTIVA FIN, d.d., Ljubljana</option>
+ <option value="797">AKTIVA INVEST d.d., Ljubljana</option>
+ <option value="842">AKTIVA NALOŽBE, d.d., Ljubljana</option>
+ <option value="611">ALPDOM, d.d., RADOVLJICA, Radovljica</option>
+ <option value="628">ALPETOUR POTOVALNA AGENCIJA, d. d., Kranj</option>
+ <option value="831">ALPOS, d.d., Šentjur</option>
+ <option value="1100">ALTA Invest d.d., Ljubljana</option>
+ <option value="1099">ALTA Skladi, d.d., Ljubljana</option>
+ <option value="1105">ALTA Skupina d. d., Ljubljana</option>
+ <option value="1165">ANTEAM TECHNOLOGY d.o.o.</option>
+ <option value="1170">AP KAPITAL 2 d.o.o.</option>
+ <option value="1169">AP KAPITAL 4 d.o.o.</option>
+ <option value="1188">AP KAPITAL 6 d.o.o.</option>
+ <option value="1193">AREX d.o.o. Šentjernej</option>
+ <option value="152">ARGONOS BPH d.o.o., Ljubljana</option>
+ <option value="349">ARKADA DVA, PID, d.d., Ljubljana</option>
+ <option value="348">ARKADA ENA, PID, d.d., Ljubljana</option>
+ <option value="826">ARKADA HOLDING, d.d., Ljubljana</option>
+ <option value="350">ARKADA TRI, PID, d.d., Ljubljana</option>
+ <option value="352">ATENA 1. SKLAD, pooblaščena investicijska družba, d.d., Ljubljana</option>
+ <option value="748">ATENA PID, d.d., Ljubljana</option>
+ <option value="612">AVANT HOLDING, d.d., Ljubljana</option>
+ <option value="353">AVTO CELJE d.d., Celje</option>
+ <option value="351">AVTOPREVOZNIŠTVO IN SERVISI, d.d., Velenje</option>
+ <option value="1005">AVTOTEHNA, d.d., Ljubljana</option>
+ <option value="354">BANKA CELJE, d.d., Celje</option>
+ <option value="39">Banka Intesa Sanpaolo d.d.</option>
+ <option value="542">BANKA VIPA, d. d., Nova Gorica</option>
+ <option value="1022">BATAGEL & Co., d.o.o., Postojna</option>
+ <option value="654">BELINKA, d.d., Ljubljana</option>
+ <option value="356">BOHOR d.d. ŠENTJUR, Šentjur</option>
+ <option value="1192">BOSQAR d.d.</option>
+ <option value="360">BTC, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="822">C2 NALOŽBE, d.d., Ljubljana</option>
+ <option value="1173">Calcit d.o.o.</option>
+ <option value="901">CAP NALOŽBE, d.d., Ljubljana</option>
+ <option value="363">CAPINVEST 2, PID, d.d., Ljubljana</option>
+ <option value="364">CAPITA d.d. Ljubljana</option>
+ <option value="1016">CBH d.d., Celje</option>
+ <option value="1116">CEESEG Aktiengesellschaft</option>
+ <option value="617">CEMENTARNA TRBOVLJE, d.d., Trbovlje</option>
+ <option value="870">CENTER NALOŽBE d.d., Maribor</option>
+ <option value="1149">Certa d.d.</option>
+ <option value="967">CERTA d.d., Cerkno</option>
+ <option value="1146">Certa Holding d.d.</option>
+ <option value="111">CERTIUS BPH d. o. o., Ljubljana</option>
+ <option value="674">CERTIUS HOLDING, d.d., Ljubljana</option>
+ <option value="809">CERTIUS INVEST d.d., Ljubljana</option>
+ <option value="366">CETIS, grafične in dokumentacijske storitve, d.d.</option>
+ <option value="928">CIMOS d.d., Koper</option>
+ <option value="368">CINKARNA CELJE, d.d., Celje</option>
+ <option value="685">CM CELJE, d. d., Celje</option>
+ <option value="369">COLOR, d.d., Medvode</option>
+ <option value="367">COMET, d.d., Zreče</option>
+ <option value="1030">CPM, d.d., Maribor</option>
+ <option value="597">CREINA d.d. KRANJ, Kranj</option>
+ <option value="900">D HOLDING, d.d.</option>
+ <option value="1035">D NALOŽBE d.d., Ljubljana</option>
+ <option value="372">DANA, d.d., Mirna</option>
+ <option value="899">DARS d.d., Celje</option>
+ <option value="1053">DATALAB, d.d., Ljubljana</option>
+ <option value="1201">DBS d.d.</option>
+ <option value="1141">Debitel telekomunikacije d.d.</option>
+ <option value="1118">DEBITEL telekomunikacije d.d., Ljubljana</option>
+ <option value="1162">DecaCare, poslovno svetovanje, d.o.o.</option>
+ <option value="1066">DELNIŠKI VZAJEMNI SKLAD INFOND DYNAMIC</option>
+ <option value="931">DELNIŠKI VZAJEMNI SKLAD TRIGLAV STEBER I</option>
+ <option value="678">DELO PRODAJA, d.d., Ljubljana</option>
+ <option value="371">DELO, d.d., Ljubljana</option>
+ <option value="935">DEOS, d.d., Ljubljana</option>
+ <option value="554">DEŽELNA BANKA SLOVENIJE d. d.</option>
+ <option value="21">DEŽELNA BANKA SLOVENIJE d. d., Ljubljana</option>
+ <option value="1195">DH d.d.</option>
+ <option value="375">DOM SMREKA, d.d., Maribor</option>
+ <option value="1174">DP JUB d.d.</option>
+ <option value="547">DPB VIZIJA, PID, d.d., Novo mesto</option>
+ <option value="615">DRAVINJSKI DOM, d.d., Slovenjske Konjice</option>
+ <option value="374">DROGA d.d., Izola</option>
+ <option value="934">DROGA KOLINSKA, d.d., Ljubljana</option>
+ <option value="1131">DUTB, d. d.</option>
+ <option value="377">DZS založništvo in trgovina, d.d., Ljubljana</option>
+ <option value="1130">DZS, d. d., Ljubljana</option>
+ <option value="1007">EBS GROUP d.o.o., Kranj</option>
+ <option value="1163">EChem d.o.o.</option>
+ <option value="1186">ECM Partnerji, d.d.</option>
+ <option value="386">EGOLES, d.d. Škofja Loka - v likvidaciji</option>
+ <option value="971">ELEKTRO GORENJSKA d.d. KRANJ</option>
+ <option value="1184">ELEKTRO LJUBLJANA d.d.</option>
+ <option value="683">ELMO, d. d., Ljubljana</option>
+ <option value="378">EMONA OBALA d.d., Koper</option>
+ <option value="1171">Equinox d.d.</option>
+ <option value="379">ETOL, d. d., Škofja vas</option>
+ <option value="770">ETRA 33, d.d., Ljubljana</option>
+ <option value="1175">Europe Nuoli International Holding d.o.o.</option>
+ <option value="18">FACTOR BANKA d. d., Ljubljana</option>
+ <option value="1015">FIDINA d.d., Ljubljana</option>
+ <option value="999">FINETOL d.d., Celje</option>
+ <option value="763">FINIRA, d.d., Ljubljana</option>
+ <option value="1143">FMR HOLDING d.d.</option>
+ <option value="922">FMR, d.d., Idrija</option>
+ <option value="680">FOND INVEST, d.d., Ljubljana</option>
+ <option value="974">FOTONA, d.d., Ljubljana</option>
+ <option value="383">FRUCTAL, d.d., Ajdovščina</option>
+ <option value="1113">FZU MONETA A.D., Podgorica</option>
+ <option value="122">GBD BPD, d. d., Kranj</option>
+ <option value="384">GEA COLLEGE, d.d., Ljubljana</option>
+ <option value="1126">GEN-I, d.o.o., Krško</option>
+ <option value="671">GEODETSKI ZAVOD SLOVENIJE, d.d., Ljubljana</option>
+ <option value="389">GORENJE, d.o.o.</option>
+ <option value="36">GORENJSKA BANKA d.d., Kranj</option>
+ <option value="1122">Gorenjski tisk, d. d.</option>
+ <option value="397">GORENJSKI TISK, d.d., Kranj</option>
+ <option value="388">GORIŠKE OPEKARNE, d.d., Renče</option>
+ <option value="1150">Gozdarstvo Grča, d. d., Kočevje</option>
+ <option value="583">GOZDNO GOSPODARSTVO BLED, d.d., Bled</option>
+ <option value="398">GOZDNO GOSPODARSTVO POSTOJNA, d.d., Postojna</option>
+ <option value="390">GPG, d.d., Ljubljana</option>
+ <option value="594">GRAD PRESTRANEK, d.d., Prestranek</option>
+ <option value="387">GRADIS, GP LJUBLJANA, d.d., Ljubljana</option>
+ <option value="1144">GRUPA PLASTOFORM upravljanje podjetij d.o.o.</option>
+ <option value="1157">H &amp; R d.d.</option>
+ <option value="1145">HALCOM, d.d.</option>
+ <option value="1025">HAT, d. o. o., Ljubljana</option>
+ <option value="401">HELIOS, DOMŽALE, d.o.o., Domžale</option>
+ <option value="541">HIDROTEHNIK d.d. LJUBLJANA, Ljubljana</option>
+ <option value="1037">HOLDING PMP d. d., Ljubljana</option>
+ <option value="1140">HOLDING PMP, naložbena dejavnost, d.d.</option>
+ <option value="404">HOTELI BERNARDIN, d.d. PORTOROŽ, Portorož</option>
+ <option value="484">HOTELI PALACE, d.d., Portorož</option>
+ <option value="832">HRAM HOLDING, d.d., Ljubljana</option>
+ <option value="1200">ILIRIKA SKLADI d.d.</option>
+ <option value="1172">IMO-RENT INVEST d.o.o.</option>
+ <option value="405">IMP ČRPALKE LJUBLJANA, d.d., Ljubljana</option>
+ <option value="742">IMP KLIMAT, d.d., Ljubljana</option>
+ <option value="1135">Impol 2000, d. d., Slovenska Bistrica</option>
+ <option value="1191">INCOM d.o.o.</option>
+ <option value="1051">INDEKSNI VZAJEMNI SKLAD PB AGRICULTURE INDEX</option>
+ <option value="1049">INDEKSNI VZAJEMNI SKLAD PB BIOTECH INDEX</option>
+ <option value="1050">INDEKSNI VZAJEMNI SKLAD PB URANIUM INDEX</option>
+ <option value="756">INFOND HOLDING, d.d., Maribor</option>
+ <option value="875">INFOND ID 1, d.d., Maribor</option>
+ <option value="758">INFOND ID, d.d., Maribor</option>
+ <option value="757">INFOND PID, d.d., Maribor</option>
+ <option value="414">INFOND ZLAT PID, d.d., Maribor</option>
+ <option value="407">INLES, d.d., Ribnica</option>
+ <option value="411">INTARA, d. d., Ljubljana</option>
+ <option value="409">INTEGRAL JESENICE, d.d., Jesenice</option>
+ <option value="1085">INTERENERGO, d. d., Ljubljana</option>
+ <option value="406">INTEREUROPA, d.d., Koper</option>
+ <option value="410">INTERTRADE ITA, d.o.o., Ljubljana</option>
+ <option value="413">INTERTRADE ITS, d.d., Ljubljana</option>
+ <option value="412">ISTRABENZ, d.d., Portorož</option>
+ <option value="415">JADRAN  d.d. SEŽANA, Sežana</option>
+ <option value="726">JATA EMONA, d.d., Ljubljana</option>
+ <option value="416">JATA, d.d., Ljubljana</option>
+ <option value="1190">Javna razsvetljava d.d.</option>
+ <option value="1134 658">Javor Pivka, d.d. - v likvidaciji</option>
+ <option value="576">JELEN GOSTINSKO PODJETJE, d.d., Slovenske Konjice</option>
+ <option value="970">JELOVICA d.d. ŠKOFJA LOKA</option>
+ <option value="418">JUTEKS, d.d., Žalec</option>
+ <option value="438">KAPITALSKA DRUŽBA, d. d., Ljubljana</option>
+ <option value="1017">KB1909 SOCIETA' PER AZIONI - DELNIŠKA DRUŽBA, Gorica</option>
+ <option value="600">KBS BANKA d.d., Maribor</option>
+ <option value="666">KD d.d., Ljubljana</option>
+ <option value="677">KD Group, d.d., Ljubljana</option>
+ <option value="682">KD ID, delniška ID, d.d.</option>
+ <option value="421">KD INVESTMENTS d.o.o., Ljubljana</option>
+ <option value="1098">KD Kapital, d.o.o., Ljubljana</option>
+ <option value="814">KD NALOŽBE d.d., Ljubljana</option>
+ <option value="681">KD PID, d.d., Ljubljana</option>
+ <option value="1029">KDD d. d., Ljubljana</option>
+ <option value="422">KEMA PUCONCI, d.d., Puconci</option>
+ <option value="424">KLASJE CELJE, d.d., Celje</option>
+ <option value="1114">Kmetijska zadruga Vipava, z.o.o., Vipava</option>
+ <option value="427">KMETIJSKI KOMBINAT PTUJ, d.d., Ptuj</option>
+ <option value="428">KOLINSKA, d.d., Ljubljana</option>
+ <option value="1032">KOLONEL d.o.o., Ljubljana</option>
+ <option value="425">KOLONIALE, d.d., Maribor</option>
+ <option value="423">KOMPAS HOTELI, d.d.,  Kranjska Gora</option>
+ <option value="969">KOMPAS RAC d.d. Ljubljana - v likvidaciji</option>
+ <option value="663">KOMPAS SHOP d.d., Ljubljana</option>
+ <option value="529">KOŠAKI TMI, d.d., Maribor</option>
+ <option value="1031">KOTO d.d., Ljubljana</option>
+ <option value="1147">Kovinoplastika Lož d.d.</option>
+ <option value="1151">Kovinoplastika Lož družba pooblaščenka d.d.</option>
+ <option value="430">KOVINOTEHNA, d.d., Celje</option>
+ <option value="1155">KOVINTRADE D.D. CELJE</option>
+ <option value="1088">KRAS, d. d., Sežana</option>
+ <option value="434">KRKA, d. d., Novo mesto</option>
+ <option value="743">KRONA HOLDING, d.d., Ljubljana</option>
+ <option value="432">KRONA KRONA, d.d., Ljubljana</option>
+ <option value="517">KRONA SENIOR, ID prilagodljive sestave naložb, d.d., Ljubljana</option>
+ <option value="431">KRUH - PECIVO, d.d., Maribor</option>
+ <option value="741">KS - SKLAD 4, d.d.,   Ljubljana</option>
+ <option value="437">KS - SKLAD 4, D.D., Ljubljana</option>
+ <option value="1010">KS NALOŽBE d.d., Ljubljana</option>
+ <option value="706">KS1 - Naložbe, d.d., Ljubljana</option>
+ <option value="820">KS2 NALOŽBE, d.d., Ljubljana</option>
+ <option value="740">KS4 Naložbe, d.d., Ljubljana</option>
+ <option value="436">KS-sklad 2, pooblaščena investicijska družba, d.d., Ljubljana</option>
+ <option value="898">L EGOLES, d.d., Škofja Loka</option>
+ <option value="440">LEK d.d.</option>
+ <option value="444">LESNINA EMMI, d.d., Slovenska Bistrica</option>
+ <option value="727">LESNINA, d.d., Ljubljana</option>
+ <option value="887">LETRIKA, d. d., Šempeter pri Gorici</option>
+ <option value="590">LIP BLED, d.d., Bled</option>
+ <option value="570">LIV POSTOJNA, d.d., Postojna</option>
+ <option value="441">LIZ INŽENIRING, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="98">Ljubljanska borza, d. d., Ljubljana</option>
+ <option value="1123">LJUBLJANSKE MLEKARNE, d.d., Ljubljana</option>
+ <option value="442">LUKA KOPER, d.d., Koper</option>
+ <option value="876">M1, d.d., Ljubljana</option>
+ <option value="466">MAKSIMA 1 d.d., Ljubljana</option>
+ <option value="794">MAKSIMA HOLDING d.d., Ljubljana</option>
+ <option value="888">MAKSIMA INVEST, d.d., Ljubljana - v stečaju</option>
+ <option value="796">Maksima, delniška ID, d.d., Ljubljana</option>
+ <option value="448">MARINA PORTOROŽ, d.d., Portorož</option>
+ <option value="450">MEDALJON, d.d., Maribor</option>
+ <option value="1073">MEDEX, d. d., Ljubljana</option>
+ <option value="454">MELAMIN, d.d., Kočevje</option>
+ <option value="1124">MENINA d.d.</option>
+ <option value="734">MERCATA 1 PID, d.d., Ljubljana</option>
+ <option value="679">MERCATA HOLDING, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="463">MERCATA PID, d.d., Ljubljana</option>
+ <option value="874">MERCATA, d.d., Ljubljana</option>
+ <option value="451">MERCATOR, d.d., Ljubljana</option>
+ <option value="1021">MERFIN,  d.o.o., Ljubljana</option>
+ <option value="452">MERKUR trgovina, d.d., Naklo</option>
+ <option value="891">MEŠANI VZAJEMNI SKLAD TRIGLAV EVROPA</option>
+ <option value="867">METALKA TRGOVINA, d.d., Ljubljana</option>
+ <option value="1160">MINERVO D.D.</option>
+ <option value="618">MIP, d.d. Nova Gorica</option>
+ <option value="453">MITOL, d.d., Sežana</option>
+ <option value="455">MKT PRINT proizvodnja knjig d.d., Ljubljana</option>
+ <option value="694">MLAJ Zadobrova, d.d., Ljubljana-Polje</option>
+ <option value="1161">Mlinotest d.d.</option>
+ <option value="610">MLINOTEST, d.d., Ajdovščina</option>
+ <option value="772">MODRA LINIJA HOLDING, d.d., Koper</option>
+ <option value="458">MODRA LINIJA, d.d., Koper</option>
+ <option value="984">MONTER INVESTITOR d.o.o., Šentjanž pri Dravogradu</option>
+ <option value="957">MP FINANCE d.d. - v likvidaciji, Ljubljana</option>
+ <option value="135">MP NALOŽBE, d. d., Ljubljana</option>
+ <option value="686">MURALES d.d. LJUTOMER, Ljutomer</option>
+ <option value="580">NAMA d.d. LJUBLJANA</option>
+ <option value="468">NFD 1 DELNIŠKI INVESTICIJSKI SKLAD, ID, d.d., Ljubljana</option>
+ <option value="467">NFD 2 INVESTICIJSKI SKLAD, d.d. Ljubljana</option>
+ <option value="819">NFD HOLDING, d.d., Ljubljana</option>
+ <option value="581">NFD INVESTICIJSKO SVETOVANJE, d.o.o., Ljubljana</option>
+ <option value="469 1153 1180">Nika d.d., Brežice</option>
+ <option value="471">NIKA, PID 1, d. d.</option>
+ <option value="472">NIKA, PID 2, d. d.</option>
+ <option value="470">NIKA, PID, d. d.</option>
+ <option value="473">NIKO d.d., Železniki, ŽELEZNIKI</option>
+ <option value="1110">NIVO INVESTICIJE d.d.</option>
+ <option value="1102">NIVO, d. d., Celje</option>
+ <option value="836">NK NALOŽBE, d.d.</option>
+ <option value="835">NK2 NALOŽBE, d.d.</option>
+ <option value="362">NLB BANKA ZASAVJE d. d., Trbovlje</option>
+ <option value="1196">NLB Skladi – Nepremičnine d.d.</option>
+ <option value="32">NLB, d. d., Ljubljana</option>
+ <option value="1158">NOVATV24.SI, informativna televizija, d.d.</option>
+ <option value="475">NOVOLIT NOVA VAS NA BLOKAH d.d., Nova vas na Blokah</option>
+ <option value="461">OLJARICA, KRANJ, d.d., Kranj</option>
+ <option value="993">ORBICO d.o.o., Ljubljana</option>
+ <option value="134">OTP banka d.d.</option>
+ <option value="1148">Paloma d.d.</option>
+ <option value="1028">PAPIR SERVIS d.d., Ljubljana</option>
+ <option value="978">PEKARNA BLATNIK d.o.o., Videm-Dobrepolje</option>
+ <option value="1027">PERUTNINA PTUJ d. d.</option>
+ <option value="487">PETROL d.d., Ljubljana</option>
+ <option value="795">PID MAKSIMA, d.d., Ljubljana</option>
+ <option value="728">PID VIPA INVEST d.d., Nova Gorica</option>
+ <option value="561">PID ZVON DVA, d.d., Maribor</option>
+ <option value="560">PID ZVON ENA, d.d., Maribor</option>
+ <option value="495">PINUS TKI d.d., Rače</option>
+ <option value="446">PIVOVARNA LAŠKO, d.d., Laško</option>
+ <option value="605">PIVOVARNA UNION, d.d., Ljubljana</option>
+ <option value="577">PLAMA - PUR, d.d., Podgrad</option>
+ <option value="491">PLOD, PID, d.d., Ljubljana</option>
+ <option value="1203">Pokojninska družba A, d.d.</option>
+ <option value="1189">POLFIN d.o.o.</option>
+ <option value="1013">POMHOLD, naložbena dejavnost, d.o.o., Maribor</option>
+ <option value="716">POM-INVEST d.d., Maribor</option>
+ <option value="862">POM-NALOŽBE d.d., Maribor</option>
+ <option value="494">POMURSKA INVESTICIJSKA DRUŽBA 1, d.d., Murska Sobota</option>
+ <option value="718">POOBLAŠČENA POMURSKA INVESTICIJSKA DRUŽBA d.d., Murska Sobota</option>
+ <option value="485">POŠTNA BANKA SLOVENIJE, d. d., Maribor</option>
+ <option value="145">POTEZA d.d., LJUBLJANA</option>
+ <option value="882">POTEZA NALOŽBE, d. o. o., Ljubljana - v stečaju</option>
+ <option value="1067">POTEZA SKUPINA, d.d. - v stečaju, Ljubljana</option>
+ <option value="355">POTEZA, BPD d.d., Ljubljana</option>
+ <option value="497">POTROŠNIK d.d. CELJE, Celje</option>
+ <option value="394">PPC GORENJSKI SEJEM KRANJ, d. d.</option>
+ <option value="752">PPS - PTUJSKE PEKARNE IN SLAŠČIČARNE, d.d., Ptuj</option>
+ <option value="982">PROBANKA UPRAVLJANJE d.o.o., Maribor</option>
+ <option value="23">PROBANKA, d. d., Maribor</option>
+ <option value="1011">PROFECTUS, finančna in poslovna družba, d.o.o., Maribor</option>
+ <option value="927">PRVA GROUP PLC. - SKUPINA PRVA d.d., Ljubljana</option>
+ <option value="849">PSZ d.d., Celje</option>
+ <option value="148">PUBLIKUM INVESTICIJSKE STORITVE, d.d.</option>
+ <option value="707">PULSAR HOLDING, d.d., Ljubljana</option>
+ <option value="1036">PZP z.o.o., Ptuj</option>
+ <option value="501">RADENSKA d.d. RADENCI</option>
+ <option value="433">RAIFFEISEN KREKOVA BANKA, d.d., Maribor</option>
+ <option value="502">RAZVOJNA DRUŽBA, d.d., Ljubljana</option>
+ <option value="1187">Relax d.d.</option>
+ <option value="506">REPUBLIKA SLOVENIJA</option>
+ <option value="505">RTC KRVAVEC, d.d.</option>
+ <option value="507">RUDIS, d.d., TRBOVLJE, Trbovlje</option>
+ <option value="1159">S8 d.d.</option>
+ <option value="975">SALONIT ANHOVO, d.d.</option>
+ <option value="509">SALUS, LJUBLJANA, d.d., Ljubljana</option>
+ <option value="1101">SANOLABOR,  d. d., Ljubljana</option>
+ <option value="1004">SARINI, svetovanje in investiranje, d.o.o., Ljubljana</option>
+ <option value="508">SATURNUS - AVTOOPREMA, d.d., Ljubljana</option>
+ <option value="510">SATURNUS - VOGEL & NOOT, d.d., Ljubljana</option>
+ <option value="1038">Sava Re, d.d.</option>
+ <option value="587">SAVA, d. d., Ljubljana</option>
+ <option value="464">SAVINJA MOZIRJE, d.d., Mozirje</option>
+ <option value="968">SEMENARNA Ljubljana, d.d.</option>
+ <option value="521">SETEV, PID, d.d., Ljubljana</option>
+ <option value="1024">SGP KOGRAD - IGEM DRAVOGRAD, d. d.</option>
+ <option value="1138">SGP POMGRAD D.D.</option>
+ <option value="516">SI.MOBIL, d.d., Ljubljana</option>
+ <option value="1074">SID banka, d. d., Ljubljana</option>
+ <option value="1137">SIJ - Slovenska industrija jekla, d. d., Ljubljana</option>
+ <option value="511">SIJAJ HRASTNIK, d.d., Hrastnik</option>
+ <option value="1093">SIP, d. d., Šempeter v Savinjski dolini</option>
+ <option value="619">SIP, d.d., Šempeter v Savinjski dolini</option>
+ <option value="764">SIVENT, d.d., Ljubljana</option>
+ <option value="513">SKB d.d., Ljubljana</option>
+ <option value="1136">Skupna pokojninska družba d.d., Ljubljana</option>
+ <option value="515">SLOVENIJALES d. d., Ljubljana</option>
+ <option value="514">SLOVENSKA RAZVOJNA DRUŽBA d.d., Ljubljana</option>
+ <option value="518">SLOVENSKI DRŽAVNI HOLDING, d.d., Ljubljana</option>
+ <option value="1108">SONČNI VRT, d.o.o., Murska Sobota</option>
+ <option value="520">STANOVANJSKI SKLAD REPUBLIKE SLOVENIJE, JAVNI SKLAD, Ljubljana</option>
+ <option value="951">STOLARNA DOBREPOLJE d.d.</option>
+ <option value="1076">SUROVINA d.d., Maribor</option>
+ <option value="1072">SUROVINA HOLDING d. d., Ptuj</option>
+ <option value="522">SVILA, d.d., Maribor</option>
+ <option value="512">SVILANIT KAMNIK, d.d., Kamnik</option>
+ <option value="537">SWATY, d.d., Maribor</option>
+ <option value="1176">TBP d.d.</option>
+ <option value="1008">TDR-METALURGIJA d.d., Ruše</option>
+ <option value="525">TEHNOUNION, d.d., Ljubljana</option>
+ <option value="1129 524">Tekstina, d. d., Ajdovščina</option>
+ <option value="976">TELEKOM SLOVENIJE, d.d., Ljubljana</option>
+ <option value="559">TERME 3000 d.d., Moravske Toplice</option>
+ <option value="523">TERME ČATEŽ, d.d., Čatež ob Savi</option>
+ <option value="553">TERME DOBRNA, d.d., Dobrna</option>
+ <option value="1168">TERME OLIMIA D.D.</option>
+ <option value="1182">Titus Group d.o.o.</option>
+ <option value="1179">Tivoli, Razvoj rezidenc, d.o.o.</option>
+ <option value="1152">TKI Hrastnik, d.d.</option>
+ <option value="1164">TOKUEI d.o.o.</option>
+ <option value="1068">TOPRO d.o.o., Sežana</option>
+ <option value="531">TOSAMA, d.d., Domžale</option>
+ <option value="393">TOVARNA OLJA GEA d.d., Slovenska Bistrica</option>
+ <option value="536">TOVARNA SLADKORJA ORMOŽ, d. d., Ormož</option>
+ <option value="850">TRDNJAVA HOLDING, d. d., Celje</option>
+ <option value="535">TRDNJAVA I, PID, d.d., Velenje</option>
+ <option value="534">TRDNJAVA, PID, d.d., Velenje</option>
+ <option value="396">TRGATEV, PID, d.d., Ljubljana</option>
+ <option value="852">TRIGLAV NALOŽBE, d.d., Ljubljana</option>
+ <option value="527">TRIGLAV STEBER I, ID, d.d., Ljubljana</option>
+ <option value="791">TRIGLAV STEBER, PID, d.d., Ljubljana</option>
+ <option value="528">TRIGLAV, finančna družba, d.d., Ljubljana</option>
+ <option value="1106">TRUBAR, d. d., Kranj</option>
+ <option value="606">TUS KO-SI, d.d., Slovenj Gradec</option>
+ <option value="1128">TUŠMOBIL, d.o.o.</option>
+ <option value="586">Union Hotels Collection d.d. - v likvidaciji</option>
+ <option value="1112">UNIOR d.d., Zreče</option>
+ <option value="790">UNIT-AS NEPREMIČNINE d.d., Ljubljana</option>
+ <option value="540">UNITAS, d.d., Šmartno pri Litiji</option>
+ <option value="1167">UNITED CAPITAL d.o.o.</option>
+ <option value="737">URAD RS ZA VARSTVO KONKURENCE</option>
+ <option value="1064">URAVNOTEŽENI VZAJEMNI SKLAD INFOND GLOBAL</option>
+ <option value="800">URAVNOTEŽENI VZAJEMNI SKLAD TRIGLAV RENTA</option>
+ <option value="543">VALKARTON, d.d., Logatec</option>
+ <option value="1132">Varstroj d. d.</option>
+ <option value="775">VELANA d.o.o.</option>
+ <option value="498">VELETRGOVINA POTROŠNIK, d. d., Murska Sobota</option>
+ <option value="1133 813">VIPA HOLDING d.d., v likvidaciji</option>
+ <option value="816">VIPA INVEST, d.d., Nova Gorica</option>
+ <option value="1115">VIPAVA 1894, d. d., Vipava</option>
+ <option value="833">VIZIJA HOLDING ENA, d.d., Ljubljana</option>
+ <option value="792">VIZIJA HOLDING, d.d., Ljubljana</option>
+ <option value="793">VIZIJA I., PID, d.d., Ljubljana</option>
+ <option value="1194">Vzajemna zdravstvena zavarovalnica d. d.</option>
+ <option value="1033">VZAJEMNI SKLAD ALTA EUROSTOCK</option>
+ <option value="1034">VZAJEMNI SKLAD MP-BALKAN.SI</option>
+ <option value="1052">VZAJEMNI SKLAD PROBANKA GLOBALNI NALOŽBENI SKLAD</option>
+ <option value="890">VZAJEMNI SKLAD TRIGLAV OBVEZNIŠKI</option>
+ <option value="1006">W & P PROFIL - SOLARVALUE HOLDING, družba za upravljanje, d.o.o., Ruše</option>
+ <option value="1154">WOOD & Company Financial Services, a.s.</option>
+ <option value="1177">Xinzhou International Group Co., d.o.o.</option>
+ <option value="1166">YGM d.o.o.</option>
+ <option value="1109">ZAVAROVALNICA MARIBOR d.d., Maribor</option>
+ <option value="1127">ZAVAROVALNICA MARIBOR, d. d., Maribor</option>
+ <option value="865">ZAVAROVALNICA TRIGLAV, d.d., Ljubljana</option>
+ <option value="503">ZDRAVILIŠČE ROGAŠKA, d.d., Rogaška Slatina</option>
+ <option value="1125">ZIF MONETA A.D., Podgorica - u postupku transformacije</option>
+ <option value="556">ZLATA MONETA I, posebna delniška ID, d.d., Maribor</option>
+ <option value="817">ZLATA MONETA II d.d., Maribor</option>
+ <option value="557">ZLATA MONETA II, PID, d.d., Maribor</option>
+ <option value="584">ZRC, d.d., TRBOVLJE, Trbovlje</option>
+ <option value="840">ZVON DVA HOLDING, d.d., Maribor</option>
+ <option value="812">ZVON ENA HOLDING, d.d., Maribor</option>
+ <option value="818">ZVON ENA ID, d.d., Maribor</option>
+ <option value="558">ŽELEZARNA RAVNE - MONTER DRAVOGRAD, d.d., Šentjanž pri Dravogradu</option>
+ <option value="607">ŽITO INTES, d.d., Maribor</option>
+ <option value="609">ŽITO, d.d., Ljubljana</option>
+ <option value="614">ŽIVILA KRANJ, d.d., Naklo</option>
+
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" >
+            LEI koda:
+          </td>
+          <td>
+            <input name="field.lei" size="64" value="" type="text" />
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            Segmenti trga:
+          </td>
+          <td>
+            <select size="1" name="field.market_segment" >
+              <option value="">&nbsp;</option>
+               <option value="prime_market">Prva kotacija</option>
+ <option value="standard">Standardna kotacija</option>
+ <option value="bonds">Obveznice</option>
+ <option value="fund_coupons">Invesiticijski kuponi</option>
+ <option value="closed_end_shares">Delnice investicijskih družb</option>
+ <option value="structured_products">Strukturirani produkti</option>
+ <option value="si_enter">SI ENTER</option>
+ <option value="progress">Progress</option>
+ <option value="stock_exchange">Borza</option>
+ <option value="members">Člani</option>
+ <option value="others">Drugi</option>
+
+            </select>
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            Koda vrednostnega papirja:
+          </td>
+          <td>
+            <select size="1" name="field.symbol" >
+              <option value="">&nbsp;</option>
+              <option value="219">AA1N</option><option value="220">AA1S</option><option value="664">AAFR</option><option value="789">AAPG</option><option value="3">AB01E</option><option value="4">AB02</option><option value="5">AB03</option><option value="623">AB04</option><option value="668">AB05</option><option value="743">AB06</option><option value="795">AB07</option><option value="857">AB08</option><option value="858">AB09</option><option value="883">AB10</option><option value="971">AB11</option><option value="972">AB12</option><option value="995">AB13</option><option value="1089">AB14</option><option value="1043">ABKN</option><option value="221">ACL1E</option><option value="950">ACLG</option><option value="1100">ADM2</option><option value="7">AELG</option><option value="1090">AG01</option><option value="1066">AGOG</option><option value="775">AKIR</option><option value="222">AKMG</option><option value="583">ALDG</option><option value="601">APAG</option><option value="1282">APC1</option><option value="1283">APC2</option><option value="963">APOG</option><option value="1225">APP2</option><option value="1226">APP3</option><option value="1212">APT1</option><option value="1213">APT2</option><option value="1329">APT3</option><option value="1330">APT4</option><option value="224">AR1N</option><option value="815">AR1R</option><option value="225">AR1S</option><option value="226">AR2N</option><option value="227">AR2S</option><option value="228">AR3N</option><option value="229">AR3S</option><option value="1356">ARE1</option><option value="230">ASVG</option><option value="231">AT1N</option><option value="232">AT1S</option><option value="233">AT2N</option><option value="234">AT2S</option><option value="235">AT3N</option><option value="236">AT3S</option><option value="1139">ATED1</option><option value="710">ATFR</option><option value="825">ATPG</option><option value="714">ATPR</option><option value="237">AVCG</option><option value="584">AVHR</option><option value="56">BCE1</option><option value="1004">BCE10</option><option value="1032">BCE11</option><option value="1061">BCE12</option><option value="1075">BCE13</option><option value="1086">BCE14</option><option value="1087">BCE15</option><option value="1088">BCE16</option><option value="57">BCE2</option><option value="571">BCE3</option><option value="631">BCE4</option><option value="680">BCE5</option><option value="728">BCE6A</option><option value="729">BCE6B</option><option value="804">BCE7</option><option value="863">BCE8</option><option value="941">BCE9</option><option value="1038">BDM1</option><option value="248">BDP1</option><option value="546">BDP2</option><option value="611">BELG</option><option value="249">BFUG</option><option value="576">BKP</option><option value="58">BKP1</option><option value="250">BKP2</option><option value="555">BKP3</option><option value="622">BKP4</option><option value="64">BTBR</option><option value="65">BTC</option><option value="66">BTC1E</option><option value="778">BTC2</option><option value="68">BZ02E</option><option value="848">BZ03</option><option value="1227">CAC2</option><option value="299">CAP1</option><option value="300">CAP2</option><option value="811">CAPG</option><option value="301">CAPN</option><option value="640">CEMG</option><option value="627">CERR</option><option value="304">CETG</option><option value="69">CHZG</option><option value="305">CICG</option><option value="905">CIM1</option><option value="1091">CIM2</option><option value="1243">CNED1</option><option value="306">COMG</option><option value="877">CPNR</option><option value="790">CRIR</option><option value="565">CRKG</option><option value="1195">CTCG</option><option value="590">CTRG</option><option value="1030">DATG</option><option value="1136">DCED1</option><option value="1358">DEHG</option><option value="73">DELR</option><option value="920">DEO1</option><option value="1021">DFNR</option><option value="876">DHLR</option><option value="307">DMRG</option><option value="1034">DPR1</option><option value="632">DPRG</option><option value="1031">DRK1</option><option value="926">DRKR</option><option value="77">DRPG</option><option value="873">DRS1</option><option value="933">DRS2</option><option value="953">DRS3</option><option value="589">DSKG</option><option value="308">DSMG</option><option value="1084">DUT01</option><option value="1085">DUT02</option><option value="1105">DUT03</option><option value="1106">DUT04</option><option value="592">DZ01</option><option value="603">DZ02</option><option value="609">DZ03</option><option value="617">DZ04</option><option value="629">DZ05</option><option value="647">DZ06</option><option value="652">DZ07</option><option value="661">DZ08</option><option value="671">DZ09</option><option value="678">DZ10</option><option value="1267">DZ103</option><option value="1268">DZ104</option><option value="1269">DZ105</option><option value="1270">DZ106</option><option value="1273">DZ107</option><option value="1277">DZ108</option><option value="1288">DZ109</option><option value="691">DZ11</option><option value="1291">DZ110</option><option value="1292">DZ111</option><option value="1294">DZ112</option><option value="1299">DZ113</option><option value="1307">DZ114</option><option value="1308">DZ115</option><option value="1309">DZ116</option><option value="1324">DZ117</option><option value="1327">DZ118</option><option value="1332">DZ119</option><option value="699">DZ12</option><option value="1352">DZ120</option><option value="1351">DZ121</option><option value="1341">DZ122</option><option value="1364">DZ123</option><option value="1370">DZ124</option><option value="1371">DZ124</option><option value="1375">DZ125</option><option value="712">DZ13</option><option value="719">DZ14</option><option value="730">DZ15</option><option value="746">DZ16</option><option value="755">DZ17</option><option value="765">DZ18</option><option value="777">DZ19</option><option value="785">DZ20</option><option value="792">DZ21</option><option value="807">DZ22</option><option value="818">DZ23</option><option value="829">DZ24</option><option value="841">DZ25</option><option value="853">DZ26</option><option value="860">DZ27</option><option value="870">DZ28</option><option value="881">DZ29</option><option value="887">DZ30</option><option value="896">DZ31</option><option value="909">DZ32</option><option value="922">DZ33</option><option value="938">DZ34</option><option value="952">DZ35</option><option value="961">DZ36</option><option value="968">DZ37</option><option value="976">DZ38</option><option value="981">DZ39</option><option value="988">DZ40</option><option value="1050">DZ41</option><option value="1057">DZ42</option><option value="1147">DZ75</option><option value="1148">DZ76</option><option value="1149">DZ77</option><option value="1150">DZ81</option><option value="1151">DZ82</option><option value="1152">DZ84</option><option value="1153">DZ89</option><option value="1154">DZ90</option><option value="1155">DZ90</option><option value="1145">DZ91</option><option value="1183">DZ92</option><option value="1209">DZ93</option><option value="1221">DZ94</option><option value="1238">DZ95</option><option value="1250">DZ96</option><option value="1251">DZ97</option><option value="1260">DZ98</option><option value="1261">DZ99</option><option value="310">DZS</option><option value="1083">DZS2</option><option value="1138">EHED1</option><option value="78">EOKG</option><option value="1235">EQNX</option><option value="79">ETOG</option><option value="737">ETRG</option><option value="913">EZ223</option><option value="914">EZ224</option><option value="915">EZ225</option><option value="916">EZ226</option><option value="917">EZ227</option><option value="918">EZ228</option><option value="919">EZ229</option><option value="923">EZ230</option><option value="924">EZ231</option><option value="925">EZ232</option><option value="927">EZ233</option><option value="929">EZ234</option><option value="932">EZ235</option><option value="934">EZ236</option><option value="935">EZ237</option><option value="936">EZ238</option><option value="939">EZ239</option><option value="80">FB01E</option><option value="311">FB02</option><option value="81">FB03</option><option value="895">FB06</option><option value="890">FB08</option><option value="891">FB09</option><option value="892">FB10</option><option value="928">FB11</option><option value="959">FB12</option><option value="970">FB13</option><option value="997">FB14</option><option value="1000">FB15</option><option value="1019">FB16</option><option value="1006">FB17</option><option value="1020">FB19</option><option value="1026">FB20</option><option value="1036">FB21</option><option value="1053">FB22</option><option value="1018">FINR</option><option value="732">FIRR</option><option value="889">FMR1</option><option value="312">FRAG</option><option value="1284">GB02</option><option value="1146">GBKR</option><option value="562">GDPR</option><option value="1202">GE02</option><option value="1303">GE03</option><option value="313">GEAL</option><option value="1080">GEN01</option><option value="1126">GEN05</option><option value="1200">GEN09</option><option value="1230">GEN10</option><option value="1244">GEN11</option><option value="1262">GEN12</option><option value="550">GGBG</option><option value="1201">GHU1</option><option value="554">GHUG</option><option value="1214">GHUR</option><option value="314">GKRG</option><option value="315">GLJG</option><option value="85">GOR</option><option value="316">GORG</option><option value="317">GORO</option><option value="86">GPG</option><option value="87">GPGR</option><option value="1113">GRV03</option><option value="1125">GRV05</option><option value="319">GRVG</option><option value="320">GSBG</option><option value="321">GSKG</option><option value="323">GT0N</option><option value="324">GTKG</option><option value="325">GZPG</option><option value="626">GZRG</option><option value="329">HDOG</option><option value="94">HTB1E</option><option value="862">IALG</option><option value="330">ICRG</option><option value="95">IEKG</option><option value="639">IELG</option><option value="850">IFDR</option><option value="725">IFFR</option><option value="847">IFHR</option><option value="727">IFIR</option><option value="726">IFPR</option><option value="331">IHPG</option><option value="1119">IM01</option><option value="1245">IMI1</option><option value="1333">IMI2</option><option value="1334">IMI3</option><option value="575">IMTG</option><option value="1302">IN02</option><option value="1042">INDDY</option><option value="1040">INDGL</option><option value="332">INJG</option><option value="333">INRG</option><option value="334">INTR</option><option value="97">ITBG</option><option value="335">ITBG_</option><option value="336">ITSG</option><option value="337">IZ0N</option><option value="338">IZ0S</option><option value="684">JAMR</option><option value="339">JASG</option><option value="542">JESG</option><option value="340">JMLG</option><option value="614">JPIG</option><option value="98">JTK</option><option value="537">JTKG</option><option value="702">K4NG</option><option value="810">K4SG</option><option value="703">K4SR</option><option value="1007">KBG1</option><option value="1064">KBG2</option><option value="1092">KBG3</option><option value="100">KBM1E</option><option value="615">KBM2</option><option value="676">KBM3</option><option value="677">KBM4</option><option value="864">KBM5</option><option value="865">KBM6</option><option value="900">KBM7</option><option value="901">KBM8</option><option value="1070">KBM9</option><option value="1012">KBMR</option><option value="107">KCEG</option><option value="106">KCEU</option><option value="940">KDH1</option><option value="962">KDH2</option><option value="1104">KDH3</option><option value="658">KDHP</option><option value="630">KDHR</option><option value="636">KDIN</option><option value="908">KDIR</option><option value="346">KDO1E</option><option value="635">KDPN</option><option value="620">KDZ</option><option value="347">KDZR</option><option value="348">KEPG</option><option value="349">KHKG</option><option value="351">KLAG</option><option value="704">KLLG</option><option value="352">KLMG</option><option value="355">KMPG</option><option value="105">KOLR</option><option value="356">KPEG</option><option value="357">KR0N</option><option value="358">KR0S</option><option value="108">KRB1</option><option value="109">KRB2E</option><option value="709">KRHR</option><option value="110">KRKG</option><option value="111">KS1</option><option value="112">KS1A</option><option value="113">KS1B</option><option value="359">KS1N</option><option value="360">KS1R</option><option value="114">KS2</option><option value="115">KS2A</option><option value="116">KS2B</option><option value="809">KS2G</option><option value="361">KS2N</option><option value="362">KS2R</option><option value="363">KS4N</option><option value="364">KS4R</option><option value="1093">KSF1</option><option value="1015">KSFG</option><option value="662">KSNG</option><option value="117">KSS4</option><option value="1133">KZTR</option><option value="872">LEGG</option><option value="118">LEK1</option><option value="119">LEK2</option><option value="120">LEKA</option><option value="121">LEKB</option><option value="122">LEKC</option><option value="540">LIVG</option><option value="956">LIVR</option><option value="367">LIZG</option><option value="123">LKPG</option><option value="559">LLBG</option><option value="370">LSBG</option><option value="124">LSK</option><option value="771">MAHR</option><option value="773">MAIR</option><option value="581">MAJG</option><option value="1143">MAJG</option><option value="374">MAPG</option><option value="1052">MDUR</option><option value="378">MEDR</option><option value="633">MEHR</option><option value="1115">MEL08</option><option value="1116">MEL08</option><option value="1121">MEL09</option><option value="1120">MEL10</option><option value="1128">MEL11</option><option value="127">MELR</option><option value="882">MEO1</option><option value="128">MER</option><option value="634">MHLG</option><option value="685">MILG</option><option value="593">MIPG</option><option value="379">MISG</option><option value="866">MKIR</option><option value="380">MKOG</option><option value="381">MKTG</option><option value="382">ML0G</option><option value="383">ML0S</option><option value="384">ML2N</option><option value="385">ML2S</option><option value="740">MLHR</option><option value="389">MOKG</option><option value="985">MPBL</option><option value="969">MPEU</option><option value="1194">MPEU</option><option value="772">MPIR</option><option value="1013">MPLR</option><option value="391">MR0N</option><option value="849">MR0R</option><option value="392">MR0S</option><option value="393">MR1N</option><option value="851">MR1R</option><option value="394">MR1S</option><option value="395">MSMG</option><option value="845">MTGG</option><option value="618">MTSG</option><option value="655">MTZG</option><option value="641">MULG</option><option value="399">MX1N</option><option value="400">MX1S</option><option value="401">MX2N</option><option value="402">MX2S</option><option value="403">MX3N</option><option value="404">MX3S</option><option value="721">NAL1</option><option value="835">NALN</option><option value="547">NALR</option><option value="418">NF1N</option><option value="419">NF1S</option><option value="420">NF2N</option><option value="808">NF2R</option><option value="421">NF2S</option><option value="549">NI01</option><option value="135">NIK</option><option value="136">NIK1</option><option value="1192">NIKN</option><option value="137">NIKN</option><option value="138">NIKR</option><option value="422">NK0N</option><option value="821">NK0R</option><option value="423">NK0S</option><option value="424">NK1N</option><option value="425">NK1S</option><option value="426">NK2N</option><option value="820">NK2R</option><option value="427">NK2S</option><option value="428">NKPG</option><option value="139">NLB1</option><option value="780">NLB10</option><option value="781">NLB11</option><option value="802">NLB12</option><option value="803">NLB13</option><option value="846">NLB14</option><option value="869">NLB15</option><option value="898">NLB16</option><option value="899">NLB17</option><option value="942">NLB18</option><option value="943">NLB19</option><option value="977">NLB20</option><option value="989">NLB21</option><option value="992">NLB22</option><option value="1010">NLB23</option><option value="1037">NLB24</option><option value="1068">NLB25</option><option value="1074">NLB26</option><option value="1236">NLB27</option><option value="140">NLB2E</option><option value="599">NLB3</option><option value="600">NLB4</option><option value="669">NLB5</option><option value="741">NLB7</option><option value="742">NLB8</option><option value="779">NLB9</option><option value="1132">NLBR</option><option value="429">NNVG</option><option value="1190">NTVN</option><option value="1191">NTVR</option><option value="1156">OZ11</option><option value="1174">OZ12</option><option value="1175">OZ13</option><option value="1176">OZ14</option><option value="1224">OZ14</option><option value="1223">OZ15</option><option value="1197">OZ15</option><option value="1252">OZ16</option><option value="1258">OZ17</option><option value="1271">OZ19</option><option value="1310">OZ20</option><option value="1280">OZ20</option><option value="1296">OZ21</option><option value="1311">OZ22</option><option value="1337">OZ23</option><option value="1350">OZ23</option><option value="1349">OZ24</option><option value="1157">OZ9</option><option value="434">PALG</option><option value="1029">PBDBI</option><option value="1028">PBDUI</option><option value="986">PBGS</option><option value="435">PBON</option><option value="145">PBS1</option><option value="750">PBS2</option><option value="751">PBS3</option><option value="814">PBS5</option><option value="906">PBS6</option><option value="907">PBS7</option><option value="436">PD0N</option><option value="797">PDKR</option><option value="1054">PET1</option><option value="1094">PET2</option><option value="1095">PET3</option><option value="1130">PET5</option><option value="148">PETG</option><option value="561">PILR</option><option value="438">PIRG</option><option value="663">PLHR</option><option value="441">PM1N</option><option value="442">PM1S</option><option value="1117">PMPG</option><option value="1118">PMPG</option><option value="859">PNO1</option><option value="446">POCG</option><option value="955">POIG</option><option value="672">POIR</option><option value="1289">POL1</option><option value="1290">POL1</option><option value="1301">POL1</option><option value="447">POMG</option><option value="544">POPG</option><option value="1025">POSR</option><option value="904">PPDT</option><option value="839">PPIG</option><option value="947">PPIR</option><option value="673">PPIR*</option><option value="722">PPSG</option><option value="154">PRB</option><option value="155">PRB1</option><option value="1048">PRB10</option><option value="1062">PRB11</option><option value="156">PRB2E</option><option value="448">PRB3</option><option value="644">PRB4</option><option value="701">PRB5</option><option value="784">PRB6</option><option value="836">PRB7</option><option value="996">PRB8</option><option value="1022">PRB9</option><option value="157">PRBN</option><option value="596">PRBP</option><option value="1045">PSN1</option><option value="569">PULG</option><option value="1142">PVMG</option><option value="158">RARG</option><option value="159">RDR</option><option value="449">RDRO</option><option value="1285">RELR</option><option value="450">RGZP</option><option value="452">RGZR</option><option value="454">RKRG</option><option value="455">RKRO</option><option value="165">RS01</option><option value="166">RS02</option><option value="168">RS08E</option><option value="169">RS09</option><option value="170">RS10</option><option value="1365">RS100</option><option value="1343">RS100</option><option value="1366">RS100</option><option value="171">RS11</option><option value="172">RS12</option><option value="173">RS13E</option><option value="566">RS14</option><option value="577">RS16</option><option value="578">RS17</option><option value="588">RS18</option><option value="604">RS19</option><option value="174">RS1D</option><option value="619">RS20</option><option value="738">RS21</option><option value="638">RS22</option><option value="637">RS23</option><option value="645">RS24</option><option value="648">RS25</option><option value="654">RS26</option><option value="681">RS27</option><option value="686">RS28</option><option value="687">RS29</option><option value="176">RS2D</option><option value="177">RS2M</option><option value="178">RS2O</option><option value="179">RS2V</option><option value="688">RS31</option><option value="689">RS32</option><option value="700">RS33</option><option value="693">RS34</option><option value="696">RS35</option><option value="697">RS36</option><option value="705">RS37</option><option value="706">RS38</option><option value="739">RS39</option><option value="713">RS40</option><option value="715">RS41</option><option value="718">RS42</option><option value="734">RS43</option><option value="744">RS44</option><option value="745">RS45</option><option value="748">RS48</option><option value="754">RS49</option><option value="167">RS4E</option><option value="760">RS50</option><option value="761">RS51</option><option value="767">RS52</option><option value="768">RS53</option><option value="794">RS54</option><option value="822">RS55</option><option value="823">RS56</option><option value="828">RS57</option><option value="878">RS58</option><option value="879">RS59</option><option value="888">RS60</option><option value="948">RS61</option><option value="949">RS62</option><option value="1016">RS63</option><option value="1051">RS64</option><option value="1055">RS65</option><option value="1056">RS66</option><option value="1065">RS67</option><option value="1071">RS68</option><option value="1096">RS69</option><option value="1097">RS70</option><option value="1112">RS71</option><option value="1111">RS72</option><option value="1110">RS73</option><option value="1109">RS74</option><option value="1108">RS75</option><option value="1107">RS76</option><option value="1122">RS77</option><option value="1123">RS78</option><option value="1124">RS79</option><option value="1177">RS80</option><option value="1184">RS81</option><option value="1178">RS82</option><option value="1179">RS83</option><option value="1180">RS84</option><option value="1198">RS85</option><option value="1206">RS86</option><option value="1355">RS86</option><option value="1211">RS87</option><option value="1231">RS88</option><option value="1237">RS89</option><option value="180">RS8DE</option><option value="1249">RS90</option><option value="1263">RS91</option><option value="1264">RS92</option><option value="1265">RS93</option><option value="1266">RS94</option><option value="1305">RS95</option><option value="1306">RS96</option><option value="1325">RS97</option><option value="1354">RS98</option><option value="1353">RS99</option><option value="567">RSE</option><option value="568">RSH</option><option value="182">RSI</option><option value="183">RSL1</option><option value="184">RSL2</option><option value="185">RSL8</option><option value="456">RUTG</option><option value="1072">SA03</option><option value="457">SAAG</option><option value="186">SAL</option><option value="187">SALR</option><option value="556">SAVA</option><option value="458">SELR</option><option value="1047">SI01</option><option value="459">SIHG</option><option value="1101">SIJ2</option><option value="1102">SIJ3</option><option value="1203">SIJ6</option><option value="1204">SIJ7</option><option value="1274">SIJ8</option><option value="1114">SIK01</option><option value="1129">SIK03</option><option value="1199">SIK06</option><option value="1210">SIK07</option><option value="1241">SIK08</option><option value="1017">SING</option><option value="733">SINR</option><option value="594">SIPAE</option><option value="595">SIPBE</option><option value="460">SKAG</option><option value="189">SKB</option><option value="190">SKB01</option><option value="191">SKB2</option><option value="192">SKB3E</option><option value="552">SKB4A</option><option value="553">SKB4B</option><option value="193">SKBB</option><option value="194">SKBP</option><option value="195">SKBR</option><option value="1098">SKD1</option><option value="1134">SKD2</option><option value="1135">SKD2</option><option value="621">SKDR</option><option value="196">SKR1E</option><option value="461">SLLG</option><option value="1367">SLOTR</option><option value="462">SM01E</option><option value="1079">SMPR</option><option value="1193">SMPR</option><option value="1099">SMS01</option><option value="1131">SMSG</option><option value="463">SN0N</option><option value="464">SN0S</option><option value="954">SNOG</option><option value="465">SOS2E</option><option value="1103">SOS3</option><option value="1141">SOUR</option><option value="964">SSDG</option><option value="197">SSR1E</option><option value="198">SSR2</option><option value="651">SSR3</option><option value="467">ST1N</option><option value="816">ST1R</option><option value="468">SVMG</option><option value="650">SZ10</option><option value="1158">SZ100</option><option value="1159">SZ102</option><option value="1160">SZ105</option><option value="1161">SZ106</option><option value="1162">SZ109</option><option value="657">SZ11</option><option value="1163">SZ110</option><option value="1164">SZ112</option><option value="1185">SZ113</option><option value="1181">SZ114</option><option value="1182">SZ115</option><option value="1186">SZ116</option><option value="1187">SZ117</option><option value="1208">SZ118</option><option value="1222">SZ119</option><option value="667">SZ12</option><option value="1219">SZ120</option><option value="1217">SZ121</option><option value="1215">SZ122</option><option value="1229">SZ123</option><option value="1233">SZ124</option><option value="1239">SZ125</option><option value="1253">SZ129</option><option value="674">SZ13</option><option value="1254">SZ130</option><option value="1256">SZ131</option><option value="683">SZ14</option><option value="1272">SZ141</option><option value="1276">SZ142</option><option value="1279">SZ143</option><option value="1287">SZ144</option><option value="1293">SZ146</option><option value="1295">SZ147</option><option value="1297">SZ148</option><option value="1300">SZ149</option><option value="694">SZ15</option><option value="1312">SZ150</option><option value="1313">SZ151</option><option value="1314">SZ152</option><option value="1315">SZ153</option><option value="1323">SZ154</option><option value="1328">SZ155</option><option value="1336">SZ156</option><option value="1348">SZ157</option><option value="1347">SZ158</option><option value="1346">SZ159</option><option value="707">SZ16</option><option value="1340">SZ160</option><option value="1363">SZ161</option><option value="1369">SZ162</option><option value="1374">SZ163</option><option value="717">SZ17</option><option value="724">SZ18</option><option value="736">SZ19</option><option value="753">SZ20</option><option value="759">SZ21</option><option value="770">SZ22</option><option value="782">SZ23</option><option value="787">SZ24</option><option value="799">SZ25</option><option value="813">SZ26</option><option value="827">SZ27</option><option value="838">SZ28</option><option value="843">SZ29</option><option value="856">SZ30</option><option value="868">SZ31</option><option value="875">SZ32</option><option value="885">SZ33</option><option value="893">SZ34</option><option value="903">SZ35</option><option value="912">SZ36</option><option value="931">SZ37</option><option value="945">SZ38</option><option value="958">SZ39</option><option value="966">SZ40</option><option value="974">SZ41</option><option value="979">SZ42</option><option value="984">SZ43</option><option value="991">SZ44</option><option value="994">SZ45</option><option value="999">SZ46</option><option value="1002">SZ47</option><option value="1049">SZ48</option><option value="1058">SZ49</option><option value="1059">SZ50</option><option value="1165">SZ99</option><option value="579">SZB3</option><option value="833">SZB4</option><option value="1081">SZB4</option><option value="539">SZM1</option><option value="558">SZM2</option><option value="573">SZM3</option><option value="585">SZM4</option><option value="597">SZM5</option><option value="606">SZM6</option><option value="613">SZM7</option><option value="625">SZM8</option><option value="643">SZM9</option><option value="1246">TBPG</option><option value="201">TCR</option><option value="202">TCRG</option><option value="203">TCTR</option><option value="469">TEAG</option><option value="204">TEHG</option><option value="472">TFDR</option><option value="470">TG1N</option><option value="854">TG1R</option><option value="471">TG1S</option><option value="774">TG2N</option><option value="473">TG2S</option><option value="1304">TIG1</option><option value="1357">TIG2</option><option value="1137">TKED1</option><option value="1144">TKHG</option><option value="474">TKMG</option><option value="1127">TLS1</option><option value="982">TLSG</option><option value="476">TODG</option><option value="479">TR0N</option><option value="832">TR0R</option><option value="480">TR0S</option><option value="481">TR1N</option><option value="831">TR1R</option><option value="482">TR1S</option><option value="834">TRSG</option><option value="763">TRSR</option><option value="1008">TSOG</option><option value="483">TSOR</option><option value="484">TUBG</option><option value="574">TUKG</option><option value="1082">TUS01</option><option value="1281">TVK01</option><option value="1259">TVL2</option><option value="485">TZ02</option><option value="486">TZ03</option><option value="487">TZ04</option><option value="488">TZ05</option><option value="489">TZ06</option><option value="490">TZ07</option><option value="491">TZ08</option><option value="492">TZ09</option><option value="493">TZ10</option><option value="978">TZ100</option><option value="980">TZ101</option><option value="983">TZ102</option><option value="987">TZ103</option><option value="990">TZ104</option><option value="993">TZ105</option><option value="998">TZ106</option><option value="1001">TZ107</option><option value="1003">TZ108</option><option value="1005">TZ109</option><option value="494">TZ11</option><option value="1009">TZ110</option><option value="1011">TZ111</option><option value="1014">TZ112</option><option value="1023">TZ114</option><option value="1024">TZ115</option><option value="1027">TZ116</option><option value="1033">TZ117</option><option value="1039">TZ118</option><option value="1041">TZ119</option><option value="495">TZ12</option><option value="1044">TZ120</option><option value="1046">TZ121</option><option value="1060">TZ125</option><option value="1063">TZ126</option><option value="1069">TZ127</option><option value="1073">TZ128</option><option value="1077">TZ129</option><option value="496">TZ13</option><option value="497">TZ14</option><option value="498">TZ15</option><option value="499">TZ16</option><option value="1166">TZ166</option><option value="1167">TZ167</option><option value="500">TZ17</option><option value="1168">TZ171</option><option value="1169">TZ173</option><option value="1170">TZ175</option><option value="1171">TZ179</option><option value="538">TZ18</option><option value="1172">TZ180</option><option value="1173">TZ181</option><option value="1188">TZ182</option><option value="1189">TZ183</option><option value="1196">TZ184</option><option value="1207">TZ185</option><option value="1220">TZ187</option><option value="1218">TZ188</option><option value="1216">TZ189</option><option value="543">TZ19</option><option value="1228">TZ190</option><option value="1232">TZ191</option><option value="1234">TZ192</option><option value="1240">TZ194</option><option value="557">TZ20</option><option value="1255">TZ200</option><option value="1257">TZ202</option><option value="563">TZ21</option><option value="1275">TZ213</option><option value="1278">TZ214</option><option value="1286">TZ215</option><option value="1298">TZ218</option><option value="572">TZ22</option><option value="1316">TZ221</option><option value="1317">TZ222</option><option value="1322">TZ223</option><option value="1326">TZ224</option><option value="1331">TZ225</option><option value="1335">TZ226</option><option value="1345">TZ229</option><option value="582">TZ23</option><option value="1339">TZ230</option><option value="1362">TZ231</option><option value="1368">TZ232</option><option value="1373">TZ233</option><option value="586">TZ24</option><option value="591">TZ25</option><option value="598">TZ26</option><option value="602">TZ27</option><option value="607">TZ28</option><option value="610">TZ29</option><option value="612">TZ30</option><option value="616">TZ31</option><option value="624">TZ32</option><option value="628">TZ33</option><option value="642">TZ34</option><option value="646">TZ35</option><option value="649">TZ36</option><option value="653">TZ37</option><option value="656">TZ38</option><option value="660">TZ39</option><option value="666">TZ40</option><option value="670">TZ41</option><option value="675">TZ42</option><option value="679">TZ43</option><option value="682">TZ44</option><option value="692">TZ45</option><option value="695">TZ46</option><option value="698">TZ47</option><option value="708">TZ48</option><option value="711">TZ49</option><option value="716">TZ50</option><option value="720">TZ51</option><option value="723">TZ52</option><option value="731">TZ53</option><option value="735">TZ54</option><option value="747">TZ55</option><option value="752">TZ56</option><option value="756">TZ57</option><option value="758">TZ58</option><option value="764">TZ59</option><option value="769">TZ60</option><option value="776">TZ61</option><option value="783">TZ62</option><option value="786">TZ63</option><option value="788">TZ64</option><option value="791">TZ65</option><option value="798">TZ66</option><option value="806">TZ67</option><option value="812">TZ68</option><option value="819">TZ69</option><option value="826">TZ70</option><option value="830">TZ71</option><option value="837">TZ72</option><option value="842">TZ73</option><option value="844">TZ74</option><option value="852">TZ75</option><option value="855">TZ76</option><option value="861">TZ77</option><option value="867">TZ78</option><option value="871">TZ79</option><option value="874">TZ80</option><option value="880">TZ81</option><option value="884">TZ82</option><option value="886">TZ83</option><option value="894">TZ84</option><option value="897">TZ85</option><option value="902">TZ86</option><option value="910">TZ87</option><option value="911">TZ88</option><option value="921">TZ89</option><option value="930">TZ90</option><option value="937">TZ91</option><option value="944">TZ92</option><option value="951">TZ93</option><option value="957">TZ94</option><option value="960">TZ95</option><option value="965">TZ96</option><option value="967">TZ97</option><option value="973">TZ98</option><option value="975">TZ99</option><option value="501">TZM1</option><option value="1205">UCED1</option><option value="1078">UKIG</option><option value="757">USAR</option><option value="506">USLG</option><option value="796">VHDR</option><option value="513">VHLG</option><option value="690">VI0N</option><option value="762">VIHR</option><option value="800">VIIN</option><option value="206">VIP1</option><option value="208">VIP3E</option><option value="209">VIP4E</option><option value="210">VIP5</option><option value="570">VIP6</option><option value="659">VIP7</option><option value="211">VIPP</option><option value="749">VLJG</option><option value="514">VLOG</option><option value="517">VP01E</option><option value="207">VP02E</option><option value="212">VPPP</option><option value="523">VZ0N</option><option value="524">VZ0S</option><option value="817">VZPG</option><option value="766">VZPR</option><option value="1338">VZZR</option><option value="1372">WORLD</option><option value="1242">XIED1</option><option value="1140">YGED1</option><option value="1247">ZATG</option><option value="525">ZDDG</option><option value="1248">ZDDG</option><option value="199">ZKB1E</option><option value="200">ZKB2</option><option value="587">ZKNG</option><option value="527">ZM1N</option><option value="528">ZM1S</option><option value="529">ZM2N</option><option value="801">ZM2R</option><option value="530">ZM2S</option><option value="531">ZMDG</option><option value="218">ZMTG</option><option value="551">ZRCG</option><option value="840">ZT01</option><option value="1076">ZT02</option><option value="580">ZTOG</option><option value="532">ZV1N</option><option value="533">ZV1S</option><option value="534">ZV2N</option><option value="824">ZV2R</option><option value="535">ZV2S</option><option value="793">ZVHR</option><option value="805">ZVIR</option><option value="1035">ZVTG</option>
+            </select>
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            ISIN:
+          </td>
+          <td>
+            <input name="field.isin" size="64" value="" type="text" />
+          </td>
+        </tr>
+        <tr>
+          <td align="right">
+            Datum objave:
+          </td>
+          <td colspan="2">
+            od <input type="text" size="16" name="field.date_from" id="SelectedDateFrom" />
+            <img title="Izberite datum" alt="Izberite datum" src="design/gumb-koledar.gif" id="SelectedDataFromButton" align="top" style="cursor: pointer" border="0" height="18" width="18" />
+            &nbsp;do <input type="text" size="16" name="field.date_to" id="SelectedDateTo" />
+            <img title="Izberite datum" alt="Izberite datum" src="design/gumb-koledar.gif" id="SelectedDataToButton" align="top" style="cursor: pointer" border="0" height="18" width="18" />
+          </td>
+        </tr>
+        <tr>
+          <td align="right">
+            Obdobje:
+          </td>
+          <td colspan="2">
+            <select size="1" name="s_date_range" id="s_date_range"
+                onchange="change_date_range(
+                  $('s_date_range'),
+                  $('SelectedDateFrom'), $('SelectedDateTo'),
+                  '1', '%e. %m. %Y')">
+              <option value="">&nbsp;</option>
+              <option value="this_week">tekoči teden</option>
+              <option value="previous_week">prejšnji teden</option>
+              <option value="this_month">tekoči mesec</option>
+              <option value="previous_month">prejšnji mesec</option>
+              <option value="half_year">zadnjih 6 mesecev</option>
+              <option value="last_year">zadnje leto</option>
+              <option value="this_year">tekoče leto</option>
+              <option value="previous_year">lani</option>
+            </select>
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            Razred dokumenta:
+          </td>
+          <td>
+            <select size="1" name="field.doc_class">
+              <option selected="selected" value="">&nbsp;</option>
+              <option value="300">Dodatne predpisane informacije, potrebne za razkritje</option><option value="400">Druge informacije</option><option value="100">Periodične predpisane informacije</option><option value="200">Tekoče predpisane informacije</option>
+            </select>
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            Tip dokumenta:
+          </td>
+          <td>
+            <select size="1" name="field.doc_type">
+              <option selected="selected" value="">&nbsp;</option>
+              <option value="1060">Notranje informacije</option><option value="1020">Letna računovodska in revizijska poročila</option><option value="1040">Polletna računovodska in revizijska poročila / omejeni pregledi</option><option value="2120">Vmesno poročilo poslovodstva</option><option value="1050">Četrtletno poročilo</option><option value="1090">Obvestila o pomembnem lastniškem deležu</option><option value="1080">Pridobitev ali odsvojitev izdajateljevih lastnih delnic</option><option value="1120">Skupno število glasovalnih pravic in vrednost kapitala</option><option value="1130">Informacije o novih izdajah vrednostnih papirjev</option><option value="2140">Spremembe glede pravic, ki jih imajo različni razredi delnic ali vrednostnih papirjev</option><option value="1070">Informacije v zvezi s skupščino delničarjev</option><option value="2160">Matična država članica</option><option value="1010">Finančni koledar</option><option value="1030">Izjava o skladnosti s kodeksom</option><option value="1110">Korporacijske akcije</option><option value="1170">Prospekt</option><option value="1160">Letni dokument</option><option value="1140">Prevzemne ponudbe</option><option value="1190">Sporočila</option><option value="1200">Sporočila borze</option><option value="1230">Novice borze</option><option value="1210">Kratko sporočilo o javni objavi</option><option value="2200">Plačila vladam</option><option value="2220">Posli vodilnih delavcev</option>
+            </select>
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            Številka dokumenta:
+          </td>
+          <td>
+            <input name="field.doc_num" size="12" value="" type="text" />
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            Jezik objave:
+          </td>
+          <td>
+            <select name="field.language" id="language">
+              <option value="">&nbsp;</option>
+              <option value="en">Angleški</option>
+<option value="sl">Slovenski</option>
+
+            </select>
+          </td>
+        </tr>
+        <tr style="display: none">
+          <td align="right">
+            Matična država članica:
+          </td>
+          <td>
+            <select name="field.country" id="country">
+              <option value="">&nbsp;</option>
+              <option value="  ">  </option>
+<option value="CZ">CZ</option>
+<option value="HR">HR</option>
+<option value="SI">SI</option>
+
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">&nbsp;</td>
+          <td colspan="2" align="right">
+            <input name="Button" value="Zbriši formular" onclick="clear_search_easy_form()" type="button" />
+            <input name="Search" value="Iskanje" type="button" onclick="do_submit()" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+  <table style="margin-top: 20px;">
+    <tbody>
+      <tr>
+        <td valign="top">*</td>
+        <td valign="top">Iskalnik išče v dokumentih le besede, ki niso del slikovnega gradiva. Zato lahko število najdenih javno dostopnih objav odstopa od dejanskega števila objav v Info Hrambi.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+            <tr>
+              <td align="center" valign="top">&nbsp;</td>
+              <td align="center" class="footer">&copy; Ljubljanska borza d.d., Ljubljana,
+                2008–2026 | Izvedba: <a href="http://www.inetis.com/" target="_blank" class="footerLink">Inetis</a>
+                &amp; <a href="http://www.creatim.com/" target="_blank" class="footerLink">Creatim</a>
+                | <a href="?doc=TERMS_OF_USE" class="footerLink">Pogoji uporabe</a>
+                | <a href="https://ljse.si/si/zascita-osebnih-podatkov/258" class="footerLink">Osebni podatki</a>
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  <script language="javascript" type="text/javascript">
+
+Event.observe(window, "load", function()
+{
+    if("function" == typeof(on_load)) { on_load(); }
+    if("function" == typeof(after_load)) { after_load(); }
+});
+
+  </script>
+
+  </body>
+</html>
+<!-- vim: set tabstop=2 shiftwidth=2 : -->

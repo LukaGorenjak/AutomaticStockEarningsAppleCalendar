@@ -8,8 +8,14 @@ tickers:
   - META
   - TSLA
 
-# Optional manual events for companies not covered by the free tier (e.g. non-US listings)
-# or custom dates you want merged into the calendar feed.
+# Ljubljana Stock Exchange (LJSE) tickers automatically scraped weekly from SEOnet
+tickers-ljse:
+  - KRKG
+  - CICG
+  - TLSG
+  - LKPG
+
+# Optional manual events for companies not covered by APIs
 manual_events:
   - ticker: ASML
     date: "2027-01-27"
@@ -17,11 +23,3 @@ manual_events:
   - ticker: TSM
     date: "2027-01-14"
     note: "Q4 2026 earnings release"
-
-# Ljubljana Stock Exchange (LJSE) issuers watched on SEOnet.
-# Maps ticker -> exact SEOnet issuer name (<author> / <category> in SEOnet RSS).
-ljse_issuers:
-  KRKG: "KRKA, d. d., Novo mesto"
-  NLBR: "NLB, d. d., Ljubljana"
-  TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
-  LKPG: "LUKA KOPER, d.d., Koper"

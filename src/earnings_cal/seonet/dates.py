@@ -226,8 +226,31 @@ def _strip_dates_from_line(line: str) -> str:
     return " ".join(cleaned.split())
 
 
+_WEEKDAY_WORDS = {
+    "ponedeljek",
+    "torek",
+    "sreda",
+    "cetrtek",
+    "petek",
+    "sobota",
+    "nedelja",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+}
+
+
 def _line_has_meaningful_label(text: str) -> bool:
-    letters = sum(1 for ch in text if ch.isalpha())
+    tokens = [
+        tok
+        for tok in re.findall(r"[^\s,;:.]+", normalize_text(text))
+        if tok not in _WEEKDAY_WORDS and not re.fullmatch(r"\d{1,2}:\d{2}", tok)
+    ]
+    letters = sum(1 for tok in tokens for ch in tok if ch.isalpha())
     return letters >= 3
 
 
@@ -249,12 +272,16 @@ def _build_label_context(lines: list[str], idx: int) -> str:
         return combined[:200]
 
     # Current line is mostly/only the date (common in multi-line PDF table rows);
-    # gather nearby non-date lines.
+    # gather up to 2 preceding non-date lines plus 1 following non-date line.
     context_parts: list[str] = []
-    if idx > 0:
-        prev = lines[idx - 1].strip()
-        if prev and not _extract_dates_from_line(prev):
-            context_parts.append(prev.lstrip("•").strip())
+    for back in (1, 2):
+        if idx - back >= 0:
+            prev = lines[idx - back].strip()
+            if not prev or _extract_dates_from_line(prev):
+                break
+            context_parts.insert(0, prev.lstrip("•").strip())
+            if prev.startswith("•"):
+                break
     if idx + 1 < len(lines):
         nxt = lines[idx + 1].strip()
         if nxt and not _extract_dates_from_line(nxt):

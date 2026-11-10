@@ -407,3 +407,110 @@ def test_cli_against_saved_fixtures(tmp_path: Path, capsys: pytest.CaptureFixtur
     assert "https://www.nlbgroup.com/int-en/investor-relations/financial-calendar" in out
     assert (reports_dir / "NLBR_93283.md").exists()
     assert load_seen(state_path) == {"93283"}
+
+
+def test_ljse_search_parsing_and_earnings_classification() -> None:
+    """Automatic LJSE scraper parses search HTML and filters real KRKG/CICG PDFs cleanly."""
+    from icalendar import Calendar
+    from earnings_cal.main import run as run_calendar
+    from earnings_cal.models import EarningsEvent
+    from earnings_cal.seonet.ljse import (
+        extract_ljse_earnings_events,
+        load_ljse_cache,
+        parse_search_results,
+        parse_symbol_map,
+        save_ljse_cache,
+    )
+
+    # Symbol dropdown parsing
+    sample_select = '<select name="field.symbol"><option value="110">KRKG</option><option value="305">CICG</option></select>'
+    assert parse_symbol_map(sample_select) == {"KRKG": "110", "CICG": "305"}
+
+    # Real search result parsing on KRKG & CICG fixtures
+    krkg_rows = parse_search_results((FIXTURES_DIR / "krkg_koledar.html").read_text(encoding="utf-8"))
+    assert krkg_rows[0][0] == "92042"
+    assert "Finančni koledar za leto 2026" in krkg_rows[0][3]
+
+    cicg_rows = parse_search_results((FIXTURES_DIR / "cicg_koledar.html").read_text(encoding="utf-8"))
+    assert cicg_rows[0][0] == "91972"
+
+    # Real KRKG 2026 PDF extraction -> keeps only earnings reports, drops quiet periods & dividends/AGM
+    krkg_html = (FIXTURES_DIR / "doc_92042.html").read_text(encoding="utf-8")
+    krkg_content = extract_from_announcement_html(
+        krkg_html,
+        "https://seonet.ljse.si/?doc_id=92042",
+        local_attachment_map={
+            "https://seonet.ljse.si/file.aspx?AttachmentID=55582": FIXTURES_DIR / "att_55582.pdf",
+        },
+    )
+    krkg_events = extract_ljse_earnings_events(
+        ticker="KRKG",
+        announcement_url="https://seonet.ljse.si/?doc_id=92042",
+        text=krkg_content.combined_text,
+        start_date=date(2026, 1, 1),
+        end_date=date(2026, 12, 31),
+    )
+    assert [e.date for e in krkg_events] == [
+        date(2026, 1, 29),
+        date(2026, 3, 12),
+        date(2026, 4, 9),
+        date(2026, 5, 14),
+        date(2026, 7, 23),
+        date(2026, 11, 12),
+    ]
+
+    # Real CICG 2026 PDF extraction
+    cicg_html = (FIXTURES_DIR / "doc_91972.html").read_text(encoding="utf-8")
+    cicg_content = extract_from_announcement_html(
+        cicg_html,
+        "https://seonet.ljse.si/?doc_id=91972",
+        local_attachment_map={
+            "https://seonet.ljse.si/file.aspx?AttachmentID=55535": FIXTURES_DIR / "att_55535.pdf",
+        },
+    )
+    cicg_events = extract_ljse_earnings_events(
+        ticker="CICG",
+        announcement_url="https://seonet.ljse.si/?doc_id=91972",
+        text=cicg_content.combined_text,
+        start_date=date(2026, 11, 10),
+        end_date=date(2027, 11, 10),
+    )
+    assert [e.date for e in cicg_events] == [date(2026, 11, 11)]
+
+
+def test_tickers_ljse_cache_and_calendar_merge(tmp_path: Path) -> None:
+    """`tickers-ljse` cache merges into docs/earnings.ics and drops removed tickers."""
+    from icalendar import Calendar
+    from earnings_cal.main import run as run_calendar
+    from earnings_cal.models import EarningsEvent
+    from earnings_cal.seonet.ljse import load_ljse_cache, save_ljse_cache
+
+    cfg_path = tmp_path / "tickers.yaml"
+    cfg_path.write_text("tickers-ljse:\n  - KRKG\n  - CICG\n", encoding="utf-8")
+    cache_path = tmp_path / "state" / "ljse_cache.json"
+    out_ics = tmp_path / "docs" / "earnings.ics"
+
+    save_ljse_cache(
+        [
+            EarningsEvent(ticker="KRKG", date=date(2026, 11, 12), note="Q1-Q3 2026 report"),
+            EarningsEvent(ticker="CICG", date=date(2026, 11, 11), note="Q1-Q3 2026 report"),
+            EarningsEvent(ticker="TLSG", date=date(2026, 11, 12), note="Removed ticker"),
+        ],
+        cache_path,
+    )
+    assert [e.ticker for e in load_ljse_cache(cache_path, allowed_tickers=["KRKG", "CICG"])] == [
+        "CICG",
+        "KRKG",
+    ]
+
+    rc = run_calendar(
+        config_path=cfg_path,
+        output_path=out_ics,
+        today=date(2026, 11, 10),
+        ljse_cache_path=cache_path,
+    )
+    assert rc == 0
+    cal = Calendar.from_ical(out_ics.read_bytes())
+    summaries = [str(c.get("summary")) for c in cal.walk() if c.name == "VEVENT"]
+    assert summaries == ["CICG earnings", "KRKG earnings"]
+

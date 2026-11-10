@@ -18,6 +18,12 @@ from earnings_cal.fetch import (
     ProviderError,
 )
 from earnings_cal.models import load_config
+from earnings_cal.seonet.ljse import (
+    DEFAULT_LJSE_CACHE_PATH,
+    load_ljse_cache,
+    save_ljse_cache,
+    scrape_ljse_tickers,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +56,23 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Use deterministic mocked API responses instead of calling Finnhub",
     )
+    parser.add_argument(
+        "--scrape-ljse",
+        action="store_true",
+        help="Scrape SEOnet for tickers-ljse and update state/ljse_cache.json before building",
+    )
+    parser.add_argument(
+        "--ljse-cache",
+        type=Path,
+        default=DEFAULT_LJSE_CACHE_PATH,
+        help="Path to cached LJSE events JSON (default: state/ljse_cache.json)",
+    )
+    parser.add_argument(
+        "--ljse-days",
+        type=int,
+        default=365,
+        help="Lookahead window in days for LJSE scraped events (default: 365)",
+    )
     return parser.parse_args(argv)
 
 
@@ -60,6 +83,9 @@ def run(
     provider: EarningsProvider | None = None,
     today: date | None = None,
     use_mock: bool = False,
+    scrape_ljse: bool = False,
+    ljse_cache_path: Path = DEFAULT_LJSE_CACHE_PATH,
+    ljse_days: int = 365,
 ) -> int:
     """Execute the earnings calendar generation pipeline.
 
@@ -72,40 +98,60 @@ def run(
         logger.error("Failed to load config from %s: %s", config_path, exc)
         return 1
 
-    if not config.tickers and not config.manual_events:
-        logger.error("No tickers or manual_events found in %s", config_path)
+    if not config.tickers and not config.tickers_ljse and not config.manual_events:
+        logger.error("No tickers, tickers-ljse, or manual_events found in %s", config_path)
         return 1
 
     start_date = today or date.today()
     end_date = start_date + timedelta(days=days)
 
-    active_provider = provider
-    if active_provider is None:
-        env_key = os.environ.get("FINNHUB_API_KEY", "").strip()
-        if use_mock or env_key.lower() == "mock":
-            logger.info("Using MockEarningsProvider for earnings calendar generation.")
-            active_provider = MockEarningsProvider()
-        else:
-            try:
-                active_provider = FinnhubProvider(api_key=env_key)
-            except ProviderError as exc:
-                logger.error("%s", exc)
-                return 1
+    api_events = []
+    if config.tickers:
+        active_provider = provider
+        if active_provider is None:
+            env_key = os.environ.get("FINNHUB_API_KEY", "").strip()
+            if use_mock or env_key.lower() == "mock":
+                logger.info("Using MockEarningsProvider for earnings calendar generation.")
+                active_provider = MockEarningsProvider()
+            else:
+                try:
+                    active_provider = FinnhubProvider(api_key=env_key)
+                except ProviderError as exc:
+                    logger.error("%s", exc)
+                    return 1
 
-    try:
-        api_events = active_provider.fetch_earnings(
-            config.tickers,
-            start_date=start_date,
-            end_date=end_date,
+        try:
+            api_events = active_provider.fetch_earnings(
+                config.tickers,
+                start_date=start_date,
+                end_date=end_date,
+            )
+        except ProviderError as exc:
+            logger.error("Aborting update to preserve existing .ics: %s", exc)
+            return 1
+        except Exception as exc:
+            logger.error("Unexpected provider error: %s", exc)
+            return 1
+
+    if scrape_ljse and config.tickers_ljse:
+        scraped = scrape_ljse_tickers(
+            config.tickers_ljse,
+            today=start_date,
+            lookahead_days=ljse_days,
         )
-    except ProviderError as exc:
-        logger.error("Aborting update to preserve existing .ics: %s", exc)
-        return 1
-    except Exception as exc:
-        logger.error("Unexpected provider error: %s", exc)
-        return 1
+        if scraped:
+            # Preserve existing cached events for any ticker that failed transiently during this scrape
+            scraped_tickers = {ev.ticker for ev in scraped}
+            existing_cached = load_ljse_cache(ljse_cache_path, allowed_tickers=config.tickers_ljse)
+            preserved = [ev for ev in existing_cached if ev.ticker not in scraped_tickers]
+            combined_ljse = preserved + scraped
+            save_ljse_cache(combined_ljse, ljse_cache_path)
+            logger.info("Cached %d upcoming LJSE event(s) in %s", len(combined_ljse), ljse_cache_path)
+        else:
+            logger.warning("LJSE scrape returned 0 upcoming events; keeping existing cache if any.")
 
-    merged = merge_events(api_events, config.manual_events)
+    ljse_events = load_ljse_cache(ljse_cache_path, allowed_tickers=config.tickers_ljse)
+    merged = merge_events(api_events, ljse_events, config.manual_events)
     if not merged:
         logger.error("No events to write; preserving existing .ics file.")
         return 1
@@ -130,6 +176,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         output_path=args.output,
         days=args.days,
         use_mock=args.mock,
+        scrape_ljse=args.scrape_ljse,
+        ljse_cache_path=args.ljse_cache,
+        ljse_days=args.ljse_days,
     )
 
 
