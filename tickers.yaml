@@ -1,0 +1,19 @@
+# Watchlist of stock tickers fetched via the Finnhub Earnings Calendar API
+tickers:
+  - AAPL
+  - MSFT
+  - NVDA
+  - GOOGL
+  - AMZN
+  - META
+  - TSLA
+
+# Optional manual events for companies not covered by the free tier (e.g. non-US listings)
+# or custom dates you want merged into the calendar feed.
+manual_events:
+  - ticker: ASML
+    date: "2027-01-27"
+    note: "Q4 2026 earnings release (manual entry)"
+  - ticker: TSM
+    date: "2027-01-14"
+    note: "Q4 2026 earnings release"
