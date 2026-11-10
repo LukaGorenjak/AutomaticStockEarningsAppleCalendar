@@ -81,6 +81,41 @@ class WatchlistConfig:
 
     tickers: list[str] = field(default_factory=list)
     manual_events: list[EarningsEvent] = field(default_factory=list)
+    ljse_issuers: dict[str, str] = field(default_factory=dict)
+
+
+ALLOWED_CONFIG_KEYS = {"tickers", "manual_events", "ljse_issuers"}
+
+
+def _parse_ljse_issuers(raw_issuers: Any) -> dict[str, str]:
+    """Validate and normalize the `ljse_issuers` mapping (ticker -> exact SEOnet issuer name)."""
+    if raw_issuers is None:
+        return {}
+    if not isinstance(raw_issuers, dict):
+        raise ValueError("'ljse_issuers' in configuration must be a mapping of ticker: issuer_name")
+
+    parsed: dict[str, str] = {}
+    seen_names: dict[str, str] = {}
+    for raw_ticker, raw_name in raw_issuers.items():
+        if not isinstance(raw_ticker, str) or not raw_ticker.strip():
+            raise ValueError(f"Invalid ticker key in 'ljse_issuers': {raw_ticker!r}")
+        ticker = raw_ticker.strip().upper()
+        if any(ch.isspace() for ch in ticker):
+            raise ValueError(f"Ticker key in 'ljse_issuers' must not contain whitespace: {raw_ticker!r}")
+        if not isinstance(raw_name, str) or not raw_name.strip():
+            raise ValueError(
+                f"Issuer name for '{ticker}' in 'ljse_issuers' must be a non-empty string, got {raw_name!r}"
+            )
+        issuer_name = raw_name.strip()
+        if issuer_name in seen_names and seen_names[issuer_name] != ticker:
+            raise ValueError(
+                f"Duplicate SEOnet issuer name {issuer_name!r} mapped to both "
+                f"{seen_names[issuer_name]} and {ticker}"
+            )
+        parsed[ticker] = issuer_name
+        seen_names[issuer_name] = ticker
+
+    return parsed
 
 
 def _parse_date(value: Any) -> date:
@@ -94,11 +129,17 @@ def _parse_date(value: Any) -> date:
 
 
 def load_config(path: Path | str) -> WatchlistConfig:
-    """Load watchlist tickers and optional manual_events from a YAML file."""
+    """Load watchlist tickers, optional manual_events, and optional ljse_issuers from YAML."""
     config_path = Path(path)
     raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
         raise ValueError(f"Expected a YAML mapping in {config_path}, got {type(raw).__name__}")
+
+    unknown_keys = sorted(set(raw.keys()) - ALLOWED_CONFIG_KEYS)
+    if unknown_keys:
+        raise ValueError(
+            f"Unknown configuration key(s) in {config_path}: {', '.join(unknown_keys)}"
+        )
 
     raw_tickers = raw.get("tickers") or []
     if not isinstance(raw_tickers, list):
@@ -142,4 +183,10 @@ def load_config(path: Path | str) -> WatchlistConfig:
             )
         )
 
-    return WatchlistConfig(tickers=tickers, manual_events=manual_events)
+    ljse_issuers = _parse_ljse_issuers(raw.get("ljse_issuers"))
+
+    return WatchlistConfig(
+        tickers=tickers,
+        manual_events=manual_events,
+        ljse_issuers=ljse_issuers,
+    )

@@ -17,3 +17,11 @@ manual_events:
   - ticker: TSM
     date: "2027-01-14"
     note: "Q4 2026 earnings release"
+
+# Ljubljana Stock Exchange (LJSE) issuers watched on SEOnet.
+# Maps ticker -> exact SEOnet issuer name (<author> / <category> in SEOnet RSS).
+ljse_issuers:
+  KRKG: "KRKA, d. d., Novo mesto"
+  NLBR: "NLB, d. d., Ljubljana"
+  TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
+  LKPG: "LUKA KOPER, d.d., Koper"

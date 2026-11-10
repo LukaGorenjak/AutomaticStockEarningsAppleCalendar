@@ -23,20 +23,35 @@ Generates a deterministic iCalendar (`.ics`) feed of upcoming stock earnings dat
 
 ```text
 .
-├── .github/workflows/update.yml   # Daily cron + manual workflow to refresh docs/earnings.ics
+├── .github/workflows/
+│   ├── seonet.yml                 # Daily cron + manual workflow to watch LJSE SEOnet & open issues
+│   └── update.yml                 # Daily cron + manual workflow to refresh docs/earnings.ics
 ├── docs/earnings.ics              # Published iCalendar feed served by GitHub Pages
+├── state/seonet_seen.json         # Processed SEOnet announcement IDs (deterministic JSON)
 ├── src/earnings_cal/
 │   ├── __init__.py
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
 │   ├── build.py                   # Deterministic iCalendar (.ics) builder & deduplication
 │   ├── fetch.py                   # EarningsProvider interface & FinnhubProvider
 │   ├── main.py                    # CLI argument parsing & orchestration
-│   └── models.py                  # EarningsEvent model & tickers.yaml loader
+│   ├── models.py                  # EarningsEvent model & tickers.yaml loader
+│   └── seonet/
+│       ├── __init__.py
+│       ├── __main__.py            # Entry point for `python -m earnings_cal.seonet`
+│       ├── cli.py                 # SEOnet watcher pipeline & CLI
+│       ├── dates.py               # Numeric & Slovene/English candidate date extraction
+│       ├── documents.py           # Announcement HTML parsing & PDF text extraction
+│       ├── feed.py                # SEOnet RSS feed client & parser
+│       ├── filter.py              # Issuer & financial calendar title matching
+│       ├── report.py              # Markdown report & YAML snippet renderer
+│       └── state.py               # Seen announcement ID persistence
 ├── tests/
-│   └── test_earnings_cal.py       # Pytest suite (mocked API responses)
+│   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
+│   ├── test_earnings_cal.py       # Pytest suite for Finnhub/iCalendar generation
+│   └── test_seonet.py             # Pytest suite for SEOnet watcher (offline fixtures)
 ├── pyproject.toml
 ├── requirements.txt
-└── tickers.yaml                   # Watchlist tickers and optional manual_events
+└── tickers.yaml                   # Watchlist tickers, manual_events, and ljse_issuers
 ```
 
 ---
@@ -62,6 +77,12 @@ manual_events:
   - ticker: TSM
     date: "2027-01-14"
     note: "Q4 2026 earnings release"
+
+ljse_issuers:
+  KRKG: "KRKA, d. d., Novo mesto"
+  NLBR: "NLB, d. d., Ljubljana"
+  TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
+  LKPG: "LUKA KOPER, d.d., Koper"
 ```
 
 ---
@@ -196,3 +217,51 @@ webcal://<user>.github.io/<repo>/earnings.ics
    webcal://<user>.github.io/<repo>/earnings.ics
    ```
 4. Tap **Subscribe** (or **Next**), ensure **Alerts** is toggled **On**, and tap **Add**.
+
+---
+
+## SEOnet Watcher (Ljubljana Stock Exchange / LJSE)
+
+The SEOnet watcher monitors Ljubljana Stock Exchange (LJSE) public announcements on [seonet.ljse.si](https://seonet.ljse.si) for newly published financial calendars (`Finančni koledar` / `Financial calendar`) from your watched Slovenian issuers.
+
+**Important:** The watcher is strictly **read-only for your calendar** — it **never** edits `ljse_events.yaml` or `docs/earnings.ics` automatically. Instead, it extracts candidate dates and source lines into a Markdown report for your manual review.
+
+### How to Add an Issuer to `ljse_issuers`
+
+SEOnet identifies companies by their exact registered issuer name (found in the `<author>` / `<category>` field of the SEOnet RSS feed at `https://seonet.ljse.si/rss/`), not by ticker. Add entries under `ljse_issuers` in `tickers.yaml` mapping your ticker to the exact SEOnet issuer name:
+
+```yaml
+ljse_issuers:
+  KRKG: "KRKA, d. d., Novo mesto"
+  NLBR: "NLB, d. d., Ljubljana"
+  TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
+  LKPG: "LUKA KOPER, d.d., Koper"
+```
+
+### Running the SEOnet Watcher Locally
+
+Run against the live SEOnet RSS feed:
+
+```bash
+python -m earnings_cal.seonet
+```
+
+Or test offline against the saved fixtures (no network requests, does not modify `state/seonet_seen.json`):
+
+```bash
+python -m earnings_cal.seonet --feed-file tests/fixtures/rss_en.xml --fixtures-dir tests/fixtures --no-write-state
+```
+
+Reports are printed to stdout and saved as `.md` files in `reports/`. Processed announcement IDs are persisted in `state/seonet_seen.json` so announcements are only reported once (failed downloads are left unseen and retried next run).
+
+### Automated Issues & Manual Review Workflow
+
+1. **Where issues show up:** The GitHub Actions workflow `.github/workflows/seonet.yml` runs daily at **07:15 UTC** (and on manual `workflow_dispatch`) using only the built-in `GITHUB_TOKEN` — no extra secrets required. Whenever a watched issuer publishes a new financial calendar, it opens one GitHub Issue in your repository's **Issues** tab titled:
+   ```text
+   New financial calendar: <TICKER>
+   ```
+   (Deduplicated by announcement ID across both open and closed issues, so closing an issue will never cause it to reopen.)
+2. **Manual review step:**
+   - Open the GitHub Issue and inspect the extracted candidate dates table alongside each raw source line (and check any attachment flagged `needs manual reading` or external link if the issuer didn't attach a PDF).
+   - Copy the events you want from the issue's **Ready-to-paste YAML** block into `ljse_events.yaml`.
+   - Replace `type: TODO` with the appropriate event type (e.g. `annual`, `q1`, `q2`, `q3`, `dividend`, `agm`), remove quiet-period or unwanted dates, and close the issue.

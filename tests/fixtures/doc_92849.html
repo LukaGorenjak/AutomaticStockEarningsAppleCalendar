@@ -1,0 +1,638 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>LJUBLJANSKA BORZA - SEOnet</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="format-detection" content="telephone=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="SHORTCUT ICON" href="favicon.ico">
+    <link href="js/modal/modal.css" rel="stylesheet">
+<script type="text/javascript" src="js/date.js"></script>
+<script type="text/javascript" src="js/locale.js"></script>
+<script type="text/javascript" src="js/script.js?v=v3.22.97"></script>
+<link type="text/css" rel="stylesheet" href="js/dynarch_calendar/calendar-blue2.css" />
+<script type="text/javascript" src="js/dynarch_calendar/calendar.js"></script>
+<script type="text/javascript" src="js/dynarch_calendar/lang/calendar-sl.js"></script>
+<script type="text/javascript" src="js/dynarch_calendar/calendar-setup.js"></script>
+<link rel="alternate" title="seonet.ljse.si" type="application/rss+xml" href="rss" />
+<link rel="alternate" title="seonet.ljse.si - sl" type="application/rss+xml" href="rss/default.aspx?lang=sl" />
+<link rel="alternate" title="seonet.ljse.si - en" type="application/rss+xml" href="rss/default.aspx?lang=en" />
+
+    <script type="text/javascript" src="js/modal/modal.js"></script>
+    <link href="design/doc/doc_style.css" rel="stylesheet" type="text/css" />
+    <link href="design/style.css" rel="stylesheet" type="text/css"/>
+    <link href="design/print_style.css" rel="stylesheet" type="text/css" media="print"/>
+    <script type="text/javascript">
+
+// Prevodi za JS in AJAX odgovore.
+const translations = {
+    CLOSE: "Zapri"
+};
+
+var message = "";
+var alert_message = "";
+var debug_message = "";
+
+var global_locale_constant = "sl_SI";
+
+    </script>
+  </head>
+  <body>
+
+    <table border="0" cellpadding="0" cellspacing="0" align="center" id="page_header">
+      <tr>
+        <td width="220" align="right" valign="top">
+          <img src="design/seonet_logo.png" width="196" height="68" border="0" /></td>
+        <td width="453" valign="top">
+          <img src="design/portal.jpg" width="453" height="68" alt="" />
+        </td>
+        <td width="120" height="69" valign="top">
+          <a href="http://www.ljse.si"><img src="design/borza_logo.png" alt="Ljubljanska borza d.d." width="258" height="68" border="0" /></a>
+        </td>
+        <td align="center">
+          <div style="padding: 10px 0 0 20px;">
+<a href="/default_en.aspx?doc_id=92849&amp;language=en">English</a>
+            <a href="/rss?lang="
+               style="display: block; margin-top: 8px;">
+              <img src="design/feed-icon_orange-16px.png"
+                   width="16" height="16"
+                              alt="RSS" border="0" />
+            </a>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <table id="MainTable" align="center" cellpadding="0" cellspacing="0" height="100%">
+      <tr>
+        <td valign="top">
+
+          <table border="0" align="center" cellpadding="0" cellspacing="0" id="page_header" width="100%">
+            <tr>
+              <td colspan="3">
+
+                <table id="TableMenu" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="border-left: 1px solid white;" class="TabOn"><a href="?doc=PUBLIC_ANNOUNCMENTS">JAVNE OBJAVE</a></td><td><a href="?doc=ANNUAL_AND_SEMI_ANNUAL_REPORTS">POROČILA</a></td><td><a href="?doc=PROSPECTUSES_AND_ANNUAL_INFORMATION_UPDATES">PROSPEKTI</a></td><td><a href="?doc=SEARCH">ISKANJE</a></td><td><a href="?doc=SUBSCRIPTION_TO_SEONET_MESSAGES">NAROČANJE</a></td><td><a href="?doc=ISSUERS">IZDAJATELJI</a></td><td><a href="?doc=TERMS_OF_USE">Pogoji uporabe</a></td><td><a href="?doc=HELP">POMOČ</a></td>
+                    
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+          <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+              <td valign="top" width="183">
+
+                <table border="0" cellspacing="0" cellpadding="0" width="183">
+                  <tr>
+                    <td><img src="design/pix-bel.gif" width="183" height="1" alt="" /></td>
+                  </tr>
+                  <tr id="left_menu_table1">
+                    <td align="right" style="border-left:1px solid white"><img src="design/zavihek-bel.gif" width="12" height="19" alt="" /></td>
+                  </tr>
+                  <tr id="left_menu_table2">
+                    <td style="border-left: 1px solid white; border-bottom: 1px solid white" valign="top">
+                      <div id="lef_menu_main_div">
+                        <div><a href="?doc=LATEST_PUBLIC_ANNOUNCEMENTS" class="menuOn">Zadnje objave</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENTS_BY_PRIME_MARKET_ISSUERS" >Prva kotacija</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENT_BY_STANDARD_MARKET_ISSUERS" >Standardna kotacija</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENT_BY_BOND_ISSUERS" >Obveznice</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_FOUND_MARKET_ISSUERS" >Investicijski kuponi</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_CLOSED_END_FOUND_MARKET_ISSUERS" >Delnice ID</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_STRUCTURED_PRODUCTS_MARKET_ISSUERS" >Strukturirani produkti</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENTS_SI_ENTER" >SI ENTER</a></div><div><a href="?doc=PUBLIC_ANNOUNCEMENTS_PROGRESS" >Progress</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_LJSE" >Ljubljanska borza</a></div><div><a href="?doc=PUBLIC_ANNOUNCMENTS_BY_LJSE_MEMBERS" >Člani Ljubljanske borze</a></div><div><a href="?doc=OTHER_ANNOUNCEMENTS" >Druge objave</a></div>
+                        
+                      </div>
+                    </td>
+                  </tr>
+                  <tr style="display: none">
+                    <td align="right" style="border-left:1px solid white"><img src="design/zavihek-bel.gif" width="12" height="19" alt="" /></td>
+                  </tr>
+                  <tr style="display: none">
+                    <td style="border-left: 1px solid white; border-bottom: 1px solid white" align="center" valign="top">
+
+                      <div class="title">Hitro iskanje</div>
+
+                      <form id="fast_search_form" name="fast_search_form" action="/default.aspx" method="post">
+
+                        <input type="hidden" name="doc" value="BASIC_SEARCH" />
+                        <input type="hidden" name="fast_search_date_from" id="FSSelectedDateFrom" />
+                        <input type="hidden" name="fast_search_date_to" id="FSSelectedDateTo" />
+
+                        Iskane besede<br />
+                        <input type="text" name="fast_search_words" /><br />
+                        Obdobje<br />
+                        <select size="1" name="FSs_date_range" id="FSs_date_range" onchange="change_range('FSs_date_range', 'FSSelectedDateFrom', 'FSSelectedDateTo', '%Y-%m-%d')">
+                          <option value="">&nbsp;</option>
+                          <option value="this_week">tekoči teden</option>
+                          <option value="previous_week">prejšnji teden</option>
+                          <option value="this_month">tekoči mesec</option>
+                          <option value="previous_month">prejšnji mesec</option>
+                          <option value="half_year">zadnjih 6 mesecev</option>
+                          <option value="last_year">zadnje leto</option>
+                          <option value="this_year">tekoče leto</option>
+                          <option value="previous_year">lani</option>
+                        </select><br />
+
+                        Družba<br />
+                        <select name="fast_search_issuer"  style="width: 140px">
+                          <option>&nbsp;</option>
+ <option value="51">ABANKA d.d., Ljubljana</option>
+ <option value="344">ACH, d. d., Ljubljana</option>
+ <option value="1107">Actual I.T. d.d.</option>
+ <option value="1139">ADRIA MOBIL, d.o.o. Novo mesto</option>
+ <option value="1070">AERO, d. d., Celje</option>
+ <option value="345">AERODROM LJUBLJANA, d.o.o.</option>
+ <option value="1095">AG d. d., Kamnik</option>
+ <option value="1">AGENCIJA ZA TRG VREDNOSTNIH PAPIRJEV</option>
+ <option value="346">AGROKOMBINAT MARIBOR d. d., Maribor</option>
+ <option value="979">AHA ALUMINIJ d.o.o., Ljubljana</option>
+ <option value="341">AKTIVA AVANT I, d.d., Ljubljana</option>
+ <option value="708">AKTIVA AVANT, d.d., Ljubljana</option>
+ <option value="744">AKTIVA FIN, d.d., Ljubljana</option>
+ <option value="797">AKTIVA INVEST d.d., Ljubljana</option>
+ <option value="842">AKTIVA NALOŽBE, d.d., Ljubljana</option>
+ <option value="611">ALPDOM, d.d., RADOVLJICA, Radovljica</option>
+ <option value="628">ALPETOUR POTOVALNA AGENCIJA, d. d., Kranj</option>
+ <option value="831">ALPOS, d.d., Šentjur</option>
+ <option value="1100">ALTA Invest d.d., Ljubljana</option>
+ <option value="1099">ALTA Skladi, d.d., Ljubljana</option>
+ <option value="1105">ALTA Skupina d. d., Ljubljana</option>
+ <option value="1165">ANTEAM TECHNOLOGY d.o.o.</option>
+ <option value="1170">AP KAPITAL 2 d.o.o.</option>
+ <option value="1169">AP KAPITAL 4 d.o.o.</option>
+ <option value="1188">AP KAPITAL 6 d.o.o.</option>
+ <option value="1193">AREX d.o.o. Šentjernej</option>
+ <option value="152">ARGONOS BPH d.o.o., Ljubljana</option>
+ <option value="349">ARKADA DVA, PID, d.d., Ljubljana</option>
+ <option value="348">ARKADA ENA, PID, d.d., Ljubljana</option>
+ <option value="826">ARKADA HOLDING, d.d., Ljubljana</option>
+ <option value="350">ARKADA TRI, PID, d.d., Ljubljana</option>
+ <option value="352">ATENA 1. SKLAD, pooblaščena investicijska družba, d.d., Ljubljana</option>
+ <option value="748">ATENA PID, d.d., Ljubljana</option>
+ <option value="612">AVANT HOLDING, d.d., Ljubljana</option>
+ <option value="353">AVTO CELJE d.d., Celje</option>
+ <option value="351">AVTOPREVOZNIŠTVO IN SERVISI, d.d., Velenje</option>
+ <option value="1005">AVTOTEHNA, d.d., Ljubljana</option>
+ <option value="354">BANKA CELJE, d.d., Celje</option>
+ <option value="39">Banka Intesa Sanpaolo d.d.</option>
+ <option value="542">BANKA VIPA, d. d., Nova Gorica</option>
+ <option value="1022">BATAGEL & Co., d.o.o., Postojna</option>
+ <option value="654">BELINKA, d.d., Ljubljana</option>
+ <option value="356">BOHOR d.d. ŠENTJUR, Šentjur</option>
+ <option value="1192">BOSQAR d.d.</option>
+ <option value="360">BTC, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="822">C2 NALOŽBE, d.d., Ljubljana</option>
+ <option value="1173">Calcit d.o.o.</option>
+ <option value="901">CAP NALOŽBE, d.d., Ljubljana</option>
+ <option value="363">CAPINVEST 2, PID, d.d., Ljubljana</option>
+ <option value="364">CAPITA d.d. Ljubljana</option>
+ <option value="1016">CBH d.d., Celje</option>
+ <option value="1116">CEESEG Aktiengesellschaft</option>
+ <option value="617">CEMENTARNA TRBOVLJE, d.d., Trbovlje</option>
+ <option value="870">CENTER NALOŽBE d.d., Maribor</option>
+ <option value="1149">Certa d.d.</option>
+ <option value="967">CERTA d.d., Cerkno</option>
+ <option value="1146">Certa Holding d.d.</option>
+ <option value="111">CERTIUS BPH d. o. o., Ljubljana</option>
+ <option value="674">CERTIUS HOLDING, d.d., Ljubljana</option>
+ <option value="809">CERTIUS INVEST d.d., Ljubljana</option>
+ <option value="366">CETIS, grafične in dokumentacijske storitve, d.d.</option>
+ <option value="928">CIMOS d.d., Koper</option>
+ <option value="368">CINKARNA CELJE, d.d., Celje</option>
+ <option value="685">CM CELJE, d. d., Celje</option>
+ <option value="369">COLOR, d.d., Medvode</option>
+ <option value="367">COMET, d.d., Zreče</option>
+ <option value="1030">CPM, d.d., Maribor</option>
+ <option value="597">CREINA d.d. KRANJ, Kranj</option>
+ <option value="900">D HOLDING, d.d.</option>
+ <option value="1035">D NALOŽBE d.d., Ljubljana</option>
+ <option value="372">DANA, d.d., Mirna</option>
+ <option value="899">DARS d.d., Celje</option>
+ <option value="1053">DATALAB, d.d., Ljubljana</option>
+ <option value="1201">DBS d.d.</option>
+ <option value="1141">Debitel telekomunikacije d.d.</option>
+ <option value="1118">DEBITEL telekomunikacije d.d., Ljubljana</option>
+ <option value="1162">DecaCare, poslovno svetovanje, d.o.o.</option>
+ <option value="1066">DELNIŠKI VZAJEMNI SKLAD INFOND DYNAMIC</option>
+ <option value="931">DELNIŠKI VZAJEMNI SKLAD TRIGLAV STEBER I</option>
+ <option value="678">DELO PRODAJA, d.d., Ljubljana</option>
+ <option value="371">DELO, d.d., Ljubljana</option>
+ <option value="935">DEOS, d.d., Ljubljana</option>
+ <option value="554">DEŽELNA BANKA SLOVENIJE d. d.</option>
+ <option value="21">DEŽELNA BANKA SLOVENIJE d. d., Ljubljana</option>
+ <option value="1195">DH d.d.</option>
+ <option value="375">DOM SMREKA, d.d., Maribor</option>
+ <option value="1174">DP JUB d.d.</option>
+ <option value="547">DPB VIZIJA, PID, d.d., Novo mesto</option>
+ <option value="615">DRAVINJSKI DOM, d.d., Slovenjske Konjice</option>
+ <option value="374">DROGA d.d., Izola</option>
+ <option value="934">DROGA KOLINSKA, d.d., Ljubljana</option>
+ <option value="1131">DUTB, d. d.</option>
+ <option value="377">DZS založništvo in trgovina, d.d., Ljubljana</option>
+ <option value="1130">DZS, d. d., Ljubljana</option>
+ <option value="1007">EBS GROUP d.o.o., Kranj</option>
+ <option value="1163">EChem d.o.o.</option>
+ <option value="1186">ECM Partnerji, d.d.</option>
+ <option value="386">EGOLES, d.d. Škofja Loka - v likvidaciji</option>
+ <option value="971">ELEKTRO GORENJSKA d.d. KRANJ</option>
+ <option value="1184">ELEKTRO LJUBLJANA d.d.</option>
+ <option value="683">ELMO, d. d., Ljubljana</option>
+ <option value="378">EMONA OBALA d.d., Koper</option>
+ <option value="1171">Equinox d.d.</option>
+ <option value="379">ETOL, d. d., Škofja vas</option>
+ <option value="770">ETRA 33, d.d., Ljubljana</option>
+ <option value="1175">Europe Nuoli International Holding d.o.o.</option>
+ <option value="18">FACTOR BANKA d. d., Ljubljana</option>
+ <option value="1015">FIDINA d.d., Ljubljana</option>
+ <option value="999">FINETOL d.d., Celje</option>
+ <option value="763">FINIRA, d.d., Ljubljana</option>
+ <option value="1143">FMR HOLDING d.d.</option>
+ <option value="922">FMR, d.d., Idrija</option>
+ <option value="680">FOND INVEST, d.d., Ljubljana</option>
+ <option value="974">FOTONA, d.d., Ljubljana</option>
+ <option value="383">FRUCTAL, d.d., Ajdovščina</option>
+ <option value="1113">FZU MONETA A.D., Podgorica</option>
+ <option value="122">GBD BPD, d. d., Kranj</option>
+ <option value="384">GEA COLLEGE, d.d., Ljubljana</option>
+ <option value="1126">GEN-I, d.o.o., Krško</option>
+ <option value="671">GEODETSKI ZAVOD SLOVENIJE, d.d., Ljubljana</option>
+ <option value="389">GORENJE, d.o.o.</option>
+ <option value="36">GORENJSKA BANKA d.d., Kranj</option>
+ <option value="1122">Gorenjski tisk, d. d.</option>
+ <option value="397">GORENJSKI TISK, d.d., Kranj</option>
+ <option value="388">GORIŠKE OPEKARNE, d.d., Renče</option>
+ <option value="1150">Gozdarstvo Grča, d. d., Kočevje</option>
+ <option value="583">GOZDNO GOSPODARSTVO BLED, d.d., Bled</option>
+ <option value="398">GOZDNO GOSPODARSTVO POSTOJNA, d.d., Postojna</option>
+ <option value="390">GPG, d.d., Ljubljana</option>
+ <option value="594">GRAD PRESTRANEK, d.d., Prestranek</option>
+ <option value="387">GRADIS, GP LJUBLJANA, d.d., Ljubljana</option>
+ <option value="1144">GRUPA PLASTOFORM upravljanje podjetij d.o.o.</option>
+ <option value="1157">H &amp; R d.d.</option>
+ <option value="1145">HALCOM, d.d.</option>
+ <option value="1025">HAT, d. o. o., Ljubljana</option>
+ <option value="401">HELIOS, DOMŽALE, d.o.o., Domžale</option>
+ <option value="541">HIDROTEHNIK d.d. LJUBLJANA, Ljubljana</option>
+ <option value="1037">HOLDING PMP d. d., Ljubljana</option>
+ <option value="1140">HOLDING PMP, naložbena dejavnost, d.d.</option>
+ <option value="404">HOTELI BERNARDIN, d.d. PORTOROŽ, Portorož</option>
+ <option value="484">HOTELI PALACE, d.d., Portorož</option>
+ <option value="832">HRAM HOLDING, d.d., Ljubljana</option>
+ <option value="1200">ILIRIKA SKLADI d.d.</option>
+ <option value="1172">IMO-RENT INVEST d.o.o.</option>
+ <option value="405">IMP ČRPALKE LJUBLJANA, d.d., Ljubljana</option>
+ <option value="742">IMP KLIMAT, d.d., Ljubljana</option>
+ <option value="1135">Impol 2000, d. d., Slovenska Bistrica</option>
+ <option value="1191">INCOM d.o.o.</option>
+ <option value="1051">INDEKSNI VZAJEMNI SKLAD PB AGRICULTURE INDEX</option>
+ <option value="1049">INDEKSNI VZAJEMNI SKLAD PB BIOTECH INDEX</option>
+ <option value="1050">INDEKSNI VZAJEMNI SKLAD PB URANIUM INDEX</option>
+ <option value="756">INFOND HOLDING, d.d., Maribor</option>
+ <option value="875">INFOND ID 1, d.d., Maribor</option>
+ <option value="758">INFOND ID, d.d., Maribor</option>
+ <option value="757">INFOND PID, d.d., Maribor</option>
+ <option value="414">INFOND ZLAT PID, d.d., Maribor</option>
+ <option value="407">INLES, d.d., Ribnica</option>
+ <option value="411">INTARA, d. d., Ljubljana</option>
+ <option value="409">INTEGRAL JESENICE, d.d., Jesenice</option>
+ <option value="1085">INTERENERGO, d. d., Ljubljana</option>
+ <option value="406">INTEREUROPA, d.d., Koper</option>
+ <option value="410">INTERTRADE ITA, d.o.o., Ljubljana</option>
+ <option value="413">INTERTRADE ITS, d.d., Ljubljana</option>
+ <option value="412">ISTRABENZ, d.d., Portorož</option>
+ <option value="415">JADRAN  d.d. SEŽANA, Sežana</option>
+ <option value="726">JATA EMONA, d.d., Ljubljana</option>
+ <option value="416">JATA, d.d., Ljubljana</option>
+ <option value="1190">Javna razsvetljava d.d.</option>
+ <option value="1134 658">Javor Pivka, d.d. - v likvidaciji</option>
+ <option value="576">JELEN GOSTINSKO PODJETJE, d.d., Slovenske Konjice</option>
+ <option value="970">JELOVICA d.d. ŠKOFJA LOKA</option>
+ <option value="418">JUTEKS, d.d., Žalec</option>
+ <option value="438">KAPITALSKA DRUŽBA, d. d., Ljubljana</option>
+ <option value="1017">KB1909 SOCIETA' PER AZIONI - DELNIŠKA DRUŽBA, Gorica</option>
+ <option value="600">KBS BANKA d.d., Maribor</option>
+ <option value="666">KD d.d., Ljubljana</option>
+ <option value="677">KD Group, d.d., Ljubljana</option>
+ <option value="682">KD ID, delniška ID, d.d.</option>
+ <option value="421">KD INVESTMENTS d.o.o., Ljubljana</option>
+ <option value="1098">KD Kapital, d.o.o., Ljubljana</option>
+ <option value="814">KD NALOŽBE d.d., Ljubljana</option>
+ <option value="681">KD PID, d.d., Ljubljana</option>
+ <option value="1029">KDD d. d., Ljubljana</option>
+ <option value="422">KEMA PUCONCI, d.d., Puconci</option>
+ <option value="424">KLASJE CELJE, d.d., Celje</option>
+ <option value="1114">Kmetijska zadruga Vipava, z.o.o., Vipava</option>
+ <option value="427">KMETIJSKI KOMBINAT PTUJ, d.d., Ptuj</option>
+ <option value="428">KOLINSKA, d.d., Ljubljana</option>
+ <option value="1032">KOLONEL d.o.o., Ljubljana</option>
+ <option value="425">KOLONIALE, d.d., Maribor</option>
+ <option value="423">KOMPAS HOTELI, d.d.,  Kranjska Gora</option>
+ <option value="969">KOMPAS RAC d.d. Ljubljana - v likvidaciji</option>
+ <option value="663">KOMPAS SHOP d.d., Ljubljana</option>
+ <option value="529">KOŠAKI TMI, d.d., Maribor</option>
+ <option value="1031">KOTO d.d., Ljubljana</option>
+ <option value="1147">Kovinoplastika Lož d.d.</option>
+ <option value="1151">Kovinoplastika Lož družba pooblaščenka d.d.</option>
+ <option value="430">KOVINOTEHNA, d.d., Celje</option>
+ <option value="1155">KOVINTRADE D.D. CELJE</option>
+ <option value="1088">KRAS, d. d., Sežana</option>
+ <option value="434">KRKA, d. d., Novo mesto</option>
+ <option value="743">KRONA HOLDING, d.d., Ljubljana</option>
+ <option value="432">KRONA KRONA, d.d., Ljubljana</option>
+ <option value="517">KRONA SENIOR, ID prilagodljive sestave naložb, d.d., Ljubljana</option>
+ <option value="431">KRUH - PECIVO, d.d., Maribor</option>
+ <option value="741">KS - SKLAD 4, d.d.,   Ljubljana</option>
+ <option value="437">KS - SKLAD 4, D.D., Ljubljana</option>
+ <option value="1010">KS NALOŽBE d.d., Ljubljana</option>
+ <option value="706">KS1 - Naložbe, d.d., Ljubljana</option>
+ <option value="820">KS2 NALOŽBE, d.d., Ljubljana</option>
+ <option value="740">KS4 Naložbe, d.d., Ljubljana</option>
+ <option value="436">KS-sklad 2, pooblaščena investicijska družba, d.d., Ljubljana</option>
+ <option value="898">L EGOLES, d.d., Škofja Loka</option>
+ <option value="440">LEK d.d.</option>
+ <option value="444">LESNINA EMMI, d.d., Slovenska Bistrica</option>
+ <option value="727">LESNINA, d.d., Ljubljana</option>
+ <option value="887">LETRIKA, d. d., Šempeter pri Gorici</option>
+ <option value="590">LIP BLED, d.d., Bled</option>
+ <option value="570">LIV POSTOJNA, d.d., Postojna</option>
+ <option value="441">LIZ INŽENIRING, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="98">Ljubljanska borza, d. d., Ljubljana</option>
+ <option value="1123">LJUBLJANSKE MLEKARNE, d.d., Ljubljana</option>
+ <option value="442">LUKA KOPER, d.d., Koper</option>
+ <option value="876">M1, d.d., Ljubljana</option>
+ <option value="466">MAKSIMA 1 d.d., Ljubljana</option>
+ <option value="794">MAKSIMA HOLDING d.d., Ljubljana</option>
+ <option value="888">MAKSIMA INVEST, d.d., Ljubljana - v stečaju</option>
+ <option value="796">Maksima, delniška ID, d.d., Ljubljana</option>
+ <option value="448">MARINA PORTOROŽ, d.d., Portorož</option>
+ <option value="450">MEDALJON, d.d., Maribor</option>
+ <option value="1073">MEDEX, d. d., Ljubljana</option>
+ <option value="454">MELAMIN, d.d., Kočevje</option>
+ <option value="1124">MENINA d.d.</option>
+ <option value="734">MERCATA 1 PID, d.d., Ljubljana</option>
+ <option value="679">MERCATA HOLDING, d.d., LJUBLJANA, Ljubljana</option>
+ <option value="463">MERCATA PID, d.d., Ljubljana</option>
+ <option value="874">MERCATA, d.d., Ljubljana</option>
+ <option value="451">MERCATOR, d.d., Ljubljana</option>
+ <option value="1021">MERFIN,  d.o.o., Ljubljana</option>
+ <option value="452">MERKUR trgovina, d.d., Naklo</option>
+ <option value="891">MEŠANI VZAJEMNI SKLAD TRIGLAV EVROPA</option>
+ <option value="867">METALKA TRGOVINA, d.d., Ljubljana</option>
+ <option value="1160">MINERVO D.D.</option>
+ <option value="618">MIP, d.d. Nova Gorica</option>
+ <option value="453">MITOL, d.d., Sežana</option>
+ <option value="455">MKT PRINT proizvodnja knjig d.d., Ljubljana</option>
+ <option value="694">MLAJ Zadobrova, d.d., Ljubljana-Polje</option>
+ <option value="1161">Mlinotest d.d.</option>
+ <option value="610">MLINOTEST, d.d., Ajdovščina</option>
+ <option value="772">MODRA LINIJA HOLDING, d.d., Koper</option>
+ <option value="458">MODRA LINIJA, d.d., Koper</option>
+ <option value="984">MONTER INVESTITOR d.o.o., Šentjanž pri Dravogradu</option>
+ <option value="957">MP FINANCE d.d. - v likvidaciji, Ljubljana</option>
+ <option value="135">MP NALOŽBE, d. d., Ljubljana</option>
+ <option value="686">MURALES d.d. LJUTOMER, Ljutomer</option>
+ <option value="580">NAMA d.d. LJUBLJANA</option>
+ <option value="468">NFD 1 DELNIŠKI INVESTICIJSKI SKLAD, ID, d.d., Ljubljana</option>
+ <option value="467">NFD 2 INVESTICIJSKI SKLAD, d.d. Ljubljana</option>
+ <option value="819">NFD HOLDING, d.d., Ljubljana</option>
+ <option value="581">NFD INVESTICIJSKO SVETOVANJE, d.o.o., Ljubljana</option>
+ <option value="469 1153 1180">Nika d.d., Brežice</option>
+ <option value="471">NIKA, PID 1, d. d.</option>
+ <option value="472">NIKA, PID 2, d. d.</option>
+ <option value="470">NIKA, PID, d. d.</option>
+ <option value="473">NIKO d.d., Železniki, ŽELEZNIKI</option>
+ <option value="1110">NIVO INVESTICIJE d.d.</option>
+ <option value="1102">NIVO, d. d., Celje</option>
+ <option value="836">NK NALOŽBE, d.d.</option>
+ <option value="835">NK2 NALOŽBE, d.d.</option>
+ <option value="362">NLB BANKA ZASAVJE d. d., Trbovlje</option>
+ <option value="1196">NLB Skladi – Nepremičnine d.d.</option>
+ <option value="32">NLB, d. d., Ljubljana</option>
+ <option value="1158">NOVATV24.SI, informativna televizija, d.d.</option>
+ <option value="475">NOVOLIT NOVA VAS NA BLOKAH d.d., Nova vas na Blokah</option>
+ <option value="461">OLJARICA, KRANJ, d.d., Kranj</option>
+ <option value="993">ORBICO d.o.o., Ljubljana</option>
+ <option value="134">OTP banka d.d.</option>
+ <option value="1148">Paloma d.d.</option>
+ <option value="1028">PAPIR SERVIS d.d., Ljubljana</option>
+ <option value="978">PEKARNA BLATNIK d.o.o., Videm-Dobrepolje</option>
+ <option value="1027">PERUTNINA PTUJ d. d.</option>
+ <option value="487">PETROL d.d., Ljubljana</option>
+ <option value="795">PID MAKSIMA, d.d., Ljubljana</option>
+ <option value="728">PID VIPA INVEST d.d., Nova Gorica</option>
+ <option value="561">PID ZVON DVA, d.d., Maribor</option>
+ <option value="560">PID ZVON ENA, d.d., Maribor</option>
+ <option value="495">PINUS TKI d.d., Rače</option>
+ <option value="446">PIVOVARNA LAŠKO, d.d., Laško</option>
+ <option value="605">PIVOVARNA UNION, d.d., Ljubljana</option>
+ <option value="577">PLAMA - PUR, d.d., Podgrad</option>
+ <option value="491">PLOD, PID, d.d., Ljubljana</option>
+ <option value="1203">Pokojninska družba A, d.d.</option>
+ <option value="1189">POLFIN d.o.o.</option>
+ <option value="1013">POMHOLD, naložbena dejavnost, d.o.o., Maribor</option>
+ <option value="716">POM-INVEST d.d., Maribor</option>
+ <option value="862">POM-NALOŽBE d.d., Maribor</option>
+ <option value="494">POMURSKA INVESTICIJSKA DRUŽBA 1, d.d., Murska Sobota</option>
+ <option value="718">POOBLAŠČENA POMURSKA INVESTICIJSKA DRUŽBA d.d., Murska Sobota</option>
+ <option value="485">POŠTNA BANKA SLOVENIJE, d. d., Maribor</option>
+ <option value="145">POTEZA d.d., LJUBLJANA</option>
+ <option value="882">POTEZA NALOŽBE, d. o. o., Ljubljana - v stečaju</option>
+ <option value="1067">POTEZA SKUPINA, d.d. - v stečaju, Ljubljana</option>
+ <option value="355">POTEZA, BPD d.d., Ljubljana</option>
+ <option value="497">POTROŠNIK d.d. CELJE, Celje</option>
+ <option value="394">PPC GORENJSKI SEJEM KRANJ, d. d.</option>
+ <option value="752">PPS - PTUJSKE PEKARNE IN SLAŠČIČARNE, d.d., Ptuj</option>
+ <option value="982">PROBANKA UPRAVLJANJE d.o.o., Maribor</option>
+ <option value="23">PROBANKA, d. d., Maribor</option>
+ <option value="1011">PROFECTUS, finančna in poslovna družba, d.o.o., Maribor</option>
+ <option value="927">PRVA GROUP PLC. - SKUPINA PRVA d.d., Ljubljana</option>
+ <option value="849">PSZ d.d., Celje</option>
+ <option value="148">PUBLIKUM INVESTICIJSKE STORITVE, d.d.</option>
+ <option value="707">PULSAR HOLDING, d.d., Ljubljana</option>
+ <option value="1036">PZP z.o.o., Ptuj</option>
+ <option value="501">RADENSKA d.d. RADENCI</option>
+ <option value="433">RAIFFEISEN KREKOVA BANKA, d.d., Maribor</option>
+ <option value="502">RAZVOJNA DRUŽBA, d.d., Ljubljana</option>
+ <option value="1187">Relax d.d.</option>
+ <option value="506">REPUBLIKA SLOVENIJA</option>
+ <option value="505">RTC KRVAVEC, d.d.</option>
+ <option value="507">RUDIS, d.d., TRBOVLJE, Trbovlje</option>
+ <option value="1159">S8 d.d.</option>
+ <option value="975">SALONIT ANHOVO, d.d.</option>
+ <option value="509">SALUS, LJUBLJANA, d.d., Ljubljana</option>
+ <option value="1101">SANOLABOR,  d. d., Ljubljana</option>
+ <option value="1004">SARINI, svetovanje in investiranje, d.o.o., Ljubljana</option>
+ <option value="508">SATURNUS - AVTOOPREMA, d.d., Ljubljana</option>
+ <option value="510">SATURNUS - VOGEL & NOOT, d.d., Ljubljana</option>
+ <option value="1038">Sava Re, d.d.</option>
+ <option value="587">SAVA, d. d., Ljubljana</option>
+ <option value="464">SAVINJA MOZIRJE, d.d., Mozirje</option>
+ <option value="968">SEMENARNA Ljubljana, d.d.</option>
+ <option value="521">SETEV, PID, d.d., Ljubljana</option>
+ <option value="1024">SGP KOGRAD - IGEM DRAVOGRAD, d. d.</option>
+ <option value="1138">SGP POMGRAD D.D.</option>
+ <option value="516">SI.MOBIL, d.d., Ljubljana</option>
+ <option value="1074">SID banka, d. d., Ljubljana</option>
+ <option value="1137">SIJ - Slovenska industrija jekla, d. d., Ljubljana</option>
+ <option value="511">SIJAJ HRASTNIK, d.d., Hrastnik</option>
+ <option value="1093">SIP, d. d., Šempeter v Savinjski dolini</option>
+ <option value="619">SIP, d.d., Šempeter v Savinjski dolini</option>
+ <option value="764">SIVENT, d.d., Ljubljana</option>
+ <option value="513">SKB d.d., Ljubljana</option>
+ <option value="1136">Skupna pokojninska družba d.d., Ljubljana</option>
+ <option value="515">SLOVENIJALES d. d., Ljubljana</option>
+ <option value="514">SLOVENSKA RAZVOJNA DRUŽBA d.d., Ljubljana</option>
+ <option value="518">SLOVENSKI DRŽAVNI HOLDING, d.d., Ljubljana</option>
+ <option value="1108">SONČNI VRT, d.o.o., Murska Sobota</option>
+ <option value="520">STANOVANJSKI SKLAD REPUBLIKE SLOVENIJE, JAVNI SKLAD, Ljubljana</option>
+ <option value="951">STOLARNA DOBREPOLJE d.d.</option>
+ <option value="1076">SUROVINA d.d., Maribor</option>
+ <option value="1072">SUROVINA HOLDING d. d., Ptuj</option>
+ <option value="522">SVILA, d.d., Maribor</option>
+ <option value="512">SVILANIT KAMNIK, d.d., Kamnik</option>
+ <option value="537">SWATY, d.d., Maribor</option>
+ <option value="1176">TBP d.d.</option>
+ <option value="1008">TDR-METALURGIJA d.d., Ruše</option>
+ <option value="525">TEHNOUNION, d.d., Ljubljana</option>
+ <option value="1129 524">Tekstina, d. d., Ajdovščina</option>
+ <option value="976">TELEKOM SLOVENIJE, d.d., Ljubljana</option>
+ <option value="559">TERME 3000 d.d., Moravske Toplice</option>
+ <option value="523">TERME ČATEŽ, d.d., Čatež ob Savi</option>
+ <option value="553">TERME DOBRNA, d.d., Dobrna</option>
+ <option value="1168">TERME OLIMIA D.D.</option>
+ <option value="1182">Titus Group d.o.o.</option>
+ <option value="1179">Tivoli, Razvoj rezidenc, d.o.o.</option>
+ <option value="1152">TKI Hrastnik, d.d.</option>
+ <option value="1164">TOKUEI d.o.o.</option>
+ <option value="1068">TOPRO d.o.o., Sežana</option>
+ <option value="531">TOSAMA, d.d., Domžale</option>
+ <option value="393">TOVARNA OLJA GEA d.d., Slovenska Bistrica</option>
+ <option value="536">TOVARNA SLADKORJA ORMOŽ, d. d., Ormož</option>
+ <option value="850">TRDNJAVA HOLDING, d. d., Celje</option>
+ <option value="535">TRDNJAVA I, PID, d.d., Velenje</option>
+ <option value="534">TRDNJAVA, PID, d.d., Velenje</option>
+ <option value="396">TRGATEV, PID, d.d., Ljubljana</option>
+ <option value="852">TRIGLAV NALOŽBE, d.d., Ljubljana</option>
+ <option value="527">TRIGLAV STEBER I, ID, d.d., Ljubljana</option>
+ <option value="791">TRIGLAV STEBER, PID, d.d., Ljubljana</option>
+ <option value="528">TRIGLAV, finančna družba, d.d., Ljubljana</option>
+ <option value="1106">TRUBAR, d. d., Kranj</option>
+ <option value="606">TUS KO-SI, d.d., Slovenj Gradec</option>
+ <option value="1128">TUŠMOBIL, d.o.o.</option>
+ <option value="586">Union Hotels Collection d.d. - v likvidaciji</option>
+ <option value="1112">UNIOR d.d., Zreče</option>
+ <option value="790">UNIT-AS NEPREMIČNINE d.d., Ljubljana</option>
+ <option value="540">UNITAS, d.d., Šmartno pri Litiji</option>
+ <option value="1167">UNITED CAPITAL d.o.o.</option>
+ <option value="737">URAD RS ZA VARSTVO KONKURENCE</option>
+ <option value="1064">URAVNOTEŽENI VZAJEMNI SKLAD INFOND GLOBAL</option>
+ <option value="800">URAVNOTEŽENI VZAJEMNI SKLAD TRIGLAV RENTA</option>
+ <option value="543">VALKARTON, d.d., Logatec</option>
+ <option value="1132">Varstroj d. d.</option>
+ <option value="775">VELANA d.o.o.</option>
+ <option value="498">VELETRGOVINA POTROŠNIK, d. d., Murska Sobota</option>
+ <option value="1133 813">VIPA HOLDING d.d., v likvidaciji</option>
+ <option value="816">VIPA INVEST, d.d., Nova Gorica</option>
+ <option value="1115">VIPAVA 1894, d. d., Vipava</option>
+ <option value="833">VIZIJA HOLDING ENA, d.d., Ljubljana</option>
+ <option value="792">VIZIJA HOLDING, d.d., Ljubljana</option>
+ <option value="793">VIZIJA I., PID, d.d., Ljubljana</option>
+ <option value="1194">Vzajemna zdravstvena zavarovalnica d. d.</option>
+ <option value="1033">VZAJEMNI SKLAD ALTA EUROSTOCK</option>
+ <option value="1034">VZAJEMNI SKLAD MP-BALKAN.SI</option>
+ <option value="1052">VZAJEMNI SKLAD PROBANKA GLOBALNI NALOŽBENI SKLAD</option>
+ <option value="890">VZAJEMNI SKLAD TRIGLAV OBVEZNIŠKI</option>
+ <option value="1006">W & P PROFIL - SOLARVALUE HOLDING, družba za upravljanje, d.o.o., Ruše</option>
+ <option value="1154">WOOD & Company Financial Services, a.s.</option>
+ <option value="1177">Xinzhou International Group Co., d.o.o.</option>
+ <option value="1166">YGM d.o.o.</option>
+ <option value="1109">ZAVAROVALNICA MARIBOR d.d., Maribor</option>
+ <option value="1127">ZAVAROVALNICA MARIBOR, d. d., Maribor</option>
+ <option value="865">ZAVAROVALNICA TRIGLAV, d.d., Ljubljana</option>
+ <option value="503">ZDRAVILIŠČE ROGAŠKA, d.d., Rogaška Slatina</option>
+ <option value="1125">ZIF MONETA A.D., Podgorica - u postupku transformacije</option>
+ <option value="556">ZLATA MONETA I, posebna delniška ID, d.d., Maribor</option>
+ <option value="817">ZLATA MONETA II d.d., Maribor</option>
+ <option value="557">ZLATA MONETA II, PID, d.d., Maribor</option>
+ <option value="584">ZRC, d.d., TRBOVLJE, Trbovlje</option>
+ <option value="840">ZVON DVA HOLDING, d.d., Maribor</option>
+ <option value="812">ZVON ENA HOLDING, d.d., Maribor</option>
+ <option value="818">ZVON ENA ID, d.d., Maribor</option>
+ <option value="558">ŽELEZARNA RAVNE - MONTER DRAVOGRAD, d.d., Šentjanž pri Dravogradu</option>
+ <option value="607">ŽITO INTES, d.d., Maribor</option>
+ <option value="609">ŽITO, d.d., Ljubljana</option>
+ <option value="614">ŽIVILA KRANJ, d.d., Naklo</option>
+
+                        </select>
+
+                        <br />
+                        <br />
+
+                        <input type="hidden" name="fast_search_submition" value="true" />
+                        <input name="fast_search_submit_button" value="Iskanje" type="submit" /><br />
+
+                        <br />
+
+                      </form>
+
+                      <a href="?doc=ADVANCED_SEARCH">Podrobno iskanje</a>
+                      <br />&nbsp;
+
+                    </td>
+                  </tr>
+                  
+                  
+                </table>
+
+              </td>
+              <td valign="top">
+
+                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                  <tr>
+                    <td style="PADDING-RIGHT: 15px; PADDING-LEFT: 15px; PADDING-BOTTOM: 15px; PADDING-TOP: 9px" valign="top">
+                      <div id="alert"></div>
+                      <div id="message"></div>
+<script>
+
+  function after_load()
+  {
+    frame_attachment_links(false, 0, 'sl', false)
+  }
+
+</script>
+
+<div id="seo_document_frame"><div id="seo_document_public_id">INI-289/26</div><div id="seo_document_body"><div id="seo_document_logo"><a target="_blank" href="visit_publisher.aspx?document_id=92849"><img border="0" src="logo.aspx?document_id=92849" alt="LUKA KOPER, d.d., Koper" /></a></div><p align="center"><b>LUKA KOPER, d.d., Koper</b></p><p align="center"><b>Sprememba finančnega koledarja 2026</b></p><div align="center"><P>Na podlagi določil Pravil Ljubljanske borze in veljavne zakonodaje Luka Koper, d. d. objavlja spremembo finančnega koledarja 2026. Sprememba se nanaša na datum upravičenosti do dividende in datum izplačila dividende.</P>
+<P>Informacija bo od 3. 6. 2026 dalje objavljena na spletni strani družbe&nbsp;<A href="http://www.luka-kp.si/">www.luka-kp.si</A>.</P></div></div><div id="seo_document_signature">Uprava družbe</div><div id="seo_document_date">
+        Datum: 03.06.2026</div><div id="seo_document_attachments"><i>Pripeti dokumenti:</i>
+             <a class="att" href="file.aspx?AttachmentID=56105">Finančni koledar 2026</a></div></div>
+
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+            <tr>
+              <td align="center" valign="top">&nbsp;</td>
+              <td align="center" class="footer">&copy; Ljubljanska borza d.d., Ljubljana,
+                2008–2026 | Izvedba: <a href="http://www.inetis.com/" target="_blank" class="footerLink">Inetis</a>
+                &amp; <a href="http://www.creatim.com/" target="_blank" class="footerLink">Creatim</a>
+                | <a href="?doc=TERMS_OF_USE" class="footerLink">Pogoji uporabe</a>
+                | <a href="https://ljse.si/si/zascita-osebnih-podatkov/258" class="footerLink">Osebni podatki</a>
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  <script language="javascript" type="text/javascript">
+
+Event.observe(window, "load", function()
+{
+    if("function" == typeof(on_load)) { on_load(); }
+    if("function" == typeof(after_load)) { after_load(); }
+});
+
+  </script>
+
+  </body>
+</html>
+<!-- vim: set tabstop=2 shiftwidth=2 : -->

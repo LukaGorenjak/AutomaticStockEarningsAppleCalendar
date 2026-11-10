@@ -25,3 +25,6 @@ Thumbs.db
 .vscode/
 .idea/
 .env
+
+# Generated SEOnet manual-review reports
+reports/
