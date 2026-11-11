@@ -242,7 +242,7 @@ manual_events:
 
     summaries = [str(v.get("summary")) for v in vevents]
     assert summaries == [
-        "AAPL earnings (BMO)",
+        "AAPL earnings (approx. before 15:30 CET)",
         "NTO earnings",
         "MSFT earnings",
     ]
@@ -259,6 +259,7 @@ manual_events:
     assert "Fiscal Period: Q1 2027" in aapl_desc
     assert "EPS Estimate: $2.10" in aapl_desc
     assert "Status: Confirmed" in aapl_desc
+    assert "approx., typical pre-market release" in aapl_desc
 
     nto_desc = str(vevents[1].get("description"))
     assert "Manual earnings check for Nintendo" in nto_desc

@@ -87,7 +87,7 @@ class USMarket(Market):
                 end_date=window.end,
             )
             api_events = [
-                replace(ev, market=self.id, kind=EventKind.EARNINGS)
+                replace(ev, market=self.id, kind=EventKind.EARNINGS, market_timezone=self.timezone)
                 for ev in fetched
             ]
 

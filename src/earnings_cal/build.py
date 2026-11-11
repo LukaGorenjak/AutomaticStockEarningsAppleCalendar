@@ -10,7 +10,12 @@ from typing import TYPE_CHECKING
 
 from icalendar import Alarm, Calendar, Event as ICalEvent, vDuration
 
-from earnings_cal.models import EarningsEvent, Event
+from earnings_cal.models import (
+    DEFAULT_DISPLAY_TIMEZONE,
+    EarningsEvent,
+    Event,
+    validate_timezone,
+)
 
 if TYPE_CHECKING:
     from earnings_cal.markets.base import Market
@@ -41,16 +46,18 @@ def build_calendar(
     events: Iterable[Event],
     calendar_name: str = "Earnings Watchlist",
     timezone_name: str | None = None,
+    display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
 ) -> Calendar:
-    """Build an `icalendar.Calendar` from a collection of `Event` items."""
+    """Build an `icalendar.Calendar` from `Event` items converted to `display_timezone`."""
+    target_tz = validate_timezone(display_timezone, field_name="display_timezone")
+
     cal = Calendar()
     cal.add("prodid", "-//Earnings Watchlist//earnings-cal//EN")
     cal.add("version", "2.0")
     cal.add("calscale", "GREGORIAN")
     cal.add("method", "PUBLISH")
     cal.add("X-WR-CALNAME", calendar_name)
-    if timezone_name:
-        cal.add("X-WR-TIMEZONE", timezone_name)
+    cal.add("X-WR-TIMEZONE", target_tz if display_timezone else (timezone_name or target_tz))
 
     refresh_duration = vDuration(timedelta(days=1))
     refresh_duration.params["VALUE"] = "DURATION"
@@ -58,23 +65,40 @@ def build_calendar(
     cal.add("X-PUBLISHED-TTL", vDuration(timedelta(days=1)))
 
     sorted_events = merge_events(events)
+    resolved_items = [(item, item.resolve_display(target_tz)) for item in sorted_events]
+    resolved_items.sort(
+        key=lambda pair: (
+            pair[1].local_date.isoformat(),
+            pair[1].start_dt.isoformat() if pair[1].start_dt else "",
+            pair[0].ticker,
+            pair[0].uid,
+        )
+    )
 
-    for item in sorted_events:
+    for item, display in resolved_items:
         vevent = ICalEvent()
         vevent.add("uid", item.uid)
-        vevent.add("summary", item.summary)
-        vevent.add("description", item.description)
+        vevent.add("summary", display.summary)
+        vevent.add("description", display.description)
         if item.source_url:
             vevent.add("url", item.source_url)
-        vevent.add("dtstart", item.date)
-        vevent.add("dtend", item.date + timedelta(days=1))
+
+        if display.is_timed and display.start_dt is not None and display.end_dt is not None:
+            vevent.add("dtstart", display.start_dt)
+            vevent.add("dtend", display.end_dt)
+            alarm_trigger = timedelta(minutes=-30)
+        else:
+            vevent.add("dtstart", display.local_date)
+            vevent.add("dtend", display.local_date + timedelta(days=1))
+            alarm_trigger = timedelta(hours=-15)
+
         vevent.add("dtstamp", DETERMINISTIC_DTSTAMP)
         vevent.add("transp", "TRANSPARENT")
 
         alarm = Alarm()
         alarm.add("action", "DISPLAY")
-        alarm.add("description", f"Reminder: {item.summary}")
-        alarm.add("trigger", timedelta(hours=-15))
+        alarm.add("description", f"Reminder: {display.summary}")
+        alarm.add("trigger", alarm_trigger)
         vevent.add_component(alarm)
 
         cal.add_component(vevent)
@@ -86,9 +110,15 @@ def render_ics(
     events: Iterable[Event],
     calendar_name: str = "Earnings Watchlist",
     timezone_name: str | None = None,
+    display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
 ) -> bytes:
     """Serialize `events` into deterministic RFC 5545 `.ics` bytes."""
-    cal = build_calendar(events, calendar_name=calendar_name, timezone_name=timezone_name)
+    cal = build_calendar(
+        events,
+        calendar_name=calendar_name,
+        timezone_name=timezone_name,
+        display_timezone=display_timezone,
+    )
     return cal.to_ical()
 
 
@@ -97,10 +127,16 @@ def write_calendar(
     output_path: Path | str,
     calendar_name: str = "Earnings Watchlist",
     timezone_name: str | None = None,
+    display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
 ) -> bool:
     """Write `.ics` file only if content changed. Returns True if file was updated."""
     path = Path(output_path)
-    new_bytes = render_ics(events, calendar_name=calendar_name, timezone_name=timezone_name)
+    new_bytes = render_ics(
+        events,
+        calendar_name=calendar_name,
+        timezone_name=timezone_name,
+        display_timezone=display_timezone,
+    )
 
     if path.exists():
         existing_bytes = path.read_bytes()
@@ -115,9 +151,11 @@ def write_calendar(
 def render_index_html(
     markets: Sequence[Market | type[Market]],
     base_host: str = DEFAULT_PAGES_HOST,
+    display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
 ) -> str:
     """Render `docs/index.html` listing every registered market feed and its `webcal://` link."""
     clean_host = base_host.strip().rstrip("/")
+    tz_label = html.escape(validate_timezone(display_timezone, field_name="display_timezone"))
     rows_html: list[str] = []
 
     for m in markets:
@@ -164,13 +202,13 @@ def render_index_html(
 </head>
 <body>
   <h1>Market Calendar Feeds (<code>.ics</code>)</h1>
-  <p>Subscribe in Apple Calendar (macOS / iOS) using the <code>webcal://</code> links below.</p>
+  <p>Subscribe in Apple Calendar (macOS / iOS) using the <code>webcal://</code> links below. Event times are converted to <code>{tz_label}</code>.</p>
   <table>
     <thead>
       <tr>
         <th>Market</th>
         <th>Calendar Name (<code>X-WR-CALNAME</code>)</th>
-        <th>Timezone</th>
+        <th>Market Timezone</th>
         <th>Subscribe (<code>webcal://</code>)</th>
         <th>Direct Download</th>
       </tr>
@@ -201,10 +239,15 @@ def write_index_html(
     markets: Sequence[Market | type[Market]],
     output_path: Path | str = Path("docs/index.html"),
     base_host: str = DEFAULT_PAGES_HOST,
+    display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
 ) -> bool:
     """Write `docs/index.html` only if content changed. Returns True if file was updated."""
     path = Path(output_path)
-    new_text = render_index_html(markets, base_host=base_host)
+    new_text = render_index_html(
+        markets,
+        base_host=base_host,
+        display_timezone=display_timezone,
+    )
 
     if path.exists():
         existing_text = path.read_text(encoding="utf-8")

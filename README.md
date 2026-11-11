@@ -25,8 +25,10 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
   - Market-scoped deterministic UIDs: `{market}-{ticker}-{date or fiscal period}-{kind}@earnings-cal` (e.g. `us-AAPL-2027Q1-earnings@earnings-cal`, `ljse-KRKG-2026-11-12-earnings@earnings-cal`).
 - **Failure Isolation Across Markets**:
   - One failing market never blocks the others: its error is logged, its existing `.ics` file in `docs/` is preserved untouched, all healthy markets are updated, and the CLI exits non-zero at the end.
-- **Apple Calendar Ready**:
-  - All-day `VEVENT` entries with `VALARM` reminders at 09:00 local time the day before (`TRIGGER:-PT15H`), `X-WR-CALNAME`, `X-WR-TIMEZONE`, and `REFRESH-INTERVAL;VALUE=DURATION:P1D`.
+- **Apple Calendar Ready & Local Timezone Conversion (`zoneinfo`)**:
+  - Configurable `display_timezone` in `tickers.yaml` (default: `Europe/Ljubljana`), converted dynamically via Python `zoneinfo.ZoneInfo` so US/EU DST mismatch weeks (March and late October / early November) and cross-midnight date shifts are handled accurately with no hardcoded UTC offsets.
+  - **Exact-time events** (`timing: exact` with `time`, e.g. `08:15` or a confirmed call time) emit timed `VEVENT`s (`DTSTART;TZID=...` + `DTEND` with duration) and a 30-minute `VALARM` reminder (`TRIGGER:-PT30M`).
+  - **Approximate Finnhub timings** (`bmo` ~ before `09:30 ET`, `amc` ~ after `16:00 ET`, `dmh` ~ `09:30–16:00 ET`) and `unknown` timings remain all-day `VEVENT`s (`TRIGGER:-PT15H`), with the converted local approximate time clearly labelled in the title suffix and description (never presented as a confirmed time).
 
 ---
 
@@ -61,7 +63,8 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
 │   ├── test_earnings_cal.py       # Finnhub & iCalendar unit/integration tests
 │   ├── test_markets.py            # Multi-market registry, dummy market, UID & isolation tests
-│   └── test_seonet.py             # SEOnet watcher & scraper tests
+│   ├── test_seonet.py             # SEOnet watcher & scraper tests
+│   └── test_timezone.py           # ZoneInfo conversions, DST mismatch weeks & timed vs all-day tests
 ├── ljse_events.yaml               # Curated LJSE events (earnings, AGM, ex_dividend, dividend)
 ├── tickers.yaml                   # Per-market watchlists and configuration sections
 ├── pyproject.toml
@@ -72,9 +75,11 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 
 ## Configuration (`tickers.yaml` & `ljse_events.yaml`)
 
-Each market has its own top-level section in `tickers.yaml`:
+Set your local `display_timezone` (any valid IANA timezone, default `Europe/Ljubljana`) and define each market's watchlist in its own section in `tickers.yaml`:
 
 ```yaml
+display_timezone: Europe/Ljubljana
+
 us:
   tickers:
     - AAPL

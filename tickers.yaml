@@ -1,3 +1,6 @@
+# Local timezone used when displaying converted event times
+display_timezone: Europe/Ljubljana
+
 # Per-market watchlists and configuration
 us:
   tickers:

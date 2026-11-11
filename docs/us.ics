@@ -6,102 +6,116 @@ METHOD:PUBLISH
 X-WR-CALNAME:Earnings US
 REFRESH-INTERVAL;VALUE=DURATION:P1D
 X-PUBLISHED-TTL:P1D
-X-WR-TIMEZONE:America/New_York
+X-WR-TIMEZONE:Europe/Ljubljana
 BEGIN:VEVENT
-SUMMARY:AAPL earnings (AMC)
+SUMMARY:AAPL earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20261125
 DTEND;VALUE=DATE:20261126
 DTSTAMP:20260101T000000Z
 UID:us-AAPL-2027Q1-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q1 2027\nEPS Estimate: $2.35
+DESCRIPTION:Fiscal Period: Q1 2027\nEPS Estimate: $2.35\nTiming: approx. a
+ fter 22:00 CET (Europe/Ljubljana) — approx.\, typical after-close releas
+ e (after 16:00 EST America/New_York\; not a confirmed exact time)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Reminder: AAPL earnings (AMC)
+DESCRIPTION:Reminder: AAPL earnings (approx. after 22:00 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:MSFT earnings (AMC)
+SUMMARY:MSFT earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20261129
 DTEND;VALUE=DATE:20261130
 DTSTAMP:20260101T000000Z
 UID:us-MSFT-2027Q2-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q2 2027\nEPS Estimate: $3.12
+DESCRIPTION:Fiscal Period: Q2 2027\nEPS Estimate: $3.12\nTiming: approx. a
+ fter 22:00 CET (Europe/Ljubljana) — approx.\, typical after-close releas
+ e (after 16:00 EST America/New_York\; not a confirmed exact time)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Reminder: MSFT earnings (AMC)
+DESCRIPTION:Reminder: MSFT earnings (approx. after 22:00 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:NVDA earnings (AMC)
+SUMMARY:NVDA earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20261202
 DTEND;VALUE=DATE:20261203
 DTSTAMP:20260101T000000Z
 UID:us-NVDA-2027Q3-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q3 2027\nEPS Estimate: $0.89
+DESCRIPTION:Fiscal Period: Q3 2027\nEPS Estimate: $0.89\nTiming: approx. a
+ fter 22:00 CET (Europe/Ljubljana) — approx.\, typical after-close releas
+ e (after 16:00 EST America/New_York\; not a confirmed exact time)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Reminder: NVDA earnings (AMC)
+DESCRIPTION:Reminder: NVDA earnings (approx. after 22:00 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:GOOGL earnings (AMC)
+SUMMARY:GOOGL earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20261206
 DTEND;VALUE=DATE:20261207
 DTSTAMP:20260101T000000Z
 UID:us-GOOGL-2026Q4-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $2.15
+DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $2.15\nTiming: approx. a
+ fter 22:00 CET (Europe/Ljubljana) — approx.\, typical after-close releas
+ e (after 16:00 EST America/New_York\; not a confirmed exact time)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Reminder: GOOGL earnings (AMC)
+DESCRIPTION:Reminder: GOOGL earnings (approx. after 22:00 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:AMZN earnings (AMC)
+SUMMARY:AMZN earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20261209
 DTEND;VALUE=DATE:20261210
 DTSTAMP:20260101T000000Z
 UID:us-AMZN-2026Q4-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $1.48
+DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $1.48\nTiming: approx. a
+ fter 22:00 CET (Europe/Ljubljana) — approx.\, typical after-close releas
+ e (after 16:00 EST America/New_York\; not a confirmed exact time)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Reminder: AMZN earnings (AMC)
+DESCRIPTION:Reminder: AMZN earnings (approx. after 22:00 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:META earnings (AMC)
+SUMMARY:META earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20261213
 DTEND;VALUE=DATE:20261214
 DTSTAMP:20260101T000000Z
 UID:us-META-2026Q4-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $6.75
+DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $6.75\nTiming: approx. a
+ fter 22:00 CET (Europe/Ljubljana) — approx.\, typical after-close releas
+ e (after 16:00 EST America/New_York\; not a confirmed exact time)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Reminder: META earnings (AMC)
+DESCRIPTION:Reminder: META earnings (approx. after 22:00 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:TSLA earnings (AMC)
+SUMMARY:TSLA earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20261216
 DTEND;VALUE=DATE:20261217
 DTSTAMP:20260101T000000Z
 UID:us-TSLA-2026Q4-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $0.78
+DESCRIPTION:Fiscal Period: Q4 2026\nEPS Estimate: $0.78\nTiming: approx. a
+ fter 22:00 CET (Europe/Ljubljana) — approx.\, typical after-close releas
+ e (after 16:00 EST America/New_York\; not a confirmed exact time)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Reminder: TSLA earnings (AMC)
+DESCRIPTION:Reminder: TSLA earnings (approx. after 22:00 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
@@ -111,7 +125,8 @@ DTSTART;VALUE=DATE:20270114
 DTEND;VALUE=DATE:20270115
 DTSTAMP:20260101T000000Z
 UID:us-TSM-2027-01-14-earnings@earnings-cal
-DESCRIPTION:Note: Q4 2026 earnings release
+DESCRIPTION:Note: Q4 2026 earnings release\nTiming: Unknown (all-day\; mar
+ ket date: 2027-01-14\, market timezone: America/New_York)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -125,7 +140,8 @@ DTSTART;VALUE=DATE:20270127
 DTEND;VALUE=DATE:20270128
 DTSTAMP:20260101T000000Z
 UID:us-ASML-2027-01-27-earnings@earnings-cal
-DESCRIPTION:Note: Q4 2026 earnings release (manual entry)
+DESCRIPTION:Note: Q4 2026 earnings release (manual entry)\nTiming: Unknown
+  (all-day\; market date: 2027-01-27\, market timezone: America/New_York)
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY

@@ -18,7 +18,7 @@ from earnings_cal.fetch import (
     ProviderError,
 )
 from earnings_cal.markets.registry import instantiate_markets
-from earnings_cal.models import DateWindow, WatchlistConfig, load_config
+from earnings_cal.models import DateWindow, WatchlistConfig, load_config, validate_timezone
 from earnings_cal.seonet.ljse import (
     DEFAULT_LJSE_CACHE_PATH,
     load_ljse_cache,
@@ -79,6 +79,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         type=int,
         default=365,
         help="Lookahead window in days for LJSE events (default: 365)",
+    )
+    parser.add_argument(
+        "--display-timezone",
+        type=str,
+        default=None,
+        help="Override display_timezone from config (default: Europe/Ljubljana)",
     )
     return parser.parse_args(argv)
 
@@ -141,7 +147,7 @@ def _run_legacy_single_feed(
         logger.error("No events to write; preserving existing .ics file.")
         return 1
 
-    write_calendar(merged, output_path)
+    write_calendar(merged, output_path, display_timezone=config.display_timezone)
     return 0
 
 
@@ -156,6 +162,7 @@ def run(
     ljse_cache_path: Path = DEFAULT_LJSE_CACHE_PATH,
     ljse_days: int = 365,
     output_dir: Path | None = None,
+    display_timezone: str | None = None,
 ) -> int:
     """Execute the multi-market calendar generation pipeline.
 
@@ -166,6 +173,10 @@ def run(
     """
     try:
         config = load_config(config_path)
+        active_display_tz = validate_timezone(
+            display_timezone or config.display_timezone,
+            field_name="display_timezone",
+        )
     except Exception as exc:
         logger.error("Failed to load config from %s: %s", config_path, exc)
         return 1
@@ -221,6 +232,7 @@ def run(
             feed_path,
             calendar_name=market.calendar_name,
             timezone_name=market.timezone,
+            display_timezone=active_display_tz,
         )
         if changed:
             logger.info("Wrote %d event(s) for market '%s' to %s", len(events), market.id, feed_path)
@@ -235,9 +247,14 @@ def run(
                 alias_path,
                 calendar_name=market.calendar_name,
                 timezone_name=market.timezone,
+                display_timezone=active_display_tz,
             )
 
-    write_index_html(markets, target_dir / "index.html")
+    write_index_html(
+        markets,
+        target_dir / "index.html",
+        display_timezone=active_display_tz,
+    )
 
     return 1 if had_failure else 0
 
@@ -257,6 +274,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         scrape_ljse=args.scrape_ljse,
         ljse_cache_path=args.ljse_cache,
         ljse_days=args.ljse_days,
+        display_timezone=args.display_timezone,
     )
 
 

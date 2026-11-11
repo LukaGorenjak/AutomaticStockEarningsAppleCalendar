@@ -104,6 +104,9 @@ def load_ljse_events_yaml(
                 eps_estimate=eps_estimate,
                 status=str(entry["status"]).strip() if entry.get("status") else None,
                 note=str(entry["note"]).strip() if entry.get("note") else None,
+                market_timezone=LJSEMarket.timezone,
+                timing=entry.get("timing"),
+                duration_minutes=int(entry["duration_minutes"]) if entry.get("duration_minutes") is not None else 60,
             )
         )
 
