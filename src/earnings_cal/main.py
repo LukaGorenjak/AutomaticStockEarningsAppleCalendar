@@ -1,8 +1,9 @@
-"""CLI entry point for generating multi-market iCalendar (.ics) feeds."""
+"""CLI entry point for generating multi-market iCalendar (.ics) feeds and change reports."""
 
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import sys
@@ -11,6 +12,16 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from earnings_cal.build import merge_events, write_calendar, write_index_html
+from earnings_cal.changes import (
+    DEFAULT_CHANGES_PATH,
+    CalendarChange,
+    append_changes,
+    diff_feed,
+    get_recent_date_moves,
+    render_alert_issue_payload,
+    render_change_summary,
+    render_commit_message,
+)
 from earnings_cal.fetch import (
     EarningsProvider,
     FinnhubProvider,
@@ -86,6 +97,24 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Override display_timezone from config (default: Europe/Ljubljana)",
     )
+    parser.add_argument(
+        "--changes-file",
+        type=Path,
+        default=None,
+        help="Path to append-only change log JSONL (default: <output-dir>/../data/changes.jsonl)",
+    )
+    parser.add_argument(
+        "--commit-msg-file",
+        type=Path,
+        default=None,
+        help="Optional output path to write a formatted git commit message summary",
+    )
+    parser.add_argument(
+        "--alert-file",
+        type=Path,
+        default=None,
+        help="Optional output path to write JSON issue payload for date changes or removals",
+    )
     return parser.parse_args(argv)
 
 
@@ -99,6 +128,7 @@ def _run_legacy_single_feed(
     scrape_ljse: bool,
     ljse_cache_path: Path,
     ljse_days: int,
+    changes_path: Path | None = None,
 ) -> int:
     """Legacy single-feed pipeline for backward compatibility with single-file callers."""
     if not config.tickers and not config.tickers_ljse and not config.manual_events:
@@ -147,8 +177,52 @@ def _run_legacy_single_feed(
         logger.error("No events to write; preserving existing .ics file.")
         return 1
 
-    write_calendar(merged, output_path, display_timezone=config.display_timezone)
+    resolved_changes_path = changes_path or (output_path.parent.parent / DEFAULT_CHANGES_PATH)
+    changes = diff_feed(
+        previous_ics_path=output_path,
+        new_events=merged,
+        window=DateWindow(start=start_date, end=end_date),
+        run_date=start_date,
+        market_id="us",
+        display_timezone=config.display_timezone,
+    )
+    if changes:
+        append_changes(changes, resolved_changes_path)
+    move_notes = get_recent_date_moves(
+        resolved_changes_path,
+        run_date=start_date,
+        events=merged,
+        display_timezone=config.display_timezone,
+    )
+
+    write_calendar(
+        merged,
+        output_path,
+        display_timezone=config.display_timezone,
+        move_notes=move_notes,
+    )
     return 0
+
+
+def _write_workflow_outputs(
+    all_changes: Sequence[CalendarChange],
+    commit_msg_file: Path | None,
+    alert_file: Path | None,
+) -> None:
+    if commit_msg_file is not None:
+        commit_msg_file.parent.mkdir(parents=True, exist_ok=True)
+        commit_msg_file.write_text(render_commit_message(all_changes), encoding="utf-8")
+
+    if alert_file is not None:
+        payload = render_alert_issue_payload(all_changes)
+        if payload is not None:
+            alert_file.parent.mkdir(parents=True, exist_ok=True)
+            alert_file.write_text(
+                json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+        elif alert_file.exists():
+            alert_file.unlink()
 
 
 def run(
@@ -163,14 +237,11 @@ def run(
     ljse_days: int = 365,
     output_dir: Path | None = None,
     display_timezone: str | None = None,
+    changes_path: Path | None = None,
+    commit_msg_file: Path | None = None,
+    alert_file: Path | None = None,
 ) -> int:
-    """Execute the multi-market calendar generation pipeline.
-
-    Builds one `.ics` feed per registered market in `output_dir` (default `docs/`),
-    plus `docs/earnings.ics` as an alias of `docs/us.ics`, and `docs/index.html`.
-    One failing market never blocks the others: its error is logged, its existing
-    `.ics` file is preserved, and `run()` exits non-zero at the end.
-    """
+    """Execute the multi-market calendar generation and change-reporting pipeline."""
     try:
         config = load_config(config_path)
         active_display_tz = validate_timezone(
@@ -197,10 +268,12 @@ def run(
             scrape_ljse=scrape_ljse,
             ljse_cache_path=ljse_cache_path,
             ljse_days=ljse_days,
+            changes_path=changes_path,
         )
 
     target_dir = output_dir or (output_path.parent if output_path is not None else Path("docs"))
     target_dir.mkdir(parents=True, exist_ok=True)
+    resolved_changes_path = changes_path or (target_dir.parent / DEFAULT_CHANGES_PATH)
 
     markets = instantiate_markets(
         config=config,
@@ -209,6 +282,7 @@ def run(
     )
 
     had_failure = False
+    all_changes: list[CalendarChange] = []
 
     for market in markets:
         feed_path = target_dir / market.feed_filename
@@ -227,19 +301,40 @@ def run(
             had_failure = True
             continue
 
+        market_window = market.effective_window(window)
+        market_changes = diff_feed(
+            previous_ics_path=feed_path,
+            new_events=events,
+            window=market_window,
+            run_date=start_date,
+            market_id=market.id,
+            display_timezone=active_display_tz,
+        )
+        all_changes.extend(market_changes)
+
+        if market_changes:
+            append_changes(market_changes, resolved_changes_path)
+
+        move_notes = get_recent_date_moves(
+            resolved_changes_path,
+            run_date=start_date,
+            events=events,
+            display_timezone=active_display_tz,
+        )
+
         changed = write_calendar(
             events,
             feed_path,
             calendar_name=market.calendar_name,
             timezone_name=market.timezone,
             display_timezone=active_display_tz,
+            move_notes=move_notes,
         )
         if changed:
             logger.info("Wrote %d event(s) for market '%s' to %s", len(events), market.id, feed_path)
         else:
             logger.info("No changes for market '%s' in %s (%d event(s))", market.id, feed_path, len(events))
 
-        # Write any legacy alias feeds (e.g. docs/earnings.ics as an alias of docs/us.ics)
         for alias_name in getattr(market, "legacy_aliases", ()) or ():
             alias_path = target_dir / alias_name
             write_calendar(
@@ -248,12 +343,24 @@ def run(
                 calendar_name=market.calendar_name,
                 timezone_name=market.timezone,
                 display_timezone=active_display_tz,
+                move_notes=move_notes,
             )
 
     write_index_html(
         markets,
         target_dir / "index.html",
         display_timezone=active_display_tz,
+    )
+
+    if all_changes:
+        logger.info("Calendar change summary:\n%s", render_change_summary(all_changes))
+    else:
+        logger.info("No calendar changes detected across markets.")
+
+    _write_workflow_outputs(
+        all_changes=all_changes,
+        commit_msg_file=commit_msg_file,
+        alert_file=alert_file,
     )
 
     return 1 if had_failure else 0
@@ -275,6 +382,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         ljse_cache_path=args.ljse_cache,
         ljse_days=args.ljse_days,
         display_timezone=args.display_timezone,
+        changes_path=args.changes_file,
+        commit_msg_file=args.commit_msg_file,
+        alert_file=args.alert_file,
     )
 
 

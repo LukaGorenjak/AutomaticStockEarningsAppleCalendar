@@ -253,15 +253,19 @@ class LJSEMarket(Market):
         raw_tickers = self.config.get("tickers") or []
         return [str(t).strip().upper() for t in raw_tickers if t and str(t).strip()]
 
+    def effective_window(self, window: DateWindow) -> DateWindow:
+        """Use at least a 365-day lookahead for LJSE annual financial calendars."""
+        return DateWindow(
+            start=window.start,
+            end=max(window.end, window.start.replace(year=window.start.year + 1)),
+        )
+
     def fetch_events(self, window: DateWindow) -> list[Event]:
         """Fetch LJSE events from `ljse_events.yaml` filtered to watchlist and window."""
         events_file = self._resolve_events_file()
         tickers = self._get_tickers()
 
-        effective_window = DateWindow(
-            start=window.start,
-            end=max(window.end, window.start.replace(year=window.start.year + 1)),
-        )
+        effective_window = self.effective_window(window)
         events = load_ljse_events_yaml(
             path=events_file,
             allowed_tickers=tickers or None,

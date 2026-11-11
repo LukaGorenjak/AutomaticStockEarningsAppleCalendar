@@ -41,6 +41,10 @@ class Market(ABC):
         """Output `.ics` filename for this market (e.g. `us.ics`)."""
         return f"{self.id}.ics"
 
+    def effective_window(self, window: DateWindow) -> DateWindow:
+        """Return the effective `[start, end]` date window used when fetching this market."""
+        return window
+
     @abstractmethod
     def fetch_events(self, window: DateWindow) -> list[Event]:
         """Fetch events for this market within `[window.start, window.end]`."""

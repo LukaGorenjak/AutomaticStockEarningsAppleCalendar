@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   scrape-ljse:
@@ -32,21 +33,100 @@ jobs:
           pip install -r requirements.txt
           pip install --no-deps -e .
 
-      - name: Scrape LJSE SEOnet & rebuild earnings calendar (.ics)
+      - name: Scrape LJSE SEOnet & rebuild market calendars (.ics)
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           PYTHONPATH: src
-        run: python -m earnings_cal --scrape-ljse
-
-      - name: Commit state/ljse_cache.json and docs feeds if changed
         run: |
-          git add state/ljse_cache.json docs/*.ics docs/index.html
+          python -m earnings_cal --scrape-ljse \
+            --commit-msg-file "${{ runner.temp }}/commit_msg.txt" \
+            --alert-file "${{ runner.temp }}/calendar_alert.json"
+
+      - name: Commit state/ljse_cache.json, data/changes.jsonl, and docs feeds if changed
+        run: |
+          git add state/ljse_cache.json data/changes.jsonl docs/*.ics docs/index.html
           if git diff --cached --quiet; then
-            echo "No changes to LJSE cache or docs feeds"
+            echo "No changes to LJSE cache, changes log, or docs feeds"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore: update LJSE cache and market calendars"
+            if [ -s "${{ runner.temp }}/commit_msg.txt" ]; then
+              git commit -F "${{ runner.temp }}/commit_msg.txt"
+            else
+              git commit -m "chore: update LJSE cache and market calendars"
+            fi
             git pull --rebase
             git push
           fi
+
+      - name: Open GitHub issue for date changes or removals (deduplicated)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const alertPath = `${process.env.RUNNER_TEMP}/calendar_alert.json`;
+            if (!fs.existsSync(alertPath)) {
+              core.info("No date changes or removals in this run; skipping issue creation.");
+              return;
+            }
+            const payload = JSON.parse(fs.readFileSync(alertPath, "utf8"));
+            const { owner, repo } = context.repo;
+
+            const existingIssues = await github.paginate(
+              github.rest.issues.listForRepo,
+              { owner, repo, state: "all", per_page: 100 }
+            );
+
+            const reportedDigests = new Set();
+            const reportedKeys = new Set();
+            for (const issue of existingIssues) {
+              if (!issue.body) continue;
+              const digestMatch = issue.body.match(/<!-- calendar-changes-id: ([^\s]+) -->/);
+              if (digestMatch) reportedDigests.add(digestMatch[1]);
+              for (const m of issue.body.matchAll(/<!-- change-key: ([^>]+) -->/g)) {
+                reportedKeys.add(m[1].trim());
+              }
+            }
+
+            if (reportedDigests.has(payload.digest)) {
+              core.info(`Change digest ${payload.digest} already reported; skipping.`);
+              return;
+            }
+
+            const freshItems = payload.items.filter((it) => !reportedKeys.has(it.alert_key));
+            if (freshItems.length === 0) {
+              core.info("All date changes/removals in this run were already reported in prior issues.");
+              return;
+            }
+
+            const moved = freshItems.filter((it) => it.change_type === "date_changed");
+            const removed = freshItems.filter((it) => it.change_type === "removed");
+            const titleParts = [];
+            if (moved.length) titleParts.push(`${moved.length} date change${moved.length === 1 ? "" : "s"}`);
+            if (removed.length) titleParts.push(`${removed.length} removal${removed.length === 1 ? "" : "s"}`);
+            const title = `Calendar alert (${payload.run_date}): ${titleParts.join(", ")}`;
+
+            const lines = [
+              `<!-- calendar-changes-id: ${payload.digest} -->`,
+              `# Calendar Changes Detected (${payload.run_date})`,
+              "",
+            ];
+            if (moved.length) {
+              lines.push("## Date Changes", "", "| Market | Ticker | Old Date | New Date | Event |", "| --- | --- | --- | --- | --- |");
+              moved.forEach((it) => lines.push(it.line));
+              lines.push("");
+            }
+            if (removed.length) {
+              lines.push("## Removed Future Events", "", "| Market | Ticker | Previous Date | Event |", "| --- | --- | --- | --- |");
+              removed.forEach((it) => lines.push(it.line));
+              lines.push("");
+            }
+            freshItems.forEach((it) => lines.push(`<!-- change-key: ${it.alert_key} -->`));
+
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body: lines.join("\n") + "\n",
+            });
+            core.info(`Created calendar alert issue: ${title}`);

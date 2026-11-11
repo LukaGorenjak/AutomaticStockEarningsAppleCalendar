@@ -23,6 +23,10 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 - **Extended `Event` & `EventKind` Model**:
   - Supports `EventKind` (`earnings`, `dividend`, `ex_dividend`, `agm`, `macro`, `other`), `market`, `ticker`, `title`, `date`, optional `time`, `description`, and `source_url`.
   - Market-scoped deterministic UIDs: `{market}-{ticker}-{date or fiscal period}-{kind}@earnings-cal` (e.g. `us-AAPL-2027Q1-earnings@earnings-cal`, `ljse-KRKG-2026-11-12-earnings@earnings-cal`).
+- **Run-to-Run Change Detection & Alerts (`data/changes.jsonl`)**:
+  - Before overwriting any `.ics` feed, compares the previous committed feed against new events by UID (`added`, `removed`, `date_changed`, `details_changed`).
+  - Events that simply scrolled behind `today` or past the lookahead horizon are ignored (only future events inside the active fetch window are reported as `removed`).
+  - Appends deterministic records to `data/changes.jsonl`, writes human-readable summaries into the workflow commit message, opens one deduplicated GitHub issue per run when any `date_changed` or `removed` occurs, and appends `"Date changed from X on <run date>"` to moved event descriptions for 14 days without extra `VALARM`s.
 - **Failure Isolation Across Markets**:
   - One failing market never blocks the others: its error is logged, its existing `.ics` file in `docs/` is preserved untouched, all healthy markets are updated, and the CLI exits non-zero at the end.
 - **Apple Calendar Ready & Local Timezone Conversion (`zoneinfo`)**:
@@ -45,6 +49,8 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── us.ics                     # US equities earnings feed (X-WR-CALNAME: Earnings US)
 │   ├── ljse.ics                   # LJSE corporate events feed (X-WR-CALNAME: Events LJSE)
 │   └── earnings.ics               # Legacy alias of docs/us.ics
+├── data/
+│   └── changes.jsonl              # Append-only deterministic log of detected feed changes
 ├── src/earnings_cal/
 │   ├── __init__.py
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
@@ -61,6 +67,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   └── seonet/                    # SEOnet RSS watcher & PDF candidate date extractor
 ├── tests/
 │   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
+│   ├── test_changes.py            # Run-to-run diffing, window-edge handling & idempotency tests
 │   ├── test_earnings_cal.py       # Finnhub & iCalendar unit/integration tests
 │   ├── test_markets.py            # Multi-market registry, dummy market, UID & isolation tests
 │   ├── test_seonet.py             # SEOnet watcher & scraper tests

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import html
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -47,6 +47,7 @@ def build_calendar(
     calendar_name: str = "Earnings Watchlist",
     timezone_name: str | None = None,
     display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
+    move_notes: Mapping[str, str] | None = None,
 ) -> Calendar:
     """Build an `icalendar.Calendar` from `Event` items converted to `display_timezone`."""
     target_tz = validate_timezone(display_timezone, field_name="display_timezone")
@@ -79,7 +80,11 @@ def build_calendar(
         vevent = ICalEvent()
         vevent.add("uid", item.uid)
         vevent.add("summary", display.summary)
-        vevent.add("description", display.description)
+        description_text = display.description
+        move_note = move_notes.get(item.uid) if move_notes else None
+        if move_note and move_note not in description_text:
+            description_text = f"{description_text}\n{move_note}"
+        vevent.add("description", description_text)
         if item.source_url:
             vevent.add("url", item.source_url)
 
@@ -111,6 +116,7 @@ def render_ics(
     calendar_name: str = "Earnings Watchlist",
     timezone_name: str | None = None,
     display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
+    move_notes: Mapping[str, str] | None = None,
 ) -> bytes:
     """Serialize `events` into deterministic RFC 5545 `.ics` bytes."""
     cal = build_calendar(
@@ -118,6 +124,7 @@ def render_ics(
         calendar_name=calendar_name,
         timezone_name=timezone_name,
         display_timezone=display_timezone,
+        move_notes=move_notes,
     )
     return cal.to_ical()
 
@@ -128,6 +135,7 @@ def write_calendar(
     calendar_name: str = "Earnings Watchlist",
     timezone_name: str | None = None,
     display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
+    move_notes: Mapping[str, str] | None = None,
 ) -> bool:
     """Write `.ics` file only if content changed. Returns True if file was updated."""
     path = Path(output_path)
@@ -136,6 +144,7 @@ def write_calendar(
         calendar_name=calendar_name,
         timezone_name=timezone_name,
         display_timezone=display_timezone,
+        move_notes=move_notes,
     )
 
     if path.exists():
