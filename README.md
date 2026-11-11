@@ -8,6 +8,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 | --- | --- | --- | --- | --- |
 | **United States (`us`)** | `docs/us.ics` | `Earnings US` | `America/New_York` | `webcal://<user>.github.io/<repo>/us.ics` |
 | **Ljubljana Stock Exchange (`ljse`)** | `docs/ljse.ics` | `Events LJSE` | `Europe/Ljubljana` | `webcal://<user>.github.io/<repo>/ljse.ics` |
+| **Macroeconomic Events (`macro`)** | `docs/macro.ics` | `Macro Calendar` | `Europe/Ljubljana` | `webcal://<user>.github.io/<repo>/macro.ics` |
 | **Legacy US Alias** | `docs/earnings.ics` | `Earnings US` | `America/New_York` | `webcal://<user>.github.io/<repo>/earnings.ics` |
 
 > **Migration notice (`docs/earnings.ics` -> `docs/us.ics`):**
@@ -19,10 +20,19 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 
 - **Modular Multi-Market Design (`src/earnings_cal/markets/`)**:
   - Each market implements `Market` (`id`, `display_name`, `timezone`, `calendar_name`, `fetch_events(window) -> list[Event]`) in its own module and is registered in `src/earnings_cal/markets/registry.py`.
-  - One `.ics` feed per market (`docs/us.ics`, `docs/ljse.ics`) plus an auto-generated `docs/index.html` listing every registered feed and its `webcal://` link.
+  - One `.ics` feed per market (`docs/us.ics`, `docs/ljse.ics`, `docs/macro.ics`) plus an auto-generated `docs/index.html` listing every registered feed and its `webcal://` link.
+- **Macroeconomic Calendar (`docs/macro.ics`)**:
+  - Curated 2026–2027 schedule in `data/macro_events.yaml` covering four configurable series (`macro.series` in `tickers.yaml`):
+    - **ECB monetary policy meetings** (`ecb`, `central_bank_meeting`, `Europe/Berlin`)
+    - **Fed FOMC meetings** (`fomc`, `central_bank_meeting`, `America/New_York`)
+    - **US CPI releases** (`us_cpi`, `inflation_release`, `08:30 America/New_York`)
+    - **Euro-area inflation releases — Eurostat flash HICP** (`ea_hicp`, `inflation_release`, `11:00 Europe/Brussels`)
+  - Multi-day meetings (`fomc`, `ecb`) render as multi-day all-day `VEVENT`s (`DTSTART;VALUE=DATE` to `DTEND;VALUE=DATE` spanning the full meeting) with the decision day and converted `display_timezone` release time noted in the description.
+  - Inflation releases (`us_cpi`, `ea_hicp`) use exact release times converted to `display_timezone` via `ZoneInfo`.
+  - Includes a validation CLI (`python -m earnings_cal.markets.macro --verify-online`) that checks `data/macro_events.yaml` dates against the official pages (`federalreserve.gov`, `ecb.europa.eu`, `bls.gov`, `ec.europa.eu/eurostat`) when reachable.
 - **Extended `Event` & `EventKind` Model**:
-  - Supports `EventKind` (`earnings`, `dividend`, `ex_dividend`, `agm`, `macro`, `other`), `market`, `ticker`, `title`, `date`, optional `time`, `description`, and `source_url`.
-  - Market-scoped deterministic UIDs: `{market}-{ticker}-{date or fiscal period}-{kind}@earnings-cal` (e.g. `us-AAPL-2027Q1-earnings@earnings-cal`, `ljse-KRKG-2026-11-12-earnings@earnings-cal`).
+  - Supports `EventKind` (`earnings`, `dividend`, `dividend_decision`, `ex_dividend`, `record_date`, `dividend_payment`, `agm`, `central_bank_meeting`, `inflation_release`, `macro`, `other`), `market`, `ticker`, `title`, `date`, optional `end_date` (for multi-day all-day events), optional `time`, `description`, and `source_url`.
+  - Market-scoped deterministic UIDs: `{market}-{ticker}-{date or fiscal period}-{kind}@earnings-cal` (e.g. `us-AAPL-2027Q1-earnings@earnings-cal`, `ljse-KRKG-2026-11-12-earnings@earnings-cal`, `macro-FOMC-2026-12-08-central_bank_meeting@earnings-cal`).
 - **Health Monitoring & Stale-Data Visibility (`docs/status.json`)**:
   - Writes [docs/status.json](docs/status.json) after every run with per-market (`us`, `ljse`, ...) and per-source (`api`, `seonet`) `last_success_at`, `upcoming_events`, `age_days`, `stale`, `healthy`, and `errors`.
   - Configurable `thresholds` in `tickers.yaml` (`max_age_days`, default `3`; `min_upcoming_events`, default `1`).
@@ -53,9 +63,11 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── status.json                # Per-market and per-source freshness, event counts & errors
 │   ├── us.ics                     # US equities earnings feed (X-WR-CALNAME: Earnings US)
 │   ├── ljse.ics                   # LJSE corporate events feed (X-WR-CALNAME: Events LJSE)
+│   ├── macro.ics                  # Macroeconomic calendar feed (X-WR-CALNAME: Macro Calendar)
 │   └── earnings.ics               # Legacy alias of docs/us.ics
 ├── data/
-│   └── changes.jsonl              # Append-only deterministic log of detected feed changes
+│   ├── changes.jsonl              # Append-only deterministic log of detected feed changes
+│   └── macro_events.yaml          # Curated 2026-2027 FOMC, ECB, US CPI, and Euro-area flash HICP schedule
 ├── src/earnings_cal/
 │   ├── __init__.py
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
@@ -68,12 +80,15 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   │   ├── base.py                # Market abstract base class
 │   │   ├── registry.py            # Central MARKET_REGISTRY
 │   │   ├── us.py                  # USMarket (Finnhub + manual_events)
-│   │   └── ljse.py                # LJSEMarket (ljse_events.yaml)
+│   │   ├── ljse.py                # LJSEMarket (ljse_events.yaml)
+│   │   └── macro.py               # MacroMarket (data/macro_events.yaml + online validator)
 │   └── seonet/                    # SEOnet RSS watcher & PDF candidate date extractor
 ├── tests/
 │   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
 │   ├── test_changes.py            # Run-to-run diffing, window-edge handling & idempotency tests
 │   ├── test_earnings_cal.py       # Finnhub & iCalendar unit/integration tests
+│   ├── test_ljse_corporate.py     # LJSE corporate event validation & SEOnet dividend/AGM tests
+│   ├── test_macro.py              # Macro YAML validation, multi-day meetings & UID stability tests
 │   ├── test_markets.py            # Multi-market registry, dummy market, UID & isolation tests
 │   ├── test_seonet.py             # SEOnet watcher & scraper tests
 │   ├── test_status.py             # Health status, staleness thresholds & stale warning tests
@@ -123,6 +138,14 @@ ljse:
     TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
     LKPG: "LUKA KOPER, d.d., Koper"
     NLBR: "NLB, d. d., Ljubljana"
+
+macro:
+  series:
+    - ecb
+    - fomc
+    - us_cpi
+    - ea_hicp
+  events_file: data/macro_events.yaml
 ```
 
 LJSE corporate events live in `ljse_events.yaml` and support:
@@ -185,6 +208,9 @@ python -m earnings_cal --mock
 # Build with a live Finnhub API key
 export FINNHUB_API_KEY="your_finnhub_api_key_here"
 python -m earnings_cal
+
+# Validate data/macro_events.yaml and check against official FOMC/ECB/BLS/Eurostat pages
+python -m earnings_cal.markets.macro --verify-online
 
 # Run the full test suite
 pytest -v

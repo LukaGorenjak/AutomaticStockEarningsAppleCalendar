@@ -1,0 +1,832 @@
+# Official Macroeconomic Schedules (2026-2027)
+#
+# Covered series (configurable via `macro.series` in `tickers.yaml`):
+# - `fomc`: Federal Reserve FOMC monetary policy meetings (`central_bank_meeting`)
+#   Official schedule: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+#   Multi-day all-day meetings; policy statement released on Day 2 at 14:00 America/New_York.
+# - `ecb`: European Central Bank Governing Council monetary policy meetings (`central_bank_meeting`)
+#   Official schedule: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+#   Multi-day all-day meetings in Frankfurt; monetary policy decision released on Day 2 at 14:15 Europe/Berlin.
+# - `us_cpi`: U.S. Bureau of Labor Statistics Consumer Price Index releases (`inflation_release`)
+#   Official schedule: https://www.bls.gov/schedule/news_release/cpi.htm
+#   Timed releases at 08:30 America/New_York.
+# - `ea_hicp`: Eurostat Euro-area annual inflation flash estimate (HICP) releases (`inflation_release`)
+#   Official schedule: https://ec.europa.eu/eurostat/web/main/news/release-calendar
+#   Timed releases at 11:00 Europe/Brussels.
+
+macro_events:
+  # ===========================================================================
+  # 1. Federal Reserve FOMC Meetings (2026-2027)
+  # ===========================================================================
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-01-27"
+    end_date: "2026-01-28"
+    decision_date: "2026-01-28"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Jan 27-28, 2026). Decision Day: 2026-01-28."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-03-17"
+    end_date: "2026-03-18"
+    decision_date: "2026-03-18"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Mar 17-18, 2026). Decision Day: 2026-03-18."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-04-28"
+    end_date: "2026-04-29"
+    decision_date: "2026-04-29"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Apr 28-29, 2026). Decision Day: 2026-04-29."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-06-16"
+    end_date: "2026-06-17"
+    decision_date: "2026-06-17"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Jun 16-17, 2026). Decision Day: 2026-06-17."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-07-28"
+    end_date: "2026-07-29"
+    decision_date: "2026-07-29"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Jul 28-29, 2026). Decision Day: 2026-07-29."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-09-15"
+    end_date: "2026-09-16"
+    decision_date: "2026-09-16"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Sep 15-16, 2026). Decision Day: 2026-09-16."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-10-27"
+    end_date: "2026-10-28"
+    decision_date: "2026-10-28"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Oct 27-28, 2026). Decision Day: 2026-10-28."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2026-12-08"
+    end_date: "2026-12-09"
+    decision_date: "2026-12-09"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Dec 8-9, 2026). Decision Day: 2026-12-09."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-01-26"
+    end_date: "2027-01-27"
+    decision_date: "2027-01-27"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Jan 26-27, 2027). Decision Day: 2027-01-27."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-03-16"
+    end_date: "2027-03-17"
+    decision_date: "2027-03-17"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Mar 16-17, 2027). Decision Day: 2027-03-17."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-04-27"
+    end_date: "2027-04-28"
+    decision_date: "2027-04-28"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Apr 27-28, 2027). Decision Day: 2027-04-28."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-06-08"
+    end_date: "2027-06-09"
+    decision_date: "2027-06-09"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Jun 8-9, 2027). Decision Day: 2027-06-09."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-07-27"
+    end_date: "2027-07-28"
+    decision_date: "2027-07-28"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Jul 27-28, 2027). Decision Day: 2027-07-28."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-09-14"
+    end_date: "2027-09-15"
+    decision_date: "2027-09-15"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Sep 14-15, 2027). Decision Day: 2027-09-15."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-10-26"
+    end_date: "2027-10-27"
+    decision_date: "2027-10-27"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting (Oct 26-27, 2027). Decision Day: 2027-10-27."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  - series: fomc
+    ticker: FOMC
+    kind: central_bank_meeting
+    date: "2027-12-07"
+    end_date: "2027-12-08"
+    decision_date: "2027-12-08"
+    decision_time: "14:00"
+    market_timezone: "America/New_York"
+    title: "FOMC decision"
+    description: "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Dec 7-8, 2027). Decision Day: 2027-12-08."
+    source_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+
+  # ===========================================================================
+  # 2. ECB Governing Council Monetary Policy Meetings (2026-2027)
+  # ===========================================================================
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-02-04"
+    end_date: "2026-02-05"
+    decision_date: "2026-02-05"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Feb 4-5, 2026). Decision Day: 2026-02-05 (press conference follows at 14:45 CET)."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-03-18"
+    end_date: "2026-03-19"
+    decision_date: "2026-03-19"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Mar 18-19, 2026). Decision Day: 2026-03-19."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-04-29"
+    end_date: "2026-04-30"
+    decision_date: "2026-04-30"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Apr 29-30, 2026). Decision Day: 2026-04-30."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-06-10"
+    end_date: "2026-06-11"
+    decision_date: "2026-06-11"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Jun 10-11, 2026). Decision Day: 2026-06-11."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-07-22"
+    end_date: "2026-07-23"
+    decision_date: "2026-07-23"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Jul 22-23, 2026). Decision Day: 2026-07-23."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-09-09"
+    end_date: "2026-09-10"
+    decision_date: "2026-09-10"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Sep 9-10, 2026). Decision Day: 2026-09-10."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-10-28"
+    end_date: "2026-10-29"
+    decision_date: "2026-10-29"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Oct 28-29, 2026). Decision Day: 2026-10-29."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2026-12-16"
+    end_date: "2026-12-17"
+    decision_date: "2026-12-17"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Dec 16-17, 2026). Decision Day: 2026-12-17."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-02-03"
+    end_date: "2027-02-04"
+    decision_date: "2027-02-04"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Feb 3-4, 2027). Decision Day: 2027-02-04."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-03-17"
+    end_date: "2027-03-18"
+    decision_date: "2027-03-18"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Mar 17-18, 2027). Decision Day: 2027-03-18."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-04-28"
+    end_date: "2027-04-29"
+    decision_date: "2027-04-29"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Apr 28-29, 2027). Decision Day: 2027-04-29."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-06-09"
+    end_date: "2027-06-10"
+    decision_date: "2027-06-10"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Jun 9-10, 2027). Decision Day: 2027-06-10."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-07-21"
+    end_date: "2027-07-22"
+    decision_date: "2027-07-22"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Jul 21-22, 2027). Decision Day: 2027-07-22."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-09-08"
+    end_date: "2027-09-09"
+    decision_date: "2027-09-09"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Sep 8-9, 2027). Decision Day: 2027-09-09."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-10-27"
+    end_date: "2027-10-28"
+    decision_date: "2027-10-28"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt (Oct 27-28, 2027). Decision Day: 2027-10-28."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  - series: ecb
+    ticker: ECB
+    kind: central_bank_meeting
+    date: "2027-12-15"
+    end_date: "2027-12-16"
+    decision_date: "2027-12-16"
+    decision_time: "14:15"
+    market_timezone: "Europe/Berlin"
+    title: "ECB decision"
+    description: "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Dec 15-16, 2027). Decision Day: 2027-12-16."
+    source_url: "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+
+  # ===========================================================================
+  # 3. U.S. Consumer Price Index (US CPI) Releases (2026-2027)
+  # ===========================================================================
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-01-13"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: December 2025)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-02-13"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: January 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-03-11"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: February 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-04-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: March 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-05-12"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: April 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-06-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: May 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-07-14"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: June 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-08-12"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: July 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-09-11"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: August 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-10-14"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: September 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-11-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: October 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2026-12-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: November 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-01-13"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: December 2026)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-02-11"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: January 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-03-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: February 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-04-13"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: March 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-05-12"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: April 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-06-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: May 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-07-14"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: June 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-08-11"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: July 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-09-14"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: August 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-10-14"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: September 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-11-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: October 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  - series: us_cpi
+    ticker: US_CPI
+    kind: inflation_release
+    date: "2027-12-10"
+    time: "08:30"
+    market_timezone: "America/New_York"
+    title: "US CPI"
+    description: "U.S. BLS Consumer Price Index release (Reference Month: November 2027)."
+    source_url: "https://www.bls.gov/schedule/news_release/cpi.htm"
+
+  # ===========================================================================
+  # 4. Euro-area Inflation Releases — Eurostat Flash HICP (2026-2027)
+  # ===========================================================================
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-01-07"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: December 2025)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-02-04"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: January 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-03-03"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: February 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-03-31"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: March 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-04-30"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: April 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-06-02"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: May 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-07-01"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: June 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-07-31"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: July 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-09-01"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: August 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-10-02"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: September 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-11-04"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: October 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2026-12-01"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: November 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2027-01-06"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: December 2026)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2027-02-02"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: January 2027)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2027-03-02"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: February 2027)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2027-04-01"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: March 2027)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2027-05-03"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: April 2027)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"
+
+  - series: ea_hicp
+    ticker: EA_HICP
+    kind: inflation_release
+    date: "2027-06-01"
+    time: "11:00"
+    market_timezone: "Europe/Brussels"
+    title: "Euro area flash HICP"
+    description: "Eurostat euro-area annual inflation flash estimate (Reference Month: May 2027)."
+    source_url: "https://ec.europa.eu/eurostat/web/main/news/release-calendar"

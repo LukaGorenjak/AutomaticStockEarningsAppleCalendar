@@ -13,6 +13,18 @@
       "stale": false,
       "upcoming_events": 10
     },
+    "macro": {
+      "age_days": 0,
+      "errors": [],
+      "healthy": true,
+      "last_attempt_at": "2026-11-11T18:55:36.950881+00:00",
+      "last_success_at": "2026-11-11T18:55:36.950881+00:00",
+      "last_success_date": "2026-11-11",
+      "max_age_days": 3,
+      "min_upcoming_events": 1,
+      "stale": false,
+      "upcoming_events": 35
+    },
     "us": {
       "age_days": 0,
       "errors": [
@@ -57,6 +69,10 @@
     "default_min_upcoming_events": 1,
     "markets": {
       "ljse": {
+        "max_age_days": 3,
+        "min_upcoming_events": 1
+      },
+      "macro": {
         "max_age_days": 3,
         "min_upcoming_events": 1
       },

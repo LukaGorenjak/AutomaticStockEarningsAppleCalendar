@@ -17,6 +17,9 @@ thresholds:
     ljse:
       max_age_days: 3
       min_upcoming_events: 1
+    macro:
+      max_age_days: 3
+      min_upcoming_events: 1
 
 # Per-market watchlists and configuration
 us:
@@ -49,3 +52,11 @@ ljse:
     TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
     LKPG: "LUKA KOPER, d.d., Koper"
     NLBR: "NLB, d. d., Ljubljana"
+
+macro:
+  series:
+    - ecb
+    - fomc
+    - us_cpi
+    - ea_hicp
+  events_file: data/macro_events.yaml

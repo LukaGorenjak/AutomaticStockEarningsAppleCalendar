@@ -93,8 +93,9 @@ def build_calendar(
             vevent.add("dtend", display.end_dt)
             alarm_trigger = timedelta(minutes=-30)
         else:
+            inclusive_end = display.local_end_date or display.local_date
             vevent.add("dtstart", display.local_date)
-            vevent.add("dtend", display.local_date + timedelta(days=1))
+            vevent.add("dtend", inclusive_end + timedelta(days=1))
             alarm_trigger = timedelta(hours=-15)
 
         vevent.add("dtstamp", DETERMINISTIC_DTSTAMP)

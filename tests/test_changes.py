@@ -89,11 +89,12 @@ ljse:
     assert changes_file.exists()
 
     records1 = load_change_records(changes_file)
-    assert len(records1) == 2
+    us_ljse_records1 = [r for r in records1 if r["market"] in {"us", "ljse"}]
+    assert len(us_ljse_records1) == 2
     assert {r["change_type"] for r in records1} == {"added"}
     # Pure additions do NOT create an alert issue file
     assert not alert_file.exists()
-    assert "2 added" in commit_msg_file.read_text(encoding="utf-8")
+    assert "added" in commit_msg_file.read_text(encoding="utf-8")
 
     initial_jsonl_text = changes_file.read_text(encoding="utf-8")
     initial_us_bytes = (docs_dir / "us.ics").read_bytes()
@@ -383,4 +384,7 @@ ljse:
         == 0
     )
     assert not alert_file.exists()
-    assert len(load_change_records(changes_file)) == 3  # 2 initial adds + 1 date_changed
+    us_ljse_records = [
+        r for r in load_change_records(changes_file) if r["market"] in {"us", "ljse"}
+    ]
+    assert len(us_ljse_records) == 3  # 2 initial adds + 1 date_changed

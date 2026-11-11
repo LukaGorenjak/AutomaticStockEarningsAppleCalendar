@@ -12,6 +12,7 @@ from typing import Any
 
 from earnings_cal.markets.base import Market
 from earnings_cal.markets.ljse import LJSEMarket
+from earnings_cal.markets.macro import MacroMarket
 from earnings_cal.markets.us import USMarket
 from earnings_cal.models import WatchlistConfig
 
@@ -19,6 +20,7 @@ from earnings_cal.models import WatchlistConfig
 MARKET_REGISTRY: dict[str, type[Market] | Market] = {
     USMarket.id: USMarket,
     LJSEMarket.id: LJSEMarket,
+    MacroMarket.id: MacroMarket,
 }
 
 

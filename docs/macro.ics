@@ -1,0 +1,664 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Earnings Watchlist//earnings-cal//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Macro Calendar
+REFRESH-INTERVAL;VALUE=DURATION:P1D
+X-PUBLISHED-TTL:P1D
+X-WR-TIMEZONE:Europe/Ljubljana
+BEGIN:VEVENT
+SUMMARY:Euro area flash HICP
+DTSTART;TZID=Europe/Ljubljana:20261201T110000
+DTEND;TZID=Europe/Ljubljana:20261201T120000
+DTSTAMP:20260101T000000Z
+UID:macro-EA_HICP-2026-12-01-inflation_release@earnings-cal
+DESCRIPTION:Eurostat euro-area annual inflation flash estimate (Reference 
+ Month: November 2026).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat
+ /web/main/news/release-calendar\nLocal Time: 2026-12-01 11:00 CET (Europe/
+ Ljubljana)\nMarket Time: 2026-12-01 11:00 CET (Europe/Brussels)
+TRANSP:TRANSPARENT
+URL:https://ec.europa.eu/eurostat/web/main/news/release-calendar
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Euro area flash HICP
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20261208
+DTEND;VALUE=DATE:20261210
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2026-12-08-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting with Summ
+ ary of Economic Projections (Dec 8-9\, 2026). Decision Day: 2026-12-09.\nM
+ eeting Dates: 2026-12-08 to 2026-12-09\nDecision Day: 2026-12-09\nSource: 
+ https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision 
+ Release Time: 2026-12-09 20:00 CET (Europe/Ljubljana) / 2026-12-09 14:00 E
+ ST (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20261210T143000
+DTEND;TZID=Europe/Ljubljana:20261210T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2026-12-10-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: Novemb
+ er 2026).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/
+ cpi.htm\nLocal Time: 2026-12-10 14:30 CET (Europe/Ljubljana)\nMarket Time:
+  2026-12-10 08:30 EST (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20261216
+DTEND;VALUE=DATE:20261218
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2026-12-16-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt wit
+ h macroeconomic projections (Dec 16-17\, 2026). Decision Day: 2026-12-17.\
+ nMeeting Dates: 2026-12-16 to 2026-12-17\nDecision Day: 2026-12-17\nSource
+ : https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDeci
+ sion Release Time: 2026-12-17 14:15 CET (Europe/Ljubljana) / 2026-12-17 14
+ :15 CET (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Euro area flash HICP
+DTSTART;TZID=Europe/Ljubljana:20270106T110000
+DTEND;TZID=Europe/Ljubljana:20270106T120000
+DTSTAMP:20260101T000000Z
+UID:macro-EA_HICP-2027-01-06-inflation_release@earnings-cal
+DESCRIPTION:Eurostat euro-area annual inflation flash estimate (Reference 
+ Month: December 2026).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat
+ /web/main/news/release-calendar\nLocal Time: 2027-01-06 11:00 CET (Europe/
+ Ljubljana)\nMarket Time: 2027-01-06 11:00 CET (Europe/Brussels)
+TRANSP:TRANSPARENT
+URL:https://ec.europa.eu/eurostat/web/main/news/release-calendar
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Euro area flash HICP
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270113T143000
+DTEND;TZID=Europe/Ljubljana:20270113T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-01-13-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: Decemb
+ er 2026).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/
+ cpi.htm\nLocal Time: 2027-01-13 14:30 CET (Europe/Ljubljana)\nMarket Time:
+  2027-01-13 08:30 EST (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20270126
+DTEND;VALUE=DATE:20270128
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2027-01-26-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting (Jan 26-2
+ 7\, 2027). Decision Day: 2027-01-27.\nMeeting Dates: 2027-01-26 to 2027-01
+ -27\nDecision Day: 2027-01-27\nSource: https://www.federalreserve.gov/mone
+ tarypolicy/fomccalendars.htm\nDecision Release Time: 2027-01-27 20:00 CET 
+ (Europe/Ljubljana) / 2027-01-27 14:00 EST (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Euro area flash HICP
+DTSTART;TZID=Europe/Ljubljana:20270202T110000
+DTEND;TZID=Europe/Ljubljana:20270202T120000
+DTSTAMP:20260101T000000Z
+UID:macro-EA_HICP-2027-02-02-inflation_release@earnings-cal
+DESCRIPTION:Eurostat euro-area annual inflation flash estimate (Reference 
+ Month: January 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/
+ web/main/news/release-calendar\nLocal Time: 2027-02-02 11:00 CET (Europe/L
+ jubljana)\nMarket Time: 2027-02-02 11:00 CET (Europe/Brussels)
+TRANSP:TRANSPARENT
+URL:https://ec.europa.eu/eurostat/web/main/news/release-calendar
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Euro area flash HICP
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20270203
+DTEND;VALUE=DATE:20270205
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2027-02-03-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt (Fe
+ b 3-4\, 2027). Decision Day: 2027-02-04.\nMeeting Dates: 2027-02-03 to 202
+ 7-02-04\nDecision Day: 2027-02-04\nSource: https://www.ecb.europa.eu/press
+ /calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-02-04 14:
+ 15 CET (Europe/Ljubljana) / 2027-02-04 14:15 CET (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270211T143000
+DTEND;TZID=Europe/Ljubljana:20270211T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-02-11-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: Januar
+ y 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/c
+ pi.htm\nLocal Time: 2027-02-11 14:30 CET (Europe/Ljubljana)\nMarket Time: 
+ 2027-02-11 08:30 EST (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Euro area flash HICP
+DTSTART;TZID=Europe/Ljubljana:20270302T110000
+DTEND;TZID=Europe/Ljubljana:20270302T120000
+DTSTAMP:20260101T000000Z
+UID:macro-EA_HICP-2027-03-02-inflation_release@earnings-cal
+DESCRIPTION:Eurostat euro-area annual inflation flash estimate (Reference 
+ Month: February 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat
+ /web/main/news/release-calendar\nLocal Time: 2027-03-02 11:00 CET (Europe/
+ Ljubljana)\nMarket Time: 2027-03-02 11:00 CET (Europe/Brussels)
+TRANSP:TRANSPARENT
+URL:https://ec.europa.eu/eurostat/web/main/news/release-calendar
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Euro area flash HICP
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270310T143000
+DTEND;TZID=Europe/Ljubljana:20270310T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-03-10-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: Februa
+ ry 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/
+ cpi.htm\nLocal Time: 2027-03-10 14:30 CET (Europe/Ljubljana)\nMarket Time:
+  2027-03-10 08:30 EST (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20270316
+DTEND;VALUE=DATE:20270318
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2027-03-16-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting with Summ
+ ary of Economic Projections (Mar 16-17\, 2027). Decision Day: 2027-03-17.\
+ nMeeting Dates: 2027-03-16 to 2027-03-17\nDecision Day: 2027-03-17\nSource
+ : https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecisio
+ n Release Time: 2027-03-17 19:00 CET (Europe/Ljubljana) / 2027-03-17 14:00
+  EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20270317
+DTEND;VALUE=DATE:20270319
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2027-03-17-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt wit
+ h macroeconomic projections (Mar 17-18\, 2027). Decision Day: 2027-03-18.\
+ nMeeting Dates: 2027-03-17 to 2027-03-18\nDecision Day: 2027-03-18\nSource
+ : https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDeci
+ sion Release Time: 2027-03-18 14:15 CET (Europe/Ljubljana) / 2027-03-18 14
+ :15 CET (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Euro area flash HICP
+DTSTART;TZID=Europe/Ljubljana:20270401T110000
+DTEND;TZID=Europe/Ljubljana:20270401T120000
+DTSTAMP:20260101T000000Z
+UID:macro-EA_HICP-2027-04-01-inflation_release@earnings-cal
+DESCRIPTION:Eurostat euro-area annual inflation flash estimate (Reference 
+ Month: March 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/we
+ b/main/news/release-calendar\nLocal Time: 2027-04-01 11:00 CEST (Europe/Lj
+ ubljana)\nMarket Time: 2027-04-01 11:00 CEST (Europe/Brussels)
+TRANSP:TRANSPARENT
+URL:https://ec.europa.eu/eurostat/web/main/news/release-calendar
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Euro area flash HICP
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270413T143000
+DTEND;TZID=Europe/Ljubljana:20270413T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-04-13-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: March 
+ 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi
+ .htm\nLocal Time: 2027-04-13 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2
+ 027-04-13 08:30 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20270427
+DTEND;VALUE=DATE:20270429
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2027-04-27-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting (Apr 27-2
+ 8\, 2027). Decision Day: 2027-04-28.\nMeeting Dates: 2027-04-27 to 2027-04
+ -28\nDecision Day: 2027-04-28\nSource: https://www.federalreserve.gov/mone
+ tarypolicy/fomccalendars.htm\nDecision Release Time: 2027-04-28 20:00 CEST
+  (Europe/Ljubljana) / 2027-04-28 14:00 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20270428
+DTEND;VALUE=DATE:20270430
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2027-04-28-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt (Ap
+ r 28-29\, 2027). Decision Day: 2027-04-29.\nMeeting Dates: 2027-04-28 to 2
+ 027-04-29\nDecision Day: 2027-04-29\nSource: https://www.ecb.europa.eu/pre
+ ss/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-04-29 1
+ 4:15 CEST (Europe/Ljubljana) / 2027-04-29 14:15 CEST (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Euro area flash HICP
+DTSTART;TZID=Europe/Ljubljana:20270503T110000
+DTEND;TZID=Europe/Ljubljana:20270503T120000
+DTSTAMP:20260101T000000Z
+UID:macro-EA_HICP-2027-05-03-inflation_release@earnings-cal
+DESCRIPTION:Eurostat euro-area annual inflation flash estimate (Reference 
+ Month: April 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/we
+ b/main/news/release-calendar\nLocal Time: 2027-05-03 11:00 CEST (Europe/Lj
+ ubljana)\nMarket Time: 2027-05-03 11:00 CEST (Europe/Brussels)
+TRANSP:TRANSPARENT
+URL:https://ec.europa.eu/eurostat/web/main/news/release-calendar
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Euro area flash HICP
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270512T143000
+DTEND;TZID=Europe/Ljubljana:20270512T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-05-12-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: April 
+ 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi
+ .htm\nLocal Time: 2027-05-12 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2
+ 027-05-12 08:30 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Euro area flash HICP
+DTSTART;TZID=Europe/Ljubljana:20270601T110000
+DTEND;TZID=Europe/Ljubljana:20270601T120000
+DTSTAMP:20260101T000000Z
+UID:macro-EA_HICP-2027-06-01-inflation_release@earnings-cal
+DESCRIPTION:Eurostat euro-area annual inflation flash estimate (Reference 
+ Month: May 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/
+ main/news/release-calendar\nLocal Time: 2027-06-01 11:00 CEST (Europe/Ljub
+ ljana)\nMarket Time: 2027-06-01 11:00 CEST (Europe/Brussels)
+TRANSP:TRANSPARENT
+URL:https://ec.europa.eu/eurostat/web/main/news/release-calendar
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: Euro area flash HICP
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20270608
+DTEND;VALUE=DATE:20270610
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2027-06-08-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting with Summ
+ ary of Economic Projections (Jun 8-9\, 2027). Decision Day: 2027-06-09.\nM
+ eeting Dates: 2027-06-08 to 2027-06-09\nDecision Day: 2027-06-09\nSource: 
+ https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision 
+ Release Time: 2027-06-09 20:00 CEST (Europe/Ljubljana) / 2027-06-09 14:00 
+ EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20270609
+DTEND;VALUE=DATE:20270611
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2027-06-09-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt wit
+ h macroeconomic projections (Jun 9-10\, 2027). Decision Day: 2027-06-10.\n
+ Meeting Dates: 2027-06-09 to 2027-06-10\nDecision Day: 2027-06-10\nSource:
+  https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecis
+ ion Release Time: 2027-06-10 14:15 CEST (Europe/Ljubljana) / 2027-06-10 14
+ :15 CEST (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270610T143000
+DTEND;TZID=Europe/Ljubljana:20270610T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-06-10-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: May 20
+ 27).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.h
+ tm\nLocal Time: 2027-06-10 14:30 CEST (Europe/Ljubljana)\nMarket Time: 202
+ 7-06-10 08:30 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270714T143000
+DTEND;TZID=Europe/Ljubljana:20270714T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-07-14-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: June 2
+ 027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.
+ htm\nLocal Time: 2027-07-14 14:30 CEST (Europe/Ljubljana)\nMarket Time: 20
+ 27-07-14 08:30 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20270721
+DTEND;VALUE=DATE:20270723
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2027-07-21-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt (Ju
+ l 21-22\, 2027). Decision Day: 2027-07-22.\nMeeting Dates: 2027-07-21 to 2
+ 027-07-22\nDecision Day: 2027-07-22\nSource: https://www.ecb.europa.eu/pre
+ ss/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-07-22 1
+ 4:15 CEST (Europe/Ljubljana) / 2027-07-22 14:15 CEST (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20270727
+DTEND;VALUE=DATE:20270729
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2027-07-27-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting (Jul 27-2
+ 8\, 2027). Decision Day: 2027-07-28.\nMeeting Dates: 2027-07-27 to 2027-07
+ -28\nDecision Day: 2027-07-28\nSource: https://www.federalreserve.gov/mone
+ tarypolicy/fomccalendars.htm\nDecision Release Time: 2027-07-28 20:00 CEST
+  (Europe/Ljubljana) / 2027-07-28 14:00 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270811T143000
+DTEND;TZID=Europe/Ljubljana:20270811T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-08-11-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: July 2
+ 027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.
+ htm\nLocal Time: 2027-08-11 14:30 CEST (Europe/Ljubljana)\nMarket Time: 20
+ 27-08-11 08:30 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20270908
+DTEND;VALUE=DATE:20270910
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2027-09-08-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt wit
+ h macroeconomic projections (Sep 8-9\, 2027). Decision Day: 2027-09-09.\nM
+ eeting Dates: 2027-09-08 to 2027-09-09\nDecision Day: 2027-09-09\nSource: 
+ https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecisi
+ on Release Time: 2027-09-09 14:15 CEST (Europe/Ljubljana) / 2027-09-09 14:
+ 15 CEST (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20270914
+DTEND;VALUE=DATE:20270916
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2027-09-14-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting with Summ
+ ary of Economic Projections (Sep 14-15\, 2027). Decision Day: 2027-09-15.\
+ nMeeting Dates: 2027-09-14 to 2027-09-15\nDecision Day: 2027-09-15\nSource
+ : https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecisio
+ n Release Time: 2027-09-15 20:00 CEST (Europe/Ljubljana) / 2027-09-15 14:0
+ 0 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20270914T143000
+DTEND;TZID=Europe/Ljubljana:20270914T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-09-14-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: August
+  2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cp
+ i.htm\nLocal Time: 2027-09-14 14:30 CEST (Europe/Ljubljana)\nMarket Time: 
+ 2027-09-14 08:30 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20271014T143000
+DTEND;TZID=Europe/Ljubljana:20271014T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-10-14-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: Septem
+ ber 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release
+ /cpi.htm\nLocal Time: 2027-10-14 14:30 CEST (Europe/Ljubljana)\nMarket Tim
+ e: 2027-10-14 08:30 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:FOMC decision
+DTSTART;VALUE=DATE:20271026
+DTEND;VALUE=DATE:20271028
+DTSTAMP:20260101T000000Z
+UID:macro-FOMC-2027-10-26-central_bank_meeting@earnings-cal
+DESCRIPTION:Federal Reserve FOMC two-day monetary policy meeting (Oct 26-2
+ 7\, 2027). Decision Day: 2027-10-27.\nMeeting Dates: 2027-10-26 to 2027-10
+ -27\nDecision Day: 2027-10-27\nSource: https://www.federalreserve.gov/mone
+ tarypolicy/fomccalendars.htm\nDecision Release Time: 2027-10-27 20:00 CEST
+  (Europe/Ljubljana) / 2027-10-27 14:00 EDT (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: FOMC decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ECB decision
+DTSTART;VALUE=DATE:20271027
+DTEND;VALUE=DATE:20271029
+DTSTAMP:20260101T000000Z
+UID:macro-ECB-2027-10-27-central_bank_meeting@earnings-cal
+DESCRIPTION:ECB Governing Council monetary policy meeting in Frankfurt (Oc
+ t 27-28\, 2027). Decision Day: 2027-10-28.\nMeeting Dates: 2027-10-27 to 2
+ 027-10-28\nDecision Day: 2027-10-28\nSource: https://www.ecb.europa.eu/pre
+ ss/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-10-28 1
+ 4:15 CEST (Europe/Ljubljana) / 2027-10-28 14:15 CEST (Europe/Berlin)
+TRANSP:TRANSPARENT
+URL:https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ECB decision
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:US CPI
+DTSTART;TZID=Europe/Ljubljana:20271110T143000
+DTEND;TZID=Europe/Ljubljana:20271110T153000
+DTSTAMP:20260101T000000Z
+UID:macro-US_CPI-2027-11-10-inflation_release@earnings-cal
+DESCRIPTION:U.S. BLS Consumer Price Index release (Reference Month: Octobe
+ r 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/c
+ pi.htm\nLocal Time: 2027-11-10 14:30 CET (Europe/Ljubljana)\nMarket Time: 
+ 2027-11-10 08:30 EST (America/New_York)
+TRANSP:TRANSPARENT
+URL:https://www.bls.gov/schedule/news_release/cpi.htm
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: US CPI
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

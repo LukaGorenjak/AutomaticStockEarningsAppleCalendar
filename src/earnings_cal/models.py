@@ -19,6 +19,7 @@ DEFAULT_MIN_UPCOMING_EVENTS = 1
 DEFAULT_MARKET_TIMEZONES: dict[str, str] = {
     "us": "America/New_York",
     "ljse": "Europe/Ljubljana",
+    "macro": "Europe/Ljubljana",
 }
 
 
@@ -32,6 +33,8 @@ class EventKind(StrEnum):
     RECORD_DATE = "record_date"
     DIVIDEND_PAYMENT = "dividend_payment"
     AGM = "agm"
+    CENTRAL_BANK_MEETING = "central_bank_meeting"
+    INFLATION_RELEASE = "inflation_release"
     MACRO = "macro"
     OTHER = "other"
 
@@ -58,6 +61,7 @@ class DisplayTiming:
     summary: str
     description: str
     date_shifted: bool = False
+    local_end_date: date | None = None
 
 
 @dataclass(frozen=True)
@@ -150,6 +154,9 @@ class Event:
     currency: str = "EUR"
     computed: bool = False
     computed_note: str | None = None
+    end_date: date | None = None
+    decision_date: date | None = None
+    decision_time: str | dt_time | None = None
 
     def __post_init__(self) -> None:
         normalized_market = str(self.market or "us").strip().lower()
@@ -234,6 +241,28 @@ class Event:
             cleaned_cnote = str(self.computed_note).strip()
             object.__setattr__(self, "computed_note", cleaned_cnote or None)
 
+        if self.end_date is not None:
+            coerced_end = parse_date_value(self.end_date)
+            if coerced_end < self.date:
+                raise ValueError(
+                    f"Event 'end_date' ({coerced_end.isoformat()}) must not precede 'date' ({self.date.isoformat()})"
+                )
+            object.__setattr__(self, "end_date", coerced_end)
+
+        if self.decision_date is not None:
+            coerced_decision = parse_date_value(self.decision_date)
+            object.__setattr__(self, "decision_date", coerced_decision)
+
+        normalized_decision_time: str | None = None
+        if isinstance(self.decision_time, dt_time):
+            normalized_decision_time = self.decision_time.strftime("%H:%M")
+        elif self.decision_time is not None:
+            cleaned_dt = str(self.decision_time).strip()
+            if cleaned_dt:
+                parsed_dt = _parse_clock_time(cleaned_dt)
+                normalized_decision_time = parsed_dt.strftime("%H:%M")
+        object.__setattr__(self, "decision_time", normalized_decision_time)
+
         resolved_title = (str(self.title).strip() if self.title else "") or self._default_title()
         object.__setattr__(self, "title", resolved_title)
 
@@ -265,6 +294,10 @@ class Event:
             return f"{self.ticker} dividend payment"
         if self.kind == EventKind.AGM:
             return f"{self.ticker} AGM"
+        if self.kind == EventKind.CENTRAL_BANK_MEETING:
+            return f"{self.ticker} decision"
+        if self.kind == EventKind.INFLATION_RELEASE:
+            return f"{self.ticker} inflation release"
         if self.kind == EventKind.MACRO:
             return f"{self.ticker} macro"
         return f"{self.ticker} {self.kind.value}"
@@ -293,6 +326,12 @@ class Event:
 
         if self.amount_per_share is not None:
             _append_line(f"Dividend Amount: {self.amount_per_share:.2f} {self.currency} per share")
+
+        if self.end_date is not None and self.end_date > self.date:
+            _append_line(f"Meeting Dates: {self.date.isoformat()} to {self.end_date.isoformat()}")
+
+        if self.decision_date is not None:
+            _append_line(f"Decision Day: {self.decision_date.isoformat()}")
 
         if self.time:
             _append_line(f"Time: {self.time}")
@@ -458,10 +497,27 @@ class Event:
                 date_shifted=date_shifted,
             )
 
-        # EventTiming.UNKNOWN
-        extra_lines = [
-            f"Timing: Unknown (all-day; market date: {self.date.isoformat()}, market timezone: {market_tz_name})"
-        ]
+        # EventTiming.UNKNOWN (including multi-day all-day meetings with optional decision_time)
+        extra_lines: list[str] = []
+        if self.decision_date is not None and self.decision_time is not None:
+            parsed_dec_time = _parse_clock_time(self.decision_time)
+            market_dec_dt = datetime.combine(self.decision_date, parsed_dec_time, tzinfo=market_tz)
+            local_dec_dt = market_dec_dt.astimezone(target_tz)
+            extra_lines.append(
+                f"Decision Release Time: {local_dec_dt.strftime('%Y-%m-%d %H:%M')} {local_dec_dt.tzname()} "
+                f"({target_tz_name}) / {market_dec_dt.strftime('%Y-%m-%d %H:%M')} {market_dec_dt.tzname()} "
+                f"({market_tz_name})"
+            )
+        elif self.end_date is not None and self.end_date > self.date:
+            extra_lines.append(
+                f"Timing: Multi-day all-day ({self.date.isoformat()} to {self.end_date.isoformat()}, "
+                f"market timezone: {market_tz_name})"
+            )
+        else:
+            extra_lines.append(
+                f"Timing: Unknown (all-day; market date: {self.date.isoformat()}, market timezone: {market_tz_name})"
+            )
+
         return DisplayTiming(
             display_timezone=target_tz_name,
             is_timed=False,
@@ -471,6 +527,7 @@ class Event:
             summary=base_title,
             description="\n".join(base_desc_lines + extra_lines),
             date_shifted=False,
+            local_end_date=self.end_date or self.date,
         )
 
     @property
@@ -661,6 +718,9 @@ def parse_event_dict(entry: dict[str, Any], default_market: str = "us") -> Event
         currency=str(entry.get("currency") or "EUR").strip() or "EUR",
         computed=bool(entry.get("computed", False)),
         computed_note=str(entry["computed_note"]).strip() if entry.get("computed_note") else None,
+        end_date=parse_date_value(entry["end_date"]) if entry.get("end_date") is not None else None,
+        decision_date=parse_date_value(entry["decision_date"]) if entry.get("decision_date") is not None else None,
+        decision_time=str(entry["decision_time"]).strip() if entry.get("decision_time") is not None else None,
     )
 
 
