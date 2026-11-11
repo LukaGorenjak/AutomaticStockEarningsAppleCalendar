@@ -13,6 +13,8 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import yaml
 
 DEFAULT_DISPLAY_TIMEZONE = "Europe/Ljubljana"
+DEFAULT_MAX_AGE_DAYS = 3
+DEFAULT_MIN_UPCOMING_EVENTS = 1
 
 DEFAULT_MARKET_TIMEZONES: dict[str, str] = {
     "us": "America/New_York",
@@ -494,6 +496,32 @@ EarningsEvent = Event
 
 
 @dataclass(frozen=True)
+class MonitoringThresholds:
+    """Configurable staleness and minimum-event thresholds."""
+
+    max_age_days: int = DEFAULT_MAX_AGE_DAYS
+    min_upcoming_events: int = DEFAULT_MIN_UPCOMING_EVENTS
+    source_max_age_days: dict[str, int] = field(default_factory=dict)
+    market_max_age_days: dict[str, int] = field(default_factory=dict)
+    market_min_upcoming_events: dict[str, int] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if self.max_age_days < 0:
+            raise ValueError(f"'max_age_days' must be >= 0, got {self.max_age_days}")
+        if self.min_upcoming_events < 0:
+            raise ValueError(f"'min_upcoming_events' must be >= 0, got {self.min_upcoming_events}")
+
+    def get_source_max_age_days(self, source_name: str) -> int:
+        return self.source_max_age_days.get(source_name.strip().lower(), self.max_age_days)
+
+    def get_market_max_age_days(self, market_id: str) -> int:
+        return self.market_max_age_days.get(market_id.strip().lower(), self.max_age_days)
+
+    def get_market_min_upcoming_events(self, market_id: str) -> int:
+        return self.market_min_upcoming_events.get(market_id.strip().lower(), self.min_upcoming_events)
+
+
+@dataclass(frozen=True)
 class WatchlistConfig:
     """Parsed configuration from tickers.yaml supporting per-market sections and display_timezone."""
 
@@ -505,6 +533,7 @@ class WatchlistConfig:
     config_dir: Path = field(default_factory=lambda: Path("."))
     is_legacy_only: bool = False
     display_timezone: str = DEFAULT_DISPLAY_TIMEZONE
+    thresholds: MonitoringThresholds = field(default_factory=MonitoringThresholds)
 
     def __post_init__(self) -> None:
         validated = validate_timezone(self.display_timezone, field_name="display_timezone")
@@ -652,15 +681,110 @@ def _known_market_ids() -> set[str]:
         return {"us", "ljse"}
 
 
+def _parse_non_negative_int(value: Any, field_name: str) -> int:
+    if isinstance(value, bool):
+        raise ValueError(f"'{field_name}' must be a non-negative integer, got {value!r}")
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"'{field_name}' must be a non-negative integer, got {value!r}") from exc
+    if parsed < 0:
+        raise ValueError(f"'{field_name}' must be >= 0, got {parsed}")
+    return parsed
+
+
+def _parse_thresholds(raw_thresholds: Any, markets_map: dict[str, dict[str, Any]]) -> MonitoringThresholds:
+    if raw_thresholds is None:
+        raw_thresholds = {}
+    if not isinstance(raw_thresholds, dict):
+        raise ValueError("'thresholds' in configuration must be a mapping")
+
+    allowed_threshold_keys = {"max_age_days", "min_upcoming_events", "sources", "markets"}
+    unknown = sorted(set(raw_thresholds.keys()) - allowed_threshold_keys)
+    if unknown:
+        raise ValueError(f"Unknown key(s) in 'thresholds': {', '.join(unknown)}")
+
+    default_max_age = (
+        _parse_non_negative_int(raw_thresholds["max_age_days"], "thresholds.max_age_days")
+        if raw_thresholds.get("max_age_days") is not None
+        else DEFAULT_MAX_AGE_DAYS
+    )
+    default_min_events = (
+        _parse_non_negative_int(
+            raw_thresholds["min_upcoming_events"],
+            "thresholds.min_upcoming_events",
+        )
+        if raw_thresholds.get("min_upcoming_events") is not None
+        else DEFAULT_MIN_UPCOMING_EVENTS
+    )
+
+    source_max_age: dict[str, int] = {}
+    raw_sources = raw_thresholds.get("sources")
+    if raw_sources is not None:
+        if not isinstance(raw_sources, dict):
+            raise ValueError("'thresholds.sources' must be a mapping")
+        for src_name, src_cfg in raw_sources.items():
+            if not isinstance(src_cfg, dict):
+                raise ValueError(f"'thresholds.sources.{src_name}' must be a mapping")
+            key = str(src_name).strip().lower()
+            if src_cfg.get("max_age_days") is not None:
+                source_max_age[key] = _parse_non_negative_int(
+                    src_cfg["max_age_days"],
+                    f"thresholds.sources.{key}.max_age_days",
+                )
+
+    market_max_age: dict[str, int] = {}
+    market_min_events: dict[str, int] = {}
+    raw_mkt_thresholds = raw_thresholds.get("markets")
+    if raw_mkt_thresholds is not None:
+        if not isinstance(raw_mkt_thresholds, dict):
+            raise ValueError("'thresholds.markets' must be a mapping")
+        for m_id, m_cfg in raw_mkt_thresholds.items():
+            if not isinstance(m_cfg, dict):
+                raise ValueError(f"'thresholds.markets.{m_id}' must be a mapping")
+            key = str(m_id).strip().lower()
+            if m_cfg.get("max_age_days") is not None:
+                market_max_age[key] = _parse_non_negative_int(
+                    m_cfg["max_age_days"],
+                    f"thresholds.markets.{key}.max_age_days",
+                )
+            if m_cfg.get("min_upcoming_events") is not None:
+                market_min_events[key] = _parse_non_negative_int(
+                    m_cfg["min_upcoming_events"],
+                    f"thresholds.markets.{key}.min_upcoming_events",
+                )
+
+    # Also allow per-market inline overrides (`us.min_upcoming_events` / `us.max_age_days`)
+    for m_id, m_cfg in markets_map.items():
+        if m_cfg.get("max_age_days") is not None:
+            market_max_age[m_id] = _parse_non_negative_int(
+                m_cfg["max_age_days"],
+                f"{m_id}.max_age_days",
+            )
+        if m_cfg.get("min_upcoming_events") is not None:
+            market_min_events[m_id] = _parse_non_negative_int(
+                m_cfg["min_upcoming_events"],
+                f"{m_id}.min_upcoming_events",
+            )
+
+    return MonitoringThresholds(
+        max_age_days=default_max_age,
+        min_upcoming_events=default_min_events,
+        source_max_age_days=source_max_age,
+        market_max_age_days=market_max_age,
+        market_min_upcoming_events=market_min_events,
+    )
+
+
 def load_config(path: Path | str) -> WatchlistConfig:
-    """Load `display_timezone`, per-market watchlists, and legacy keys from YAML."""
+    """Load `display_timezone`, thresholds, per-market watchlists, and legacy keys from YAML."""
     config_path = Path(path)
     raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
         raise ValueError(f"Expected a YAML mapping in {config_path}, got {type(raw).__name__}")
 
     registered_ids = _known_market_ids()
-    allowed_keys = LEGACY_CONFIG_KEYS | registered_ids | {"markets", "display_timezone"}
+    allowed_keys = LEGACY_CONFIG_KEYS | registered_ids | {"markets", "display_timezone", "thresholds"}
     unknown_keys = sorted(set(raw.keys()) - allowed_keys)
     if unknown_keys:
         raise ValueError(
@@ -681,7 +805,7 @@ def load_config(path: Path | str) -> WatchlistConfig:
             markets_map[str(m_id).strip().lower()] = dict(m_cfg)
 
     for key, val in raw.items():
-        if key in LEGACY_CONFIG_KEYS or key in {"markets", "display_timezone"}:
+        if key in LEGACY_CONFIG_KEYS or key in {"markets", "display_timezone", "thresholds"}:
             continue
         if val is None:
             markets_map[key.lower()] = {}
@@ -721,6 +845,8 @@ def load_config(path: Path | str) -> WatchlistConfig:
     if ljse_tickers or ljse_issuers or "ljse" in markets_map:
         markets_map["ljse"] = ljse_section
 
+    thresholds = _parse_thresholds(raw.get("thresholds"), markets_map)
+
     return WatchlistConfig(
         tickers=us_tickers,
         tickers_ljse=ljse_tickers,
@@ -730,4 +856,5 @@ def load_config(path: Path | str) -> WatchlistConfig:
         config_dir=config_path.parent,
         is_legacy_only=not has_market_sections,
         display_timezone=display_timezone,
+        thresholds=thresholds,
     )

@@ -1,6 +1,23 @@
 # Local timezone used when displaying converted event times
 display_timezone: Europe/Ljubljana
 
+# Staleness & minimum upcoming event thresholds (make silent failures visible)
+thresholds:
+  max_age_days: 3
+  min_upcoming_events: 1
+  sources:
+    api:
+      max_age_days: 3
+    seonet:
+      max_age_days: 8
+  markets:
+    us:
+      max_age_days: 3
+      min_upcoming_events: 1
+    ljse:
+      max_age_days: 3
+      min_upcoming_events: 1
+
 # Per-market watchlists and configuration
 us:
   tickers:

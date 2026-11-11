@@ -34,27 +34,31 @@ jobs:
           pip install -r requirements.txt
           pip install --no-deps -e .
 
-      - name: Build all registered market calendars (.ics), docs/index.html, and change log
+      - name: Build all registered market calendars (.ics), docs/index.html, docs/status.json, and change log
+        id: build
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           PYTHONPATH: src
         run: |
+          set +e
           python -m earnings_cal \
             --commit-msg-file "${{ runner.temp }}/commit_msg.txt" \
             --alert-file "${{ runner.temp }}/calendar_alert.json"
+          CAL_EXIT=$?
+          echo "cal_exit=$CAL_EXIT" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and push changed feed files and data/changes.jsonl
+      - name: Commit and push changed feed files, docs/status.json, and data/changes.jsonl
         run: |
-          git add docs/*.ics docs/index.html data/changes.jsonl
+          git add docs/*.ics docs/index.html docs/status.json data/changes.jsonl
           if git diff --cached --quiet; then
-            echo "No changes to docs/*.ics, docs/index.html, or data/changes.jsonl"
+            echo "No changes to docs/*.ics, docs/index.html, docs/status.json, or data/changes.jsonl"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             if [ -s "${{ runner.temp }}/commit_msg.txt" ]; then
               git commit -F "${{ runner.temp }}/commit_msg.txt"
             else
-              git commit -m "chore: update market calendars"
+              git commit -m "chore: update market calendars and status"
             fi
             git pull --rebase
             git push
@@ -131,3 +135,80 @@ jobs:
               body: lines.join("\n") + "\n",
             });
             core.info(`Created calendar alert issue: ${title}`);
+
+      - name: Sync stale-data GitHub issues from docs/status.json
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const statusPath = "docs/status.json";
+            if (!fs.existsSync(statusPath)) return;
+            const status = JSON.parse(fs.readFileSync(statusPath, "utf8"));
+            const { owner, repo } = context.repo;
+
+            const openIssues = await github.paginate(
+              github.rest.issues.listForRepo,
+              { owner, repo, state: "open", per_page: 100 }
+            );
+            const openByTitle = new Map(openIssues.map((iss) => [iss.title, iss]));
+
+            const targets = Object.entries(status.markets || {}).map(([name, info]) => ({
+              name,
+              kind: "market",
+              info,
+            }));
+            if (status.sources && status.sources.seonet) {
+              targets.push({ name: "seonet", kind: "source", info: status.sources.seonet });
+            }
+
+            for (const target of targets) {
+              const title = `Stale data: ${target.name}`;
+              const existing = openByTitle.get(title);
+              const entry = target.info || {};
+
+              if (entry.stale) {
+                const lines = [
+                  `# Stale Data Alert: \`${target.name}\``,
+                  "",
+                  `- **Last Successful Update:** ${entry.last_success_at || "Never"}`,
+                  `- **Age (days):** ${entry.age_days ?? "Unknown"} (max allowed: ${entry.max_age_days})`,
+                ];
+                if (target.kind === "market") {
+                  lines.push(`- **Upcoming Events:** ${entry.upcoming_events} (minimum required: ${entry.min_upcoming_events})`);
+                }
+                lines.push("", "## Errors");
+                const errs = entry.errors && entry.errors.length ? entry.errors : ["Staleness threshold exceeded."];
+                errs.forEach((e) => lines.push(`- ${e}`));
+                const body = lines.join("\n") + "\n";
+
+                if (existing) {
+                  if ((existing.body || "").trim() !== body.trim()) {
+                    await github.rest.issues.update({ owner, repo, issue_number: existing.number, body });
+                    core.info(`Updated issue #${existing.number}: ${title}`);
+                  }
+                } else {
+                  await github.rest.issues.create({ owner, repo, title, body });
+                  core.info(`Opened stale-data issue: ${title}`);
+                }
+              } else if (entry.healthy && existing) {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: existing.number,
+                  body: `Resolved: \`${target.name}\` is healthy again as of ${entry.last_success_at}. Closing automatically.`,
+                });
+                await github.rest.issues.update({
+                  owner,
+                  repo,
+                  issue_number: existing.number,
+                  state: "closed",
+                });
+                core.info(`Closed recovered stale-data issue #${existing.number}: ${title}`);
+              }
+            }
+
+      - name: Fail job if any market update failed
+        if: steps.build.outputs.cal_exit != '0'
+        run: |
+          echo "Calendar update exited with status ${{ steps.build.outputs.cal_exit }}"
+          exit ${{ steps.build.outputs.cal_exit }}

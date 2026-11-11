@@ -23,6 +23,10 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 - **Extended `Event` & `EventKind` Model**:
   - Supports `EventKind` (`earnings`, `dividend`, `ex_dividend`, `agm`, `macro`, `other`), `market`, `ticker`, `title`, `date`, optional `time`, `description`, and `source_url`.
   - Market-scoped deterministic UIDs: `{market}-{ticker}-{date or fiscal period}-{kind}@earnings-cal` (e.g. `us-AAPL-2027Q1-earnings@earnings-cal`, `ljse-KRKG-2026-11-12-earnings@earnings-cal`).
+- **Health Monitoring & Stale-Data Visibility (`docs/status.json`)**:
+  - Writes [docs/status.json](docs/status.json) after every run with per-market (`us`, `ljse`, ...) and per-source (`api`, `seonet`) `last_success_at`, `upcoming_events`, `age_days`, `stale`, `healthy`, and `errors`.
+  - Configurable `thresholds` in `tickers.yaml` (`max_age_days`, default `3`; `min_upcoming_events`, default `1`).
+  - Failed runs or suspicious drops below `min_upcoming_events` never overwrite the last good `.ics` events or `last_success_at`. When a market is stale, an all-day warning event for today (`WARNING: {market} data is stale (last update {date})`, UID `{market}-stale-warning@earnings-cal`) is injected directly into that market's `.ics` feed until it recovers, and the GitHub workflow opens/updates `"Stale data: {market}"` and auto-closes it when healthy again.
 - **Run-to-Run Change Detection & Alerts (`data/changes.jsonl`)**:
   - Before overwriting any `.ics` feed, compares the previous committed feed against new events by UID (`added`, `removed`, `date_changed`, `details_changed`).
   - Events that simply scrolled behind `today` or past the lookahead horizon are ignored (only future events inside the active fetch window are reported as `removed`).
@@ -46,6 +50,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   └── update.yml                 # Daily cron + manual workflow building all registered markets
 ├── docs/
 │   ├── index.html                 # Auto-generated directory of all market feeds & webcal:// links
+│   ├── status.json                # Per-market and per-source freshness, event counts & errors
 │   ├── us.ics                     # US equities earnings feed (X-WR-CALNAME: Earnings US)
 │   ├── ljse.ics                   # LJSE corporate events feed (X-WR-CALNAME: Events LJSE)
 │   └── earnings.ics               # Legacy alias of docs/us.ics
@@ -71,6 +76,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── test_earnings_cal.py       # Finnhub & iCalendar unit/integration tests
 │   ├── test_markets.py            # Multi-market registry, dummy market, UID & isolation tests
 │   ├── test_seonet.py             # SEOnet watcher & scraper tests
+│   ├── test_status.py             # Health status, staleness thresholds & stale warning tests
 │   └── test_timezone.py           # ZoneInfo conversions, DST mismatch weeks & timed vs all-day tests
 ├── ljse_events.yaml               # Curated LJSE events (earnings, AGM, ex_dividend, dividend)
 ├── tickers.yaml                   # Per-market watchlists and configuration sections

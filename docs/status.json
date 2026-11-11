@@ -1,0 +1,73 @@
+{
+  "generated_at": "2026-11-11T18:41:05.140979+00:00",
+  "markets": {
+    "ljse": {
+      "age_days": 0,
+      "errors": [],
+      "healthy": true,
+      "last_attempt_at": "2026-11-11T18:41:05.140979+00:00",
+      "last_success_at": "2026-11-11T18:41:05.140979+00:00",
+      "last_success_date": "2026-11-11",
+      "max_age_days": 3,
+      "min_upcoming_events": 1,
+      "stale": false,
+      "upcoming_events": 10
+    },
+    "us": {
+      "age_days": 0,
+      "errors": [],
+      "healthy": true,
+      "last_attempt_at": "2026-11-11T18:41:05.140979+00:00",
+      "last_success_at": "2026-11-11T18:41:05.140979+00:00",
+      "last_success_date": "2026-11-11",
+      "max_age_days": 3,
+      "min_upcoming_events": 1,
+      "stale": false,
+      "upcoming_events": 9
+    }
+  },
+  "sources": {
+    "api": {
+      "age_days": 0,
+      "errors": [],
+      "healthy": true,
+      "last_attempt_at": "2026-11-11T18:41:05.140979+00:00",
+      "last_success_at": "2026-11-11T18:41:05.140979+00:00",
+      "last_success_date": "2026-11-11",
+      "max_age_days": 3,
+      "stale": false
+    },
+    "seonet": {
+      "age_days": null,
+      "errors": [],
+      "healthy": true,
+      "last_attempt_at": null,
+      "last_success_at": null,
+      "last_success_date": null,
+      "max_age_days": 8,
+      "stale": false
+    }
+  },
+  "thresholds": {
+    "default_max_age_days": 3,
+    "default_min_upcoming_events": 1,
+    "markets": {
+      "ljse": {
+        "max_age_days": 3,
+        "min_upcoming_events": 1
+      },
+      "us": {
+        "max_age_days": 3,
+        "min_upcoming_events": 1
+      }
+    },
+    "sources": {
+      "api": {
+        "max_age_days": 3
+      },
+      "seonet": {
+        "max_age_days": 8
+      }
+    }
+  }
+}

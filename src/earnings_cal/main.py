@@ -1,4 +1,4 @@
-"""CLI entry point for generating multi-market iCalendar (.ics) feeds and change reports."""
+"""CLI entry point for generating multi-market iCalendar (.ics) feeds, change logs, and status."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 from collections.abc import Sequence
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from earnings_cal.build import merge_events, write_calendar, write_index_html
@@ -35,6 +35,15 @@ from earnings_cal.seonet.ljse import (
     load_ljse_cache,
     save_ljse_cache,
     scrape_ljse_tickers,
+)
+from earnings_cal.status import (
+    DEFAULT_STATUS_PATH,
+    build_status_snapshot,
+    evaluate_market_status,
+    evaluate_source_status,
+    inject_stale_warning_ics,
+    load_status,
+    write_status,
 )
 
 logger = logging.getLogger(__name__)
@@ -104,6 +113,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Path to append-only change log JSONL (default: <output-dir>/../data/changes.jsonl)",
     )
     parser.add_argument(
+        "--status-file",
+        type=Path,
+        default=None,
+        help="Path to health status JSON (default: <output-dir>/status.json)",
+    )
+    parser.add_argument(
         "--commit-msg-file",
         type=Path,
         default=None,
@@ -116,6 +131,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Optional output path to write JSON issue payload for date changes or removals",
     )
     return parser.parse_args(argv)
+
+
+def _resolve_now_utc(now: datetime | None, today: date | None) -> datetime:
+    if now is not None:
+        if now.tzinfo is None:
+            return now.replace(tzinfo=timezone.utc)
+        return now.astimezone(timezone.utc)
+    if today is not None:
+        return datetime.combine(today, datetime.min.time(), tzinfo=timezone.utc)
+    return datetime.now(timezone.utc)
 
 
 def _run_legacy_single_feed(
@@ -231,6 +256,7 @@ def run(
     days: int = 90,
     provider: EarningsProvider | None = None,
     today: date | None = None,
+    now: datetime | None = None,
     use_mock: bool = False,
     scrape_ljse: bool = False,
     ljse_cache_path: Path = DEFAULT_LJSE_CACHE_PATH,
@@ -238,10 +264,14 @@ def run(
     output_dir: Path | None = None,
     display_timezone: str | None = None,
     changes_path: Path | None = None,
+    status_path: Path | None = None,
     commit_msg_file: Path | None = None,
     alert_file: Path | None = None,
 ) -> int:
-    """Execute the multi-market calendar generation and change-reporting pipeline."""
+    """Execute the multi-market calendar generation, change-reporting, and health-status pipeline."""
+    now_utc = _resolve_now_utc(now, today)
+    start_date = today or now_utc.date()
+
     try:
         config = load_config(config_path)
         active_display_tz = validate_timezone(
@@ -252,11 +282,9 @@ def run(
         logger.error("Failed to load config from %s: %s", config_path, exc)
         return 1
 
-    start_date = today or date.today()
     end_date = start_date + timedelta(days=days)
     window = DateWindow(start=start_date, end=end_date)
 
-    # Preserve backward compatibility when legacy-only config + explicit output_path are passed
     if config.is_legacy_only and output_path is not None and output_dir is None:
         return _run_legacy_single_feed(
             config=config,
@@ -274,6 +302,35 @@ def run(
     target_dir = output_dir or (output_path.parent if output_path is not None else Path("docs"))
     target_dir.mkdir(parents=True, exist_ok=True)
     resolved_changes_path = changes_path or (target_dir.parent / DEFAULT_CHANGES_PATH)
+    resolved_status_path = status_path or (target_dir / DEFAULT_STATUS_PATH.name)
+
+    prev_status = load_status(resolved_status_path)
+    prev_markets = dict(prev_status.get("markets") or {})
+    prev_sources = dict(prev_status.get("sources") or {})
+    thresholds = config.thresholds
+
+    # Optional SEOnet scrape when `--scrape-ljse` is requested
+    seonet_succeeded: bool | None = None
+    seonet_errors: list[str] = []
+    if scrape_ljse and config.tickers_ljse:
+        try:
+            scraped = scrape_ljse_tickers(
+                config.tickers_ljse,
+                today=start_date,
+                lookahead_days=ljse_days,
+            )
+            if scraped:
+                scraped_tickers = {ev.ticker for ev in scraped}
+                existing_cached = load_ljse_cache(ljse_cache_path, allowed_tickers=config.tickers_ljse)
+                preserved = [ev for ev in existing_cached if ev.ticker not in scraped_tickers]
+                save_ljse_cache(preserved + scraped, ljse_cache_path)
+                seonet_succeeded = True
+            else:
+                seonet_succeeded = False
+                seonet_errors.append("SEOnet scrape returned 0 upcoming LJSE events.")
+        except Exception as exc:
+            seonet_succeeded = False
+            seonet_errors.append(str(exc))
 
     markets = instantiate_markets(
         config=config,
@@ -283,28 +340,92 @@ def run(
 
     had_failure = False
     all_changes: list[CalendarChange] = []
+    market_status_entries: dict[str, dict] = {}
+    api_succeeded: bool | None = None
+    api_errors: list[str] = []
 
     for market in markets:
         feed_path = target_dir / market.feed_filename
+        max_age = thresholds.get_market_max_age_days(market.id)
+        min_upcoming = thresholds.get_market_min_upcoming_events(market.id)
+        prev_market_entry = prev_markets.get(market.id)
+
+        fetched_events = None
+        fetch_errors: list[str] = []
         try:
-            events = market.fetch_events(window)
-            if not events:
-                raise ProviderError(f"Market '{market.id}' returned zero events.")
+            fetched_events = market.fetch_events(window)
         except Exception as exc:
+            fetch_errors.append(str(exc))
+
+        if fetch_errors:
+            upcoming_count: int | None = None
+        else:
+            fetched_events = fetched_events or []
+            upcoming_count = sum(
+                1
+                for ev in fetched_events
+                if ev.resolve_display(active_display_tz).local_date >= start_date
+            )
+
+        market_entry = evaluate_market_status(
+            market_id=market.id,
+            prev_entry=prev_market_entry,
+            now_utc=now_utc,
+            max_age_days=max_age,
+            min_upcoming_events=min_upcoming,
+            upcoming_events=upcoming_count,
+            errors=fetch_errors,
+        )
+        market_status_entries[market.id] = market_entry
+
+        if market.id == "us":
+            if market_entry["errors"]:
+                api_succeeded = False
+                api_errors = list(market_entry["errors"])
+            else:
+                api_succeeded = True
+                api_errors = []
+
+        if market_entry["errors"]:
+            had_failure = True
             logger.error(
-                "Market '%s' (%s) failed: %s. Keeping existing %s untouched.",
+                "Market '%s' (%s) unhealthy: %s.",
                 market.id,
                 market.display_name,
-                exc,
-                feed_path,
+                "; ".join(market_entry["errors"]),
             )
-            had_failure = True
+            # Only inject calendar stale warning when stale AND we are not on an uninitialized sentinel
+            has_prior_good = (prev_market_entry or {}).get("last_success_at") is not None
+            if market_entry["stale"] and (has_prior_good or not feed_path.exists()):
+                inject_stale_warning_ics(
+                    feed_path=feed_path,
+                    market_id=market.id,
+                    warning_date=start_date,
+                    last_success_date=market_entry.get("last_success_date"),
+                    errors=market_entry["errors"],
+                    calendar_name=market.calendar_name,
+                    display_timezone=active_display_tz,
+                )
+                for alias_name in getattr(market, "legacy_aliases", ()) or ():
+                    inject_stale_warning_ics(
+                        feed_path=target_dir / alias_name,
+                        market_id=market.id,
+                        warning_date=start_date,
+                        last_success_date=market_entry.get("last_success_date"),
+                        errors=market_entry["errors"],
+                        calendar_name=market.calendar_name,
+                        display_timezone=active_display_tz,
+                    )
+            else:
+                logger.info("Preserving existing %s untouched.", feed_path)
             continue
 
+        # Healthy run: diff, append changes, write clean calendar (removes any stale warning VEVENT)
+        assert fetched_events is not None
         market_window = market.effective_window(window)
         market_changes = diff_feed(
             previous_ics_path=feed_path,
-            new_events=events,
+            new_events=fetched_events,
             window=market_window,
             run_date=start_date,
             market_id=market.id,
@@ -318,12 +439,12 @@ def run(
         move_notes = get_recent_date_moves(
             resolved_changes_path,
             run_date=start_date,
-            events=events,
+            events=fetched_events,
             display_timezone=active_display_tz,
         )
 
         changed = write_calendar(
-            events,
+            fetched_events,
             feed_path,
             calendar_name=market.calendar_name,
             timezone_name=market.timezone,
@@ -331,20 +452,48 @@ def run(
             move_notes=move_notes,
         )
         if changed:
-            logger.info("Wrote %d event(s) for market '%s' to %s", len(events), market.id, feed_path)
+            logger.info("Wrote %d event(s) for market '%s' to %s", len(fetched_events), market.id, feed_path)
         else:
-            logger.info("No changes for market '%s' in %s (%d event(s))", market.id, feed_path, len(events))
+            logger.info("No changes for market '%s' in %s (%d event(s))", market.id, feed_path, len(fetched_events))
 
         for alias_name in getattr(market, "legacy_aliases", ()) or ():
             alias_path = target_dir / alias_name
             write_calendar(
-                events,
+                fetched_events,
                 alias_path,
                 calendar_name=market.calendar_name,
                 timezone_name=market.timezone,
                 display_timezone=active_display_tz,
                 move_notes=move_notes,
             )
+
+    sources_entries = {
+        "api": evaluate_source_status(
+            source_name="api",
+            prev_entry=prev_sources.get("api"),
+            now_utc=now_utc,
+            max_age_days=thresholds.get_source_max_age_days("api"),
+            succeeded=api_succeeded,
+            errors=api_errors,
+        ),
+        "seonet": evaluate_source_status(
+            source_name="seonet",
+            prev_entry=prev_sources.get("seonet"),
+            now_utc=now_utc,
+            max_age_days=thresholds.get_source_max_age_days("seonet"),
+            succeeded=seonet_succeeded,
+            errors=seonet_errors,
+        ),
+    }
+
+    status_snapshot = build_status_snapshot(
+        prev_status=prev_status,
+        markets_entries=market_status_entries,
+        sources_entries=sources_entries,
+        thresholds=thresholds,
+        now_utc=now_utc,
+    )
+    write_status(status_snapshot, resolved_status_path)
 
     write_index_html(
         markets,
@@ -383,6 +532,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         ljse_days=args.ljse_days,
         display_timezone=args.display_timezone,
         changes_path=args.changes_file,
+        status_path=args.status_file,
         commit_msg_file=args.commit_msg_file,
         alert_file=args.alert_file,
     )

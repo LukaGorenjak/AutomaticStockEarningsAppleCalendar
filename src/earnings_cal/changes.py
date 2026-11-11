@@ -147,7 +147,7 @@ def load_ics_snapshots(
         if comp.name != "VEVENT":
             continue
         uid = str(comp.get("uid") or "").strip()
-        if not uid:
+        if not uid or uid.endswith("-stale-warning@earnings-cal"):
             continue
 
         decoded_start = comp.decoded("dtstart")

@@ -20,6 +20,7 @@ from earnings_cal.seonet.feed import SEONET_FEED_URL, FeedError, FeedItem, fetch
 from earnings_cal.seonet.filter import filter_items
 from earnings_cal.seonet.report import render_announcement_report
 from earnings_cal.seonet.state import DEFAULT_STATE_PATH, StateError, load_seen, save_seen
+from earnings_cal.status import update_seonet_source_status
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Do not update state/seonet_seen.json (useful for dry-run fixture checks)",
     )
+    parser.add_argument(
+        "--status-file",
+        type=Path,
+        default=None,
+        help="Optional status.json file to update the 'seonet' source health entry",
+    )
     return parser.parse_args(argv)
 
 
@@ -115,6 +122,7 @@ def run_seonet(
     write_state: bool = True,
     feed_fetcher: Callable[[], list[FeedItem]] | None = None,
     content_fetcher: Callable[[str], AnnouncementContent] | None = None,
+    status_path: Path | None = None,
 ) -> int:
     """Run the SEOnet watcher pipeline. Returns 0 on success, non-zero on error."""
     try:
@@ -122,6 +130,8 @@ def run_seonet(
     except Exception as exc:
         logger.error("Failed to load config %s: %s", config_path, exc)
         return 1
+
+    seonet_max_age = config.thresholds.get_source_max_age_days("seonet")
 
     if not config.ljse_issuers:
         logger.info("No 'ljse_issuers' configured in %s; nothing to watch.", config_path)
@@ -142,6 +152,13 @@ def run_seonet(
             feed_items = fetch_feed(url=feed_url)
     except (FeedError, OSError) as exc:
         logger.error("SEOnet feed error (state preserved): %s", exc)
+        if status_path is not None:
+            update_seonet_source_status(
+                status_path=status_path,
+                succeeded=False,
+                errors=[str(exc)],
+                max_age_days=seonet_max_age,
+            )
         return 1
 
     matched_items = filter_items(feed_items, config.ljse_issuers)
@@ -149,6 +166,12 @@ def run_seonet(
 
     if not new_matches:
         logger.info("No new SEOnet financial calendar announcements.")
+        if status_path is not None:
+            update_seonet_source_status(
+                status_path=status_path,
+                succeeded=True,
+                max_age_days=seonet_max_age,
+            )
         return 0
 
     if content_fetcher is not None:
@@ -189,7 +212,21 @@ def run_seonet(
         sys.stdout.write("\n---\n\n".join(rendered_reports))
 
     if failures:
+        if status_path is not None:
+            update_seonet_source_status(
+                status_path=status_path,
+                succeeded=False,
+                errors=failures,
+                max_age_days=seonet_max_age,
+            )
         return 1
+
+    if status_path is not None:
+        update_seonet_source_status(
+            status_path=status_path,
+            succeeded=True,
+            max_age_days=seonet_max_age,
+        )
 
     return 0
 
@@ -208,4 +245,5 @@ def main(argv: Sequence[str] | None = None) -> int:
         feed_file=args.feed_file,
         fixtures_dir=args.fixtures_dir,
         write_state=not args.no_write_state,
+        status_path=args.status_file,
     )
