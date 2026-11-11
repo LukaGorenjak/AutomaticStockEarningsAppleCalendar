@@ -145,6 +145,9 @@ class Event:
     quarter: int | None = None
     fiscal_year: int | None = None
     eps_estimate: float | None = None
+    eps_actual: float | None = None
+    revenue_estimate: float | None = None
+    revenue_actual: float | None = None
     status: str | None = None
     note: str | None = None
     market_timezone: str | None = None
@@ -685,6 +688,15 @@ def parse_event_dict(entry: dict[str, Any], default_market: str = "us") -> Event
     eps_estimate = (
         float(entry["eps_estimate"]) if entry.get("eps_estimate") is not None else None
     )
+    eps_actual = (
+        float(entry["eps_actual"]) if entry.get("eps_actual") is not None else None
+    )
+    revenue_estimate = (
+        float(entry["revenue_estimate"]) if entry.get("revenue_estimate") is not None else None
+    )
+    revenue_actual = (
+        float(entry["revenue_actual"]) if entry.get("revenue_actual") is not None else None
+    )
     duration_minutes = (
         int(entry["duration_minutes"]) if entry.get("duration_minutes") is not None else 60
     )
@@ -705,6 +717,9 @@ def parse_event_dict(entry: dict[str, Any], default_market: str = "us") -> Event
         quarter=quarter,
         fiscal_year=fiscal_year,
         eps_estimate=eps_estimate,
+        eps_actual=eps_actual,
+        revenue_estimate=revenue_estimate,
+        revenue_actual=revenue_actual,
         status=str(entry["status"]) if entry.get("status") is not None else None,
         note=str(entry["note"]).strip() if entry.get("note") else None,
         market_timezone=(

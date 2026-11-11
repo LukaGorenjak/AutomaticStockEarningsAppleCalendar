@@ -41,6 +41,12 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
   - Before overwriting any `.ics` feed, compares the previous committed feed against new events by UID (`added`, `removed`, `date_changed`, `details_changed`).
   - Events that simply scrolled behind `today` or past the lookahead horizon are ignored (only future events inside the active fetch window are reported as `removed`).
   - Appends deterministic records to `data/changes.jsonl`, writes human-readable summaries into the workflow commit message, opens one deduplicated GitHub issue per run when any `date_changed` or `removed` occurs, and appends `"Date changed from X on <run date>"` to moved event descriptions for 14 days without extra `VALARM`s.
+- **Post-Earnings Results & Price Reaction Tracker (`data/results.csv`)**:
+  - Automatically runs after each update (`src/earnings_cal/results.py`), finds past earnings events in the watchlist within the lookback window (`default: 30 days`), and records one row per event in `data/results.csv` (`market,ticker,report_date,fiscal_period,eps_estimate,eps_actual,surprise_pct,price_move_1d_pct,recorded_at,manual_notes`).
+  - Deduplicated by `(market, ticker, fiscal_period)` and deterministically sorted. Existing non-empty values are never overwritten unless `--results-correction` / `--correction` is passed, while missing fields (`None`) on recent events are retried and filled in when late data arrives.
+  - LJSE issuers without consensus EPS estimates store `report_date`, `price_move_1d_pct`, and optional `manual_notes` while leaving EPS fields empty.
+  - Daily closing prices are kept behind a separate `PriceProvider` interface (`YahooAndLJSEPriceProvider` using Yahoo Finance v8 chart JSON for US tickers and the official LJSE REST price list for LJSE tickers).
+  - Includes a summary CLI (`python -m earnings_cal.results summary`) printing the average EPS surprise and 1-day price move per ticker.
 - **Failure Isolation Across Markets**:
   - One failing market never blocks the others: its error is logged, its existing `.ics` file in `docs/` is preserved untouched, all healthy markets are updated, and the CLI exits non-zero at the end.
 - **Apple Calendar Ready & Local Timezone Conversion (`zoneinfo`)**:
@@ -67,14 +73,18 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   └── earnings.ics               # Legacy alias of docs/us.ics
 ├── data/
 │   ├── changes.jsonl              # Append-only deterministic log of detected feed changes
-│   └── macro_events.yaml          # Curated 2026-2027 FOMC, ECB, US CPI, and Euro-area flash HICP schedule
+│   ├── macro_events.yaml          # Curated 2026-2027 FOMC, ECB, US CPI, and Euro-area flash HICP schedule
+│   └── results.csv                # Post-earnings EPS surprise & 1-day price reaction log
 ├── src/earnings_cal/
 │   ├── __init__.py
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
 │   ├── build.py                   # Deterministic iCalendar (.ics) & docs/index.html builder
+│   ├── changes.py                 # Run-to-run .ics diffing & GitHub issue alert payload builder
 │   ├── fetch.py                   # EarningsProvider interface & FinnhubProvider
 │   ├── main.py                    # Multi-market CLI orchestration & failure isolation
 │   ├── models.py                  # Event, EventKind, DateWindow & YAML config loader
+│   ├── results.py                 # Post-earnings surprise/price tracker (data/results.csv) & summary CLI
+│   ├── status.py                  # Health status (docs/status.json) & stale-warning VEVENT injector
 │   ├── markets/
 │   │   ├── __init__.py
 │   │   ├── base.py                # Market abstract base class
@@ -90,6 +100,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── test_ljse_corporate.py     # LJSE corporate event validation & SEOnet dividend/AGM tests
 │   ├── test_macro.py              # Macro YAML validation, multi-day meetings & UID stability tests
 │   ├── test_markets.py            # Multi-market registry, dummy market, UID & isolation tests
+│   ├── test_results.py            # Post-earnings results CSV, late data & summary CLI tests
 │   ├── test_seonet.py             # SEOnet watcher & scraper tests
 │   ├── test_status.py             # Health status, staleness thresholds & stale warning tests
 │   └── test_timezone.py           # ZoneInfo conversions, DST mismatch weeks & timed vs all-day tests
@@ -211,6 +222,9 @@ python -m earnings_cal
 
 # Validate data/macro_events.yaml and check against official FOMC/ECB/BLS/Eurostat pages
 python -m earnings_cal.markets.macro --verify-online
+
+# Print per-ticker average EPS surprise and 1-day price move from data/results.csv
+python -m earnings_cal.results summary
 
 # Run the full test suite
 pytest -v

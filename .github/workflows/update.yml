@@ -47,11 +47,11 @@ jobs:
           CAL_EXIT=$?
           echo "cal_exit=$CAL_EXIT" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and push changed feed files, docs/status.json, and data/changes.jsonl
+      - name: Commit and push changed feed files, docs/status.json, data/changes.jsonl, and data/results.csv
         run: |
-          git add docs/*.ics docs/index.html docs/status.json data/changes.jsonl
+          git add docs/*.ics docs/index.html docs/status.json data/changes.jsonl data/results.csv
           if git diff --cached --quiet; then
-            echo "No changes to docs/*.ics, docs/index.html, docs/status.json, or data/changes.jsonl"
+            echo "No changes to docs/*.ics, docs/index.html, docs/status.json, data/changes.jsonl, or data/results.csv"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

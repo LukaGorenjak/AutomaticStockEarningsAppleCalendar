@@ -242,6 +242,9 @@ class FinnhubProvider(EarningsProvider):
             quarter = _optional_int(item.get("quarter"))
             fiscal_year = _optional_int(item.get("year"))
             eps_estimate = _optional_float(item.get("epsEstimate"))
+            eps_actual = _optional_float(item.get("epsActual"))
+            revenue_estimate = _optional_float(item.get("revenueEstimate"))
+            revenue_actual = _optional_float(item.get("revenueActual"))
             hour = str(item.get("hour") or "").strip().lower() or None
             status = _extract_status(item)
 
@@ -253,6 +256,9 @@ class FinnhubProvider(EarningsProvider):
                     quarter=quarter,
                     fiscal_year=fiscal_year,
                     eps_estimate=eps_estimate,
+                    eps_actual=eps_actual,
+                    revenue_estimate=revenue_estimate,
+                    revenue_actual=revenue_actual,
                     status=status,
                 )
             )
@@ -282,9 +288,34 @@ class MockEarningsProvider(EarningsProvider):
             "META": (32, "amc", 4, 2026, 6.75),
             "TSLA": (35, "amc", 4, 2026, 0.78),
         }
+        past_sample_specs: dict[str, tuple[date, str | None, int, int, float, float]] = {
+            "AAPL": (date(2026, 10, 29), "amc", 4, 2026, 1.60, 1.64),
+            "MSFT": (date(2026, 10, 28), "amc", 1, 2027, 3.10, 3.30),
+            "GOOGL": (date(2026, 10, 27), "amc", 3, 2026, 1.85, 2.12),
+            "AMZN": (date(2026, 10, 30), "amc", 3, 2026, 1.14, 1.43),
+            "META": (date(2026, 10, 28), "amc", 3, 2026, 5.25, 6.03),
+            "TSLA": (date(2026, 10, 21), "amc", 3, 2026, 0.58, 0.72),
+        }
 
         events: list[EarningsEvent] = []
         for idx, ticker in enumerate(normalized):
+            if (end_date - start_date).days <= 45 and start_date < date(2026, 11, 1):
+                if ticker in past_sample_specs:
+                    p_date, p_hour, p_q, p_fy, p_est, p_act = past_sample_specs[ticker]
+                    if start_date <= p_date <= end_date:
+                        events.append(
+                            EarningsEvent(
+                                ticker=ticker,
+                                date=p_date,
+                                hour=p_hour,
+                                quarter=p_q,
+                                fiscal_year=p_fy,
+                                eps_estimate=p_est,
+                                eps_actual=p_act,
+                            )
+                        )
+                continue
+
             offset_days, hour, quarter, fiscal_year, eps = sample_specs.get(
                 ticker,
                 (10 + (idx * 5) % 60, "bmo", 4, start_date.year, 1.50),

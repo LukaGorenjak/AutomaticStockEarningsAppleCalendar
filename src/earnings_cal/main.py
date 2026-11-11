@@ -30,6 +30,13 @@ from earnings_cal.fetch import (
 )
 from earnings_cal.markets.registry import instantiate_markets
 from earnings_cal.models import DateWindow, WatchlistConfig, load_config, validate_timezone
+from earnings_cal.results import (
+    DEFAULT_RESULTS_LOOKBACK_DAYS,
+    DEFAULT_RESULTS_PATH,
+    EarningsSurpriseProvider,
+    PriceProvider,
+    update_results,
+)
 from earnings_cal.seonet.ljse import (
     DEFAULT_LJSE_CACHE_PATH,
     load_ljse_cache,
@@ -129,6 +136,23 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         type=Path,
         default=None,
         help="Optional output path to write JSON issue payload for date changes or removals",
+    )
+    parser.add_argument(
+        "--results-file",
+        type=Path,
+        default=None,
+        help="Path to post-earnings results CSV (default: <output-dir>/../data/results.csv)",
+    )
+    parser.add_argument(
+        "--results-lookback-days",
+        type=int,
+        default=DEFAULT_RESULTS_LOOKBACK_DAYS,
+        help="Lookback window in days for recording past earnings results (default: 30)",
+    )
+    parser.add_argument(
+        "--results-correction",
+        action="store_true",
+        help="Allow overwriting existing rows in data/results.csv",
     )
     return parser.parse_args(argv)
 
@@ -267,6 +291,11 @@ def run(
     status_path: Path | None = None,
     commit_msg_file: Path | None = None,
     alert_file: Path | None = None,
+    results_path: Path | None = None,
+    results_lookback_days: int = DEFAULT_RESULTS_LOOKBACK_DAYS,
+    results_correction: bool = False,
+    surprise_provider: EarningsSurpriseProvider | None = None,
+    price_provider: PriceProvider | None = None,
 ) -> int:
     """Execute the multi-market calendar generation, change-reporting, and health-status pipeline."""
     now_utc = _resolve_now_utc(now, today)
@@ -303,6 +332,7 @@ def run(
     target_dir.mkdir(parents=True, exist_ok=True)
     resolved_changes_path = changes_path or (target_dir.parent / DEFAULT_CHANGES_PATH)
     resolved_status_path = status_path or (target_dir / DEFAULT_STATUS_PATH.name)
+    resolved_results_path = results_path or (target_dir.parent / DEFAULT_RESULTS_PATH)
 
     prev_status = load_status(resolved_status_path)
     prev_markets = dict(prev_status.get("markets") or {})
@@ -512,6 +542,24 @@ def run(
         alert_file=alert_file,
     )
 
+    # Record post-earnings results for past watchlist events (missing data is never an error)
+    if provider is None or use_mock or results_path is not None or surprise_provider is not None or price_provider is not None:
+        try:
+            update_results(
+                config=config,
+                results_path=resolved_results_path,
+                today=start_date,
+                now=now_utc,
+                lookback_days=results_lookback_days,
+                correction=results_correction,
+                earnings_provider=provider,
+                surprise_provider=surprise_provider,
+                price_provider=price_provider,
+                use_mock=use_mock,
+            )
+        except Exception as exc:
+            logger.warning("Post-earnings results update skipped: %s", exc)
+
     return 1 if had_failure else 0
 
 
@@ -535,6 +583,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         status_path=args.status_file,
         commit_msg_file=args.commit_msg_file,
         alert_file=args.alert_file,
+        results_path=args.results_file,
+        results_lookback_days=args.results_lookback_days,
+        results_correction=args.results_correction,
     )
 
 
