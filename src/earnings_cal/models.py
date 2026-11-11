@@ -3,19 +3,48 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, time as dt_time
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 
+class EventKind(StrEnum):
+    """Supported market event categories."""
+
+    EARNINGS = "earnings"
+    DIVIDEND = "dividend"
+    EX_DIVIDEND = "ex_dividend"
+    AGM = "agm"
+    MACRO = "macro"
+    OTHER = "other"
+
+
 @dataclass(frozen=True)
-class EarningsEvent:
-    """Represents a single company earnings event."""
+class DateWindow:
+    """Inclusive date range `[start, end]` for fetching market events."""
+
+    start: date
+    end: date
+
+    def contains(self, target: date) -> bool:
+        return self.start <= target <= self.end
+
+
+@dataclass(frozen=True)
+class Event:
+    """Represents a single market calendar event (earnings, dividend, AGM, macro, etc.)."""
 
     ticker: str
     date: date
+    market: str = "us"
+    kind: EventKind | str = EventKind.EARNINGS
+    title: str | None = None
+    time: str | dt_time | None = None
+    description: str | None = None
+    source_url: str | None = None
     hour: str | None = None
     quarter: int | None = None
     fiscal_year: int | None = None
@@ -24,35 +53,69 @@ class EarningsEvent:
     note: str | None = None
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "ticker", self.ticker.strip().upper())
+        normalized_market = str(self.market or "us").strip().lower()
+        if not normalized_market:
+            raise ValueError("Event 'market' must be a non-empty string")
+        object.__setattr__(self, "market", normalized_market)
+
+        normalized_ticker = str(self.ticker or "").strip().upper()
+        if not normalized_ticker:
+            raise ValueError("Event 'ticker' must be a non-empty string")
+        object.__setattr__(self, "ticker", normalized_ticker)
+
+        if isinstance(self.kind, EventKind):
+            coerced_kind = self.kind
+        else:
+            raw_kind = str(self.kind or EventKind.EARNINGS.value).strip().lower().replace("-", "_")
+            coerced_kind = EventKind(raw_kind)
+        object.__setattr__(self, "kind", coerced_kind)
+
         if self.hour is not None:
-            normalized_hour = self.hour.strip().lower()
+            normalized_hour = str(self.hour).strip().lower()
             object.__setattr__(self, "hour", normalized_hour or None)
 
-    @property
-    def uid(self) -> str:
-        """Stable UID per event.
+        if isinstance(self.time, dt_time):
+            object.__setattr__(self, "time", self.time.strftime("%H:%M"))
+        elif self.time is not None:
+            cleaned_time = str(self.time).strip()
+            object.__setattr__(self, "time", cleaned_time or None)
 
-        Format: `{TICKER}-{fiscalYear}Q{quarter}@earnings-cal`,
-        falling back to `{TICKER}-{date}@earnings-cal` when fiscal year or quarter is missing.
-        """
-        if self.fiscal_year is not None and self.quarter is not None:
-            return f"{self.ticker}-{self.fiscal_year}Q{self.quarter}@earnings-cal"
-        return f"{self.ticker}-{self.date.isoformat()}@earnings-cal"
+        if self.source_url is not None:
+            cleaned_url = str(self.source_url).strip()
+            object.__setattr__(self, "source_url", cleaned_url or None)
 
-    @property
-    def summary(self) -> str:
-        """Event title: `AAPL earnings (BMO)` / `(AMC)` / `AAPL earnings`."""
-        if self.hour == "bmo":
-            return f"{self.ticker} earnings (BMO)"
-        if self.hour == "amc":
-            return f"{self.ticker} earnings (AMC)"
-        return f"{self.ticker} earnings"
+        if self.note is not None:
+            cleaned_note = str(self.note).strip()
+            object.__setattr__(self, "note", cleaned_note or None)
 
-    @property
-    def description(self) -> str:
-        """Human-readable event description with fiscal period, EPS estimate, status, and notes."""
+        resolved_title = (str(self.title).strip() if self.title else "") or self._default_title()
+        object.__setattr__(self, "title", resolved_title)
+
+        resolved_description = self._build_description(self.description)
+        object.__setattr__(self, "description", resolved_description)
+
+    def _default_title(self) -> str:
+        if self.kind == EventKind.EARNINGS:
+            if self.hour == "bmo":
+                return f"{self.ticker} earnings (BMO)"
+            if self.hour == "amc":
+                return f"{self.ticker} earnings (AMC)"
+            return f"{self.ticker} earnings"
+        if self.kind == EventKind.DIVIDEND:
+            return f"{self.ticker} dividend"
+        if self.kind == EventKind.EX_DIVIDEND:
+            return f"{self.ticker} ex-dividend"
+        if self.kind == EventKind.AGM:
+            return f"{self.ticker} AGM"
+        if self.kind == EventKind.MACRO:
+            return f"{self.ticker} macro"
+        return f"{self.ticker} {self.kind.value}"
+
+    def _build_description(self, explicit_description: str | None) -> str:
         lines: list[str] = []
+        if explicit_description and str(explicit_description).strip():
+            lines.append(str(explicit_description).strip())
+
         if self.quarter is not None and self.fiscal_year is not None:
             lines.append(f"Fiscal Period: Q{self.quarter} {self.fiscal_year}")
         elif self.fiscal_year is not None:
@@ -63,29 +126,66 @@ class EarningsEvent:
         if self.eps_estimate is not None:
             lines.append(f"EPS Estimate: ${self.eps_estimate:.2f}")
 
+        if self.time:
+            lines.append(f"Time: {self.time}")
+
         if self.status:
             lines.append(f"Status: {self.status}")
 
-        if self.note:
+        if self.note and self.note not in lines:
             lines.append(f"Note: {self.note}")
 
+        if self.source_url and not any(self.source_url in line for line in lines):
+            lines.append(f"Source: {self.source_url}")
+
         if not lines:
-            lines.append(f"{self.ticker} earnings release")
+            if self.kind == EventKind.EARNINGS:
+                lines.append(f"{self.ticker} earnings release")
+            else:
+                lines.append(f"{self.ticker} {self.kind.value.replace('_', ' ')} event")
 
         return "\n".join(lines)
+
+    @property
+    def uid(self) -> str:
+        """Stable UID per event including market ID and event kind.
+
+        Format: `{market}-{ticker}-{date or fiscal period}-{kind}@earnings-cal`
+        """
+        if self.fiscal_year is not None and self.quarter is not None:
+            period_or_date = f"{self.fiscal_year}Q{self.quarter}"
+        else:
+            period_or_date = self.date.isoformat()
+        return f"{self.market}-{self.ticker}-{period_or_date}-{self.kind.value}@earnings-cal"
+
+    @property
+    def summary(self) -> str:
+        """Calendar VEVENT summary (alias for `title`)."""
+        return self.title or self._default_title()
+
+
+# Backward-compatible alias for existing callers and tests
+EarningsEvent = Event
 
 
 @dataclass(frozen=True)
 class WatchlistConfig:
-    """Parsed configuration from tickers.yaml."""
+    """Parsed configuration from tickers.yaml supporting per-market sections."""
 
     tickers: list[str] = field(default_factory=list)
     tickers_ljse: list[str] = field(default_factory=list)
-    manual_events: list[EarningsEvent] = field(default_factory=list)
+    manual_events: list[Event] = field(default_factory=list)
     ljse_issuers: dict[str, str] = field(default_factory=dict)
+    markets: dict[str, dict[str, Any]] = field(default_factory=dict)
+    config_dir: Path = field(default_factory=lambda: Path("."))
+    is_legacy_only: bool = False
+
+    def get_market_section(self, market_id: str) -> dict[str, Any]:
+        """Return the configuration dictionary for `market_id`."""
+        return dict(self.markets.get(market_id.lower(), {}))
 
 
-ALLOWED_CONFIG_KEYS = {"tickers", "tickers-ljse", "manual_events", "ljse_issuers"}
+LEGACY_CONFIG_KEYS = {"tickers", "tickers-ljse", "manual_events", "ljse_issuers"}
 
 
 def _parse_ticker_list(raw_value: Any, field_name: str) -> list[str]:
@@ -135,7 +235,7 @@ def _parse_ljse_issuers(raw_issuers: Any) -> dict[str, str]:
     return parsed
 
 
-def _parse_date(value: Any) -> date:
+def parse_date_value(value: Any) -> date:
     if isinstance(value, datetime):
         return value.date()
     if isinstance(value, date):
@@ -145,57 +245,132 @@ def _parse_date(value: Any) -> date:
     raise ValueError(f"Unsupported date value: {value!r}")
 
 
+def parse_event_dict(entry: dict[str, Any], default_market: str = "us") -> Event:
+    """Parse a raw YAML event mapping into an `Event`."""
+    if not isinstance(entry, dict):
+        raise ValueError(f"Each event item must be a mapping, got {entry!r}")
+    if "ticker" not in entry or "date" not in entry:
+        raise ValueError(f"Event is missing required 'ticker' or 'date': {entry!r}")
+
+    quarter = int(entry["quarter"]) if entry.get("quarter") is not None else None
+    fiscal_year = int(entry["fiscal_year"]) if entry.get("fiscal_year") is not None else None
+    eps_estimate = (
+        float(entry["eps_estimate"]) if entry.get("eps_estimate") is not None else None
+    )
+    raw_kind = entry.get("kind") or entry.get("type") or EventKind.EARNINGS
+    market_id = str(entry.get("market") or default_market).strip().lower()
+
+    return Event(
+        market=market_id,
+        ticker=str(entry["ticker"]),
+        date=parse_date_value(entry["date"]),
+        kind=raw_kind,
+        title=str(entry["title"]).strip() if entry.get("title") else None,
+        time=str(entry["time"]).strip() if entry.get("time") is not None else None,
+        description=str(entry["description"]).strip() if entry.get("description") else None,
+        source_url=str(entry["source_url"]).strip() if entry.get("source_url") else None,
+        hour=str(entry["hour"]) if entry.get("hour") is not None else None,
+        quarter=quarter,
+        fiscal_year=fiscal_year,
+        eps_estimate=eps_estimate,
+        status=str(entry["status"]) if entry.get("status") is not None else None,
+        note=str(entry["note"]).strip() if entry.get("note") else None,
+    )
+
+
+def _parse_manual_events(raw_manual: Any, market_id: str = "us") -> list[Event]:
+    if raw_manual is None:
+        return []
+    if not isinstance(raw_manual, list):
+        raise ValueError("'manual_events' in configuration must be a list")
+    return [parse_event_dict(entry, default_market=market_id) for entry in raw_manual]
+
+
+def _known_market_ids() -> set[str]:
+    try:
+        from earnings_cal.markets.registry import get_registered_market_ids
+
+        return set(get_registered_market_ids())
+    except Exception:
+        return {"us", "ljse"}
+
+
 def load_config(path: Path | str) -> WatchlistConfig:
-    """Load watchlist tickers, optional manual_events, and optional ljse_issuers from YAML."""
+    """Load per-market watchlists (and legacy top-level keys) from YAML."""
     config_path = Path(path)
     raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
         raise ValueError(f"Expected a YAML mapping in {config_path}, got {type(raw).__name__}")
 
-    unknown_keys = sorted(set(raw.keys()) - ALLOWED_CONFIG_KEYS)
+    registered_ids = _known_market_ids()
+    allowed_keys = LEGACY_CONFIG_KEYS | registered_ids | {"markets"}
+    unknown_keys = sorted(set(raw.keys()) - allowed_keys)
     if unknown_keys:
         raise ValueError(
             f"Unknown configuration key(s) in {config_path}: {', '.join(unknown_keys)}"
         )
 
-    tickers = _parse_ticker_list(raw.get("tickers"), "tickers")
-    tickers_ljse = _parse_ticker_list(raw.get("tickers-ljse"), "tickers-ljse")
+    markets_map: dict[str, dict[str, Any]] = {}
 
-    raw_manual = raw.get("manual_events") or []
-    if not isinstance(raw_manual, list):
-        raise ValueError("'manual_events' in configuration must be a list")
+    # Support optional nested `markets:` mapping as well as top-level `<market_id>:` sections
+    if "markets" in raw:
+        if not isinstance(raw["markets"], dict):
+            raise ValueError("'markets' in configuration must be a mapping")
+        for m_id, m_cfg in raw["markets"].items():
+            if not isinstance(m_cfg, dict):
+                raise ValueError(f"Configuration for market '{m_id}' must be a mapping")
+            markets_map[str(m_id).strip().lower()] = dict(m_cfg)
 
-    manual_events: list[EarningsEvent] = []
-    for entry in raw_manual:
-        if not isinstance(entry, dict):
-            raise ValueError(f"Each manual_events item must be a mapping, got {entry!r}")
-        if "ticker" not in entry or "date" not in entry:
-            raise ValueError(f"Manual event is missing required 'ticker' or 'date': {entry!r}")
+    for key, val in raw.items():
+        if key in LEGACY_CONFIG_KEYS or key == "markets":
+            continue
+        if val is None:
+            markets_map[key.lower()] = {}
+        elif isinstance(val, dict):
+            markets_map[key.lower()] = dict(val)
+        else:
+            raise ValueError(f"Configuration section for market '{key}' must be a mapping")
 
-        quarter = int(entry["quarter"]) if entry.get("quarter") is not None else None
-        fiscal_year = int(entry["fiscal_year"]) if entry.get("fiscal_year") is not None else None
-        eps_estimate = (
-            float(entry["eps_estimate"]) if entry.get("eps_estimate") is not None else None
-        )
+    has_market_sections = bool(markets_map)
 
-        manual_events.append(
-            EarningsEvent(
-                ticker=str(entry["ticker"]),
-                date=_parse_date(entry["date"]),
-                hour=str(entry["hour"]) if entry.get("hour") is not None else None,
-                quarter=quarter,
-                fiscal_year=fiscal_year,
-                eps_estimate=eps_estimate,
-                status=str(entry["status"]) if entry.get("status") is not None else None,
-                note=str(entry["note"]).strip() if entry.get("note") else None,
-            )
-        )
+    # Parse legacy top-level fields if present
+    legacy_tickers = _parse_ticker_list(raw.get("tickers"), "tickers")
+    legacy_tickers_ljse = _parse_ticker_list(raw.get("tickers-ljse"), "tickers-ljse")
+    legacy_manual = _parse_manual_events(raw.get("manual_events"), market_id="us")
+    legacy_issuers = _parse_ljse_issuers(raw.get("ljse_issuers"))
 
-    ljse_issuers = _parse_ljse_issuers(raw.get("ljse_issuers"))
+    # Merge US section with legacy top-level US fields
+    us_section = dict(markets_map.get("us", {}))
+    us_tickers = _parse_ticker_list(us_section.get("tickers"), "us.tickers") or legacy_tickers
+    us_manual = (
+        _parse_manual_events(us_section.get("manual_events"), market_id="us")
+        if "manual_events" in us_section
+        else legacy_manual
+    )
+    us_section["tickers"] = us_tickers
+    us_section["manual_events"] = us_manual
+    if us_tickers or us_manual or "us" in markets_map:
+        markets_map["us"] = us_section
+
+    # Merge LJSE section with legacy top-level LJSE fields
+    ljse_section = dict(markets_map.get("ljse", {}))
+    ljse_tickers = (
+        _parse_ticker_list(ljse_section.get("tickers"), "ljse.tickers")
+        or legacy_tickers_ljse
+    )
+    raw_section_issuers = ljse_section.get("issuers") or ljse_section.get("ljse_issuers")
+    ljse_issuers = _parse_ljse_issuers(raw_section_issuers) if raw_section_issuers is not None else legacy_issuers
+    ljse_section["tickers"] = ljse_tickers
+    ljse_section["issuers"] = ljse_issuers
+    if ljse_tickers or ljse_issuers or "ljse" in markets_map:
+        markets_map["ljse"] = ljse_section
 
     return WatchlistConfig(
-        tickers=tickers,
-        tickers_ljse=tickers_ljse,
-        manual_events=manual_events,
+        tickers=us_tickers,
+        tickers_ljse=ljse_tickers,
+        manual_events=us_manual,
         ljse_issuers=ljse_issuers,
+        markets=markets_map,
+        config_dir=config_path.parent,
+        is_legacy_only=not has_market_sections,
     )

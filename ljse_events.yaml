@@ -1,0 +1,76 @@
+# Curated Ljubljana Stock Exchange (LJSE) financial calendar events
+ljse_events:
+  - ticker: CICG
+    date: "2026-11-11"
+    kind: earnings
+    title: "CICG Q1–Q3 2026 Interim Report"
+    description: "Objava Poročila o poslovanju Cinkarne Celje, d.d. za obdobje januar - september 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=91972"
+
+  - ticker: KRKG
+    date: "2026-11-12"
+    kind: earnings
+    time: "08:15"
+    title: "KRKG Q1–Q3 2026 Interim Report"
+    description: "Objava poročila o poslovanju skupine Krka in družbe Krka za obdobje januar - september 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92042"
+
+  - ticker: TLSG
+    date: "2026-11-12"
+    kind: earnings
+    title: "TLSG Q1–Q3 2026 Interim Report"
+    description: "Objava nerevidiranega poročila o poslovanju Skupine Telekom Slovenije in družbe Telekom Slovenije, d.d., za obdobje januar - september 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92747"
+
+  - ticker: LKPG
+    date: "2026-11-19"
+    kind: earnings
+    title: "LKPG Q1–Q3 2026 Interim Report"
+    description: "Objava nerevidiranega poročila o poslovanju Skupine in družbe Luka Koper, d. d., za obdobje januar - september 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92849"
+
+  - ticker: KRKG
+    date: "2027-01-28"
+    kind: earnings
+    time: "08:15"
+    title: "KRKG 2026 Preliminary Results"
+    description: "Predhodna ocena poslovanja skupine Krka za leto 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92042"
+
+  - ticker: KRKG
+    date: "2027-03-11"
+    kind: earnings
+    time: "08:15"
+    title: "KRKG 2026 Unaudited Financial Statements"
+    description: "Objava nerevidiranih računovodskih izkazov skupine Krka in družbe Krka za leto 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92042"
+
+  - ticker: KRKG
+    date: "2027-04-08"
+    kind: earnings
+    time: "08:15"
+    title: "KRKG 2026 Annual Report"
+    description: "Objava letnega poročila skupine Krka in družbe Krka za leto 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92042"
+
+  - ticker: KRKG
+    date: "2027-07-08"
+    kind: agm
+    time: "13:00"
+    title: "KRKG Annual General Meeting"
+    description: "Redna skupščina delničarjev družbe Krka, d. d., Novo mesto"
+    source_url: "https://seonet.ljse.si/?doc_id=92042"
+
+  - ticker: KRKG
+    date: "2027-07-21"
+    kind: ex_dividend
+    title: "KRKG Ex-Dividend Date"
+    description: "Prvi trgovalni dan brez pravice do dividende"
+    source_url: "https://seonet.ljse.si/?doc_id=92042"
+
+  - ticker: KRKG
+    date: "2027-07-23"
+    kind: dividend
+    title: "KRKG Dividend Payment"
+    description: "Izplačilo dividend delničarjem družbe Krka, d. d., Novo mesto"
+    source_url: "https://seonet.ljse.si/?doc_id=92042"

@@ -1,16 +1,22 @@
-name: Update Earnings Calendar
+name: Update Market Calendars
 
 on:
   schedule:
     # Runs daily at 06:00 UTC
     - cron: "0 6 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "tickers.yaml"
+      - "ljse_events.yaml"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  update-calendar:
+  update-calendars:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -27,20 +33,21 @@ jobs:
           pip install -r requirements.txt
           pip install --no-deps -e .
 
-      - name: Generate earnings calendar (.ics)
+      - name: Build all registered market calendars (.ics) and docs/index.html
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           PYTHONPATH: src
         run: python -m earnings_cal
 
-      - name: Commit and push if docs/earnings.ics changed
+      - name: Commit and push changed feed files
         run: |
-          git add docs/earnings.ics
+          git add docs/*.ics docs/index.html
           if git diff --cached --quiet; then
-            echo "No changes to docs/earnings.ics"
+            echo "No changes to docs/*.ics or docs/index.html"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore: update earnings calendar"
+            git commit -m "chore: update market calendars"
+            git pull --rebase
             git push
           fi

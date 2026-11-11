@@ -49,8 +49,8 @@ def test_uid_stability_and_date_move_updates_instead_of_duplicating() -> None:
         eps_estimate=2.40,
     )
 
-    assert initial_event.uid == "AAPL-2027Q1@earnings-cal"
-    assert moved_event.uid == "AAPL-2027Q1@earnings-cal"
+    assert initial_event.uid == "us-AAPL-2027Q1-earnings@earnings-cal"
+    assert moved_event.uid == "us-AAPL-2027Q1-earnings@earnings-cal"
 
     merged = merge_events([initial_event], [moved_event])
     assert len(merged) == 1
@@ -60,14 +60,14 @@ def test_uid_stability_and_date_move_updates_instead_of_duplicating() -> None:
     cal = Calendar.from_ical(render_ics(merged))
     vevents = [comp for comp in cal.walk() if comp.name == "VEVENT"]
     assert len(vevents) == 1
-    assert str(vevents[0].get("uid")) == "AAPL-2027Q1@earnings-cal"
+    assert str(vevents[0].get("uid")) == "us-AAPL-2027Q1-earnings@earnings-cal"
     assert vevents[0].decoded("dtstart") == date(2027, 2, 4)
 
 
 def test_uid_fallback_when_quarter_missing() -> None:
-    """Fallback UID uses {TICKER}-{date}@earnings-cal when quarter/fiscalYear is absent."""
+    """Fallback UID uses {market}-{TICKER}-{date}-{kind}@earnings-cal when quarter/fiscalYear is absent."""
     ev = EarningsEvent(ticker="ASML", date=date(2027, 1, 27), note="Q4 results")
-    assert ev.uid == "ASML-2027-01-27@earnings-cal"
+    assert ev.uid == "us-ASML-2027-01-27-earnings@earnings-cal"
 
 
 def test_no_duplicate_events_and_deterministic_output_on_rerun(tmp_path: Path) -> None:
@@ -160,7 +160,7 @@ def test_no_duplicate_events_and_deterministic_output_on_rerun(tmp_path: Path) -
     vevents = [comp for comp in cal.walk() if comp.name == "VEVENT"]
     assert len(vevents) == 2
     uids = [str(v.get("uid")) for v in vevents]
-    assert uids == ["NVDA-2027Q3@earnings-cal", "AAPL-2027Q1@earnings-cal"]
+    assert uids == ["us-NVDA-2027Q3-earnings@earnings-cal", "us-AAPL-2027Q1-earnings@earnings-cal"]
 
 
 def test_manual_events_merge_and_parse_cleanly_with_icalendar(tmp_path: Path) -> None:

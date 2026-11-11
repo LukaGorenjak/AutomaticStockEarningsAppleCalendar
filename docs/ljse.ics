@@ -1,0 +1,174 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Earnings Watchlist//earnings-cal//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Events LJSE
+REFRESH-INTERVAL;VALUE=DURATION:P1D
+X-PUBLISHED-TTL:P1D
+X-WR-TIMEZONE:Europe/Ljubljana
+BEGIN:VEVENT
+SUMMARY:CICG Q1–Q3 2026 Interim Report
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+DTSTAMP:20260101T000000Z
+UID:ljse-CICG-2026-11-11-earnings@earnings-cal
+DESCRIPTION:Objava Poročila o poslovanju Cinkarne Celje\, d.d. za obdobje
+  januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=91972
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=91972
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: CICG Q1–Q3 2026 Interim Report
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:KRKG Q1–Q3 2026 Interim Report
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+DTSTAMP:20260101T000000Z
+UID:ljse-KRKG-2026-11-12-earnings@earnings-cal
+DESCRIPTION:Objava poročila o poslovanju skupine Krka in družbe Krka za 
+ obdobje januar - september 2026\nTime: 08:15\nSource: https://seonet.ljse.
+ si/?doc_id=92042
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92042
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: KRKG Q1–Q3 2026 Interim Report
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:TLSG Q1–Q3 2026 Interim Report
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+DTSTAMP:20260101T000000Z
+UID:ljse-TLSG-2026-11-12-earnings@earnings-cal
+DESCRIPTION:Objava nerevidiranega poročila o poslovanju Skupine Telekom S
+ lovenije in družbe Telekom Slovenije\, d.d.\, za obdobje januar - septemb
+ er 2026\nSource: https://seonet.ljse.si/?doc_id=92747
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92747
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: TLSG Q1–Q3 2026 Interim Report
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:LKPG Q1–Q3 2026 Interim Report
+DTSTART;VALUE=DATE:20261119
+DTEND;VALUE=DATE:20261120
+DTSTAMP:20260101T000000Z
+UID:ljse-LKPG-2026-11-19-earnings@earnings-cal
+DESCRIPTION:Objava nerevidiranega poročila o poslovanju Skupine in družb
+ e Luka Koper\, d. d.\, za obdobje januar - september 2026\nSource: https:/
+ /seonet.ljse.si/?doc_id=92849
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92849
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: LKPG Q1–Q3 2026 Interim Report
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:KRKG 2026 Preliminary Results
+DTSTART;VALUE=DATE:20270128
+DTEND;VALUE=DATE:20270129
+DTSTAMP:20260101T000000Z
+UID:ljse-KRKG-2027-01-28-earnings@earnings-cal
+DESCRIPTION:Predhodna ocena poslovanja skupine Krka za leto 2026\nTime: 08
+ :15\nSource: https://seonet.ljse.si/?doc_id=92042
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92042
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: KRKG 2026 Preliminary Results
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:KRKG 2026 Unaudited Financial Statements
+DTSTART;VALUE=DATE:20270311
+DTEND;VALUE=DATE:20270312
+DTSTAMP:20260101T000000Z
+UID:ljse-KRKG-2027-03-11-earnings@earnings-cal
+DESCRIPTION:Objava nerevidiranih računovodskih izkazov skupine Krka in dr
+ užbe Krka za leto 2026\nTime: 08:15\nSource: https://seonet.ljse.si/?doc_
+ id=92042
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92042
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: KRKG 2026 Unaudited Financial Statements
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:KRKG 2026 Annual Report
+DTSTART;VALUE=DATE:20270408
+DTEND;VALUE=DATE:20270409
+DTSTAMP:20260101T000000Z
+UID:ljse-KRKG-2027-04-08-earnings@earnings-cal
+DESCRIPTION:Objava letnega poročila skupine Krka in družbe Krka za leto 
+ 2026\nTime: 08:15\nSource: https://seonet.ljse.si/?doc_id=92042
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92042
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: KRKG 2026 Annual Report
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:KRKG Annual General Meeting
+DTSTART;VALUE=DATE:20270708
+DTEND;VALUE=DATE:20270709
+DTSTAMP:20260101T000000Z
+UID:ljse-KRKG-2027-07-08-agm@earnings-cal
+DESCRIPTION:Redna skupščina delničarjev družbe Krka\, d. d.\, Novo mes
+ to\nTime: 13:00\nSource: https://seonet.ljse.si/?doc_id=92042
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92042
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: KRKG Annual General Meeting
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:KRKG Ex-Dividend Date
+DTSTART;VALUE=DATE:20270721
+DTEND;VALUE=DATE:20270722
+DTSTAMP:20260101T000000Z
+UID:ljse-KRKG-2027-07-21-ex_dividend@earnings-cal
+DESCRIPTION:Prvi trgovalni dan brez pravice do dividende\nSource: https://
+ seonet.ljse.si/?doc_id=92042
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92042
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: KRKG Ex-Dividend Date
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:KRKG Dividend Payment
+DTSTART;VALUE=DATE:20270723
+DTEND;VALUE=DATE:20270724
+DTSTAMP:20260101T000000Z
+UID:ljse-KRKG-2027-07-23-dividend@earnings-cal
+DESCRIPTION:Izplačilo dividend delničarjem družbe Krka\, d. d.\, Novo m
+ esto\nSource: https://seonet.ljse.si/?doc_id=92042
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92042
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: KRKG Dividend Payment
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+END:VCALENDAR

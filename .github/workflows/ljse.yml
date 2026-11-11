@@ -38,14 +38,15 @@ jobs:
           PYTHONPATH: src
         run: python -m earnings_cal --scrape-ljse
 
-      - name: Commit state/ljse_cache.json and docs/earnings.ics if changed
+      - name: Commit state/ljse_cache.json and docs feeds if changed
         run: |
-          git add state/ljse_cache.json docs/earnings.ics
+          git add state/ljse_cache.json docs/*.ics docs/index.html
           if git diff --cached --quiet; then
-            echo "No changes to LJSE cache or docs/earnings.ics"
+            echo "No changes to LJSE cache or docs feeds"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore: update LJSE cache and earnings calendar"
+            git commit -m "chore: update LJSE cache and market calendars"
+            git pull --rebase
             git push
           fi

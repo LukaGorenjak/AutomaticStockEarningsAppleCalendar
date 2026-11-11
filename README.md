@@ -1,21 +1,32 @@
-# Earnings Watchlist Calendar (`earnings-cal`)
+# Multi-Market Earnings & Financial Events Calendar (`earnings-cal`)
 
-Generates a deterministic iCalendar (`.ics`) feed of upcoming stock earnings dates for a customizable watchlist, refreshed daily by GitHub Actions and served via GitHub Pages so Apple Calendar (macOS & iOS) can subscribe via a `webcal://` URL.
+Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and corporate events per market, refreshed daily by GitHub Actions and served via GitHub Pages so Apple Calendar (macOS & iOS) can subscribe via `webcal://` URLs.
+
+## Published Feeds
+
+| Market | Feed File | `X-WR-CALNAME` | IANA Timezone | Subscription URL (`webcal://`) |
+| --- | --- | --- | --- | --- |
+| **United States (`us`)** | `docs/us.ics` | `Earnings US` | `America/New_York` | `webcal://<user>.github.io/<repo>/us.ics` |
+| **Ljubljana Stock Exchange (`ljse`)** | `docs/ljse.ics` | `Events LJSE` | `Europe/Ljubljana` | `webcal://<user>.github.io/<repo>/ljse.ics` |
+| **Legacy US Alias** | `docs/earnings.ics` | `Earnings US` | `America/New_York` | `webcal://<user>.github.io/<repo>/earnings.ics` |
+
+> **Migration notice (`docs/earnings.ics` -> `docs/us.ics`):**
+> `docs/earnings.ics` is preserved as an identical alias of `docs/us.ics` so existing Apple Calendar subscriptions continue working without interruption. Subscribers should migrate their subscription URL to `webcal://<user>.github.io/<repo>/us.ics` (and optionally subscribe to `webcal://<user>.github.io/<repo>/ljse.ics` for Ljubljana Stock Exchange events). A live directory of all registered feeds is also published at `https://<user>.github.io/<repo>/` (`docs/index.html`).
+
+---
 
 ## Features
 
-- **Finnhub Earnings Calendar Integration**: Queries `GET https://finnhub.io/api/v1/calendar/earnings` per ticker over a 90-day lookahead window (`from=YYYY-MM-DD`, `to=YYYY-MM-DD`, `symbol=TICKER`), staying well within Finnhub's free-tier limit of 60 calls/minute.
-- **Swappable Provider Interface**: `EarningsProvider` in `src/earnings_cal/fetch.py` cleanly decouples API fetching from calendar generation so another source (e.g., Alpha Vantage) can be swapped in later.
-- **Resilient Error Handling**:
-  - Retries HTTP `429` rate limits and transient `5xx` errors with exponential backoff (honoring `Retry-After` when present).
-  - Warns and skips individual failing tickers without crashing the run.
-  - Preserves the existing `docs/earnings.ics` and exits non-zero if the API fails or returns zero events across all watchlist tickers.
+- **Modular Multi-Market Design (`src/earnings_cal/markets/`)**:
+  - Each market implements `Market` (`id`, `display_name`, `timezone`, `calendar_name`, `fetch_events(window) -> list[Event]`) in its own module and is registered in `src/earnings_cal/markets/registry.py`.
+  - One `.ics` feed per market (`docs/us.ics`, `docs/ljse.ics`) plus an auto-generated `docs/index.html` listing every registered feed and its `webcal://` link.
+- **Extended `Event` & `EventKind` Model**:
+  - Supports `EventKind` (`earnings`, `dividend`, `ex_dividend`, `agm`, `macro`, `other`), `market`, `ticker`, `title`, `date`, optional `time`, `description`, and `source_url`.
+  - Market-scoped deterministic UIDs: `{market}-{ticker}-{date or fiscal period}-{kind}@earnings-cal` (e.g. `us-AAPL-2027Q1-earnings@earnings-cal`, `ljse-KRKG-2026-11-12-earnings@earnings-cal`).
+- **Failure Isolation Across Markets**:
+  - One failing market never blocks the others: its error is logged, its existing `.ics` file in `docs/` is preserved untouched, all healthy markets are updated, and the CLI exits non-zero at the end.
 - **Apple Calendar Ready**:
-  - One all-day `VEVENT` per earnings release (`AAPL earnings (BMO)` / `(AMC)` / `AAPL earnings`).
-  - Stable UID per fiscal period (`{TICKER}-{fiscalYear}Q{quarter}@earnings-cal`, falling back to `{TICKER}-{date}@earnings-cal`), so date shifts update the existing calendar entry instead of duplicating.
-  - Built-in `VALARM` firing at 09:00 local time the day before (`TRIGGER:-PT15H`).
-  - Calendar metadata (`X-WR-CALNAME:Earnings Watchlist`, `REFRESH-INTERVAL;VALUE=DURATION:P1D`, `X-PUBLISHED-TTL:P1D`).
-  - Byte-for-byte deterministic output so GitHub Actions only commits when an event actually changes.
+  - All-day `VEVENT` entries with `VALARM` reminders at 09:00 local time the day before (`TRIGGER:-PT15H`), `X-WR-CALNAME`, `X-WR-TIMEZONE`, and `REFRESH-INTERVAL;VALUE=DURATION:P1D`.
 
 ---
 
@@ -24,219 +35,131 @@ Generates a deterministic iCalendar (`.ics`) feed of upcoming stock earnings dat
 ```text
 .
 ├── .github/workflows/
-│   ├── ljse.yml                   # Weekly cron + tickers.yaml push workflow to scrape LJSE & rebuild .ics
-│   └── update.yml                 # Daily cron + manual workflow to refresh docs/earnings.ics
-├── docs/earnings.ics              # Published iCalendar feed served by GitHub Pages
-├── state/ljse_cache.json          # Cached weekly-scraped LJSE earnings events
+│   ├── ljse.yml                   # Weekly cron + push workflow for LJSE SEOnet cache
+│   ├── seonet.yml                 # Daily SEOnet RSS watcher opening review issues
+│   └── update.yml                 # Daily cron + manual workflow building all registered markets
+├── docs/
+│   ├── index.html                 # Auto-generated directory of all market feeds & webcal:// links
+│   ├── us.ics                     # US equities earnings feed (X-WR-CALNAME: Earnings US)
+│   ├── ljse.ics                   # LJSE corporate events feed (X-WR-CALNAME: Events LJSE)
+│   └── earnings.ics               # Legacy alias of docs/us.ics
 ├── src/earnings_cal/
 │   ├── __init__.py
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
-│   ├── build.py                   # Deterministic iCalendar (.ics) builder & deduplication
+│   ├── build.py                   # Deterministic iCalendar (.ics) & docs/index.html builder
 │   ├── fetch.py                   # EarningsProvider interface & FinnhubProvider
-│   ├── main.py                    # CLI argument parsing & orchestration
-│   ├── models.py                  # EarningsEvent model & tickers.yaml loader
-│   └── seonet/
-│       ├── __init__.py
-│       ├── __main__.py            # Entry point for `python -m earnings_cal.seonet`
-│       ├── cli.py                 # Optional SEOnet RSS report CLI
-│       ├── dates.py               # Numeric & Slovene/English candidate date extraction
-│       ├── documents.py           # Announcement HTML parsing & PDF text extraction
-│       ├── feed.py                # SEOnet RSS feed client & parser
-│       ├── filter.py              # Issuer & financial calendar title matching
-│       ├── ljse.py                # Automatic weekly SEOnet scraper for tickers-ljse
-│       ├── report.py              # Markdown report renderer
-│       └── state.py               # Seen announcement ID persistence
+│   ├── main.py                    # Multi-market CLI orchestration & failure isolation
+│   ├── models.py                  # Event, EventKind, DateWindow & YAML config loader
+│   ├── markets/
+│   │   ├── __init__.py
+│   │   ├── base.py                # Market abstract base class
+│   │   ├── registry.py            # Central MARKET_REGISTRY
+│   │   ├── us.py                  # USMarket (Finnhub + manual_events)
+│   │   └── ljse.py                # LJSEMarket (ljse_events.yaml)
+│   └── seonet/                    # SEOnet RSS watcher & PDF candidate date extractor
 ├── tests/
 │   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
-│   ├── test_earnings_cal.py       # Pytest suite for Finnhub/iCalendar generation
-│   └── test_seonet.py             # Pytest suite for SEOnet & LJSE scraper (offline fixtures)
+│   ├── test_earnings_cal.py       # Finnhub & iCalendar unit/integration tests
+│   ├── test_markets.py            # Multi-market registry, dummy market, UID & isolation tests
+│   └── test_seonet.py             # SEOnet watcher & scraper tests
+├── ljse_events.yaml               # Curated LJSE events (earnings, AGM, ex_dividend, dividend)
+├── tickers.yaml                   # Per-market watchlists and configuration sections
 ├── pyproject.toml
-├── requirements.txt
-└── tickers.yaml                   # Watchlist tickers, tickers-ljse, and manual_events
+└── requirements.txt
 ```
 
 ---
 
-## Configuration (`tickers.yaml`)
+## Configuration (`tickers.yaml` & `ljse_events.yaml`)
 
-Edit `tickers.yaml` in the repository root to customize your stock watchlist and optional manual events (for non-US listings or dates not covered by the free Finnhub tier):
+Each market has its own top-level section in `tickers.yaml`:
 
 ```yaml
-tickers:
-  - AAPL
-  - MSFT
-  - NVDA
-  - GOOGL
-  - AMZN
-  - META
-  - TSLA
+us:
+  tickers:
+    - AAPL
+    - MSFT
+    - NVDA
+    - GOOGL
+    - AMZN
+    - META
+    - TSLA
+  manual_events:
+    - ticker: ASML
+      date: "2027-01-27"
+      note: "Q4 2026 earnings release (manual entry)"
+    - ticker: TSM
+      date: "2027-01-14"
+      note: "Q4 2026 earnings release"
 
-tickers-ljse:
-  - KRKG
-  - CICG
-  - TLSG
-  - LKPG
-
-manual_events:
-  - ticker: ASML
-    date: "2027-01-27"
-    note: "Q4 2026 earnings release (manual entry)"
-  - ticker: TSM
-    date: "2027-01-14"
-    note: "Q4 2026 earnings release"
+ljse:
+  tickers:
+    - KRKG
+    - CICG
+    - TLSG
+    - LKPG
+  events_file: ljse_events.yaml
+  issuers:
+    KRKG: "KRKA, d. d., Novo mesto"
+    CICG: "CINKARNA CELJE, d.d., Celje"
+    TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
+    LKPG: "LUKA KOPER, d.d., Koper"
+    NLBR: "NLB, d. d., Ljubljana"
 ```
+
+LJSE corporate events live in `ljse_events.yaml` with `kind` (`earnings`, `dividend`, `ex_dividend`, `agm`, `macro`, `other`), `date`, optional `time`, `title`, `description`, and `source_url`.
 
 ---
 
-## Local Setup & Usage
+## How to Add a Market
 
-### Prerequisites
+Adding a new market requires **one module, one registry entry, one config section, and its tests** — with **no edits to core code** (`models.py`, `build.py`, `main.py`, or `.github/workflows/update.yml`):
 
-- Python **3.11+**
+1. **Create a market module** in `src/earnings_cal/markets/<market_id>.py` subclassing `Market`:
+   ```python
+   from earnings_cal.markets.base import Market
+   from earnings_cal.models import DateWindow, Event, EventKind
 
-### 1. Create a virtual environment and install dependencies
+   class XetraMarket(Market):
+       id = "xetra"
+       display_name = "Deutsche Börse Xetra"
+       timezone = "Europe/Berlin"
+       calendar_name = "Events Xetra"
 
-**macOS / Linux:**
+       def fetch_events(self, window: DateWindow) -> list[Event]:
+           tickers = [str(t).upper() for t in self.config.get("tickers", [])]
+           # Fetch and return list[Event] with market=self.id within [window.start, window.end]
+           return [...]
+   ```
+2. **Register the market** in `src/earnings_cal/markets/registry.py`:
+   ```python
+   MARKET_REGISTRY: dict[str, type[Market] | Market] = {
+       USMarket.id: USMarket,
+       LJSEMarket.id: LJSEMarket,
+       XetraMarket.id: XetraMarket,
+   }
+   ```
+3. **Add its config section** in `tickers.yaml`:
+   ```yaml
+   xetra:
+     tickers:
+       - SAP
+       - SIE
+   ```
+4. **Add tests** in `tests/test_markets.py` and run `pytest`. Running `python -m earnings_cal` will automatically generate `docs/xetra.ics` and list it with its `webcal://` link in `docs/index.html`.
+
+---
+
+## Local Usage & Testing
+
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-```
+# Build all registered markets locally using deterministic mock Finnhub data
+python -m earnings_cal --mock
 
-**Windows (PowerShell):**
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-pip install -e .
-```
-
-### 2. Run the generator locally
-
-With a real Finnhub API key:
-
-**macOS / Linux:**
-```bash
+# Build with a live Finnhub API key
 export FINNHUB_API_KEY="your_finnhub_api_key_here"
 python -m earnings_cal
+
+# Run the full test suite
+pytest -v
 ```
-
-**Windows (PowerShell):**
-```powershell
-$env:FINNHUB_API_KEY = "your_finnhub_api_key_here"
-python -m earnings_cal
-```
-
-To test locally without a live key (using deterministic mocked responses):
-
-```bash
-python -m earnings_cal --mock
-# or set FINNHUB_API_KEY=mock
-```
-
-This writes the generated calendar to `docs/earnings.ics`.
-
-### 3. Run tests
-
-```bash
-pytest
-```
-
----
-
-## End-to-End Deployment Guide
-
-### Step 1: Get a Free Finnhub API Key
-
-1. Go to [https://finnhub.io/register](https://finnhub.io/register) and sign up for a free account.
-2. Once signed in, copy your **API Key** from the [Finnhub Dashboard](https://finnhub.io/dashboard).
-
-### Step 2: Add the GitHub Repository Secret
-
-1. Push this project to a GitHub repository.
-2. In your GitHub repository, navigate to **Settings** -> **Secrets and variables** -> **Actions**.
-3. Click **New repository secret**.
-4. Set:
-   - **Name**: `FINNHUB_API_KEY`
-   - **Secret**: Paste your Finnhub API key.
-5. Click **Add secret**.
-
-### Step 3: Trigger the Initial Workflow (Optional)
-
-1. Go to the **Actions** tab in your GitHub repository.
-2. Select **Update Earnings Calendar** on the left.
-3. Click **Run workflow** -> **Run workflow** to verify the secret works and refresh `docs/earnings.ics` immediately.
-
-### Step 4: Enable GitHub Pages (`main` branch, `/docs` folder)
-
-1. In your GitHub repository, navigate to **Settings** -> **Pages**.
-2. Under **Build and deployment**:
-   - **Source**: Select **Deploy from a branch**.
-   - **Branch**: Select **`main`** and folder **`/docs`**.
-3. Click **Save**.
-4. Wait ~1 minute for GitHub Pages to publish. Your feed will be hosted at:
-   ```text
-   https://<user>.github.io/<repo>/earnings.ics
-   ```
-   *(Note: GitHub Pages URLs are public even for private repositories if Pages is enabled on a paid plan, or for any public repository on GitHub Free.)*
-
----
-
-## Subscribing in Apple Calendar (`webcal://`)
-
-Replace `<user>` with your GitHub username and `<repo>` with your repository name in the subscription URL below:
-
-```text
-webcal://<user>.github.io/<repo>/earnings.ics
-```
-
-### On Mac (macOS Apple Calendar)
-
-1. Open the **Calendar** app.
-2. From the menu bar, choose **File** -> **New Calendar Subscription…** (or press `Option + Command + S`).
-3. Enter your `webcal://` URL:
-   ```text
-   webcal://<user>.github.io/<repo>/earnings.ics
-   ```
-   and click **Subscribe**.
-4. Confirm the settings:
-   - **Name**: `Earnings Watchlist` (pre-filled from `X-WR-CALNAME`)
-   - **Location**: Select **iCloud** (recommended so the subscription syncs automatically to your iPhone/iPad) or **On My Mac**.
-   - **Auto-refresh**: Select **Every day** (pre-filled from `REFRESH-INTERVAL` / `X-PUBLISHED-TTL`).
-   - Make sure **Remove: Alerts** is **unchecked** so you receive the 09:00 day-before notifications.
-5. Click **OK**.
-
-### On iPhone / iPad (iOS Apple Calendar)
-
-*(If you chose **iCloud** as the location when subscribing on Mac, the calendar will appear automatically on your iPhone. To subscribe directly on iPhone instead:)*
-
-1. Open the **Calendar** app (or go to **Settings** -> **Apps** -> **Calendar** -> **Calendar Accounts** -> **Add Account** -> **Other** -> **Add Subscribed Calendar**).
-2. In the **Calendar** app: tap **Calendars** at the bottom of the screen -> tap **Add Calendar** (bottom left) -> tap **Add Subscription Calendar**.
-3. Paste your `webcal://` URL:
-   ```text
-   webcal://<user>.github.io/<repo>/earnings.ics
-   ```
-4. Tap **Subscribe** (or **Next**), ensure **Alerts** is toggled **On**, and tap **Add**.
-
----
-
-## Automatic LJSE Scraping (`tickers-ljse`)
-
-You can list Ljubljana Stock Exchange tickers directly under `tickers-ljse:` in `tickers.yaml` (just like `tickers:`):
-
-```yaml
-tickers-ljse:
-  - KRKG
-  - CICG
-  - TLSG
-  - LKPG
-```
-
-- **Weekly automation (`.github/workflows/ljse.yml`)**: Runs every Monday at **06:30 UTC**, on any push to `tickers.yaml`, and on manual `workflow_dispatch`.
-- For each ticker in `tickers-ljse`, it looks up the symbol on [seonet.ljse.si](https://seonet.ljse.si), finds the latest Financial Calendar announcement, extracts earnings/report release dates from the attached PDF (skipping quiet periods, dividends, and AGM dates), caches them in `state/ljse_cache.json`, and merges them automatically into `docs/earnings.ics`.
-- To run the LJSE scrape locally:
-  ```bash
-  python -m earnings_cal --scrape-ljse --mock
-  ```
-  *(Omit `--mock` when `FINNHUB_API_KEY` is set.)*

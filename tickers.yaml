@@ -1,25 +1,31 @@
-# Watchlist of stock tickers fetched via the Finnhub Earnings Calendar API
-tickers:
-  - AAPL
-  - MSFT
-  - NVDA
-  - GOOGL
-  - AMZN
-  - META
-  - TSLA
+# Per-market watchlists and configuration
+us:
+  tickers:
+    - AAPL
+    - MSFT
+    - NVDA
+    - GOOGL
+    - AMZN
+    - META
+    - TSLA
+  manual_events:
+    - ticker: ASML
+      date: "2027-01-27"
+      note: "Q4 2026 earnings release (manual entry)"
+    - ticker: TSM
+      date: "2027-01-14"
+      note: "Q4 2026 earnings release"
 
-# Ljubljana Stock Exchange (LJSE) tickers automatically scraped weekly from SEOnet
-tickers-ljse:
-  - KRKG
-  - CICG
-  - TLSG
-  - LKPG
-
-# Optional manual events for companies not covered by APIs
-manual_events:
-  - ticker: ASML
-    date: "2027-01-27"
-    note: "Q4 2026 earnings release (manual entry)"
-  - ticker: TSM
-    date: "2027-01-14"
-    note: "Q4 2026 earnings release"
+ljse:
+  tickers:
+    - KRKG
+    - CICG
+    - TLSG
+    - LKPG
+  events_file: ljse_events.yaml
+  issuers:
+    KRKG: "KRKA, d. d., Novo mesto"
+    CICG: "CINKARNA CELJE, d.d., Celje"
+    TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
+    LKPG: "LUKA KOPER, d.d., Koper"
+    NLBR: "NLB, d. d., Ljubljana"

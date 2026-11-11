@@ -1,4 +1,4 @@
-"""CLI entry point for generating the earnings iCalendar feed."""
+"""CLI entry point for generating multi-market iCalendar (.ics) feeds."""
 
 from __future__ import annotations
 
@@ -10,14 +10,15 @@ from collections.abc import Sequence
 from datetime import date, timedelta
 from pathlib import Path
 
-from earnings_cal.build import merge_events, write_calendar
+from earnings_cal.build import merge_events, write_calendar, write_index_html
 from earnings_cal.fetch import (
     EarningsProvider,
     FinnhubProvider,
     MockEarningsProvider,
     ProviderError,
 )
-from earnings_cal.models import load_config
+from earnings_cal.markets.registry import instantiate_markets
+from earnings_cal.models import DateWindow, WatchlistConfig, load_config
 from earnings_cal.seonet.ljse import (
     DEFAULT_LJSE_CACHE_PATH,
     load_ljse_cache,
@@ -31,7 +32,7 @@ logger = logging.getLogger(__name__)
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="earnings_cal",
-        description="Generate an iCalendar (.ics) feed of upcoming stock earnings dates.",
+        description="Generate iCalendar (.ics) feeds for all registered markets.",
     )
     parser.add_argument(
         "--config",
@@ -40,10 +41,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Path to watchlist YAML file (default: tickers.yaml)",
     )
     parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("docs"),
+        help="Output directory for per-market .ics feeds and index.html (default: docs)",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
-        default=Path("docs/earnings.ics"),
-        help="Output path for the generated .ics file (default: docs/earnings.ics)",
+        default=None,
+        help="Optional single-file output path for legacy compatibility",
     )
     parser.add_argument(
         "--days",
@@ -59,7 +66,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--scrape-ljse",
         action="store_true",
-        help="Scrape SEOnet for tickers-ljse and update state/ljse_cache.json before building",
+        help="Scrape SEOnet for LJSE tickers and update state/ljse_cache.json",
     )
     parser.add_argument(
         "--ljse-cache",
@@ -71,39 +78,26 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--ljse-days",
         type=int,
         default=365,
-        help="Lookahead window in days for LJSE scraped events (default: 365)",
+        help="Lookahead window in days for LJSE events (default: 365)",
     )
     return parser.parse_args(argv)
 
 
-def run(
-    config_path: Path = Path("tickers.yaml"),
-    output_path: Path = Path("docs/earnings.ics"),
-    days: int = 90,
-    provider: EarningsProvider | None = None,
-    today: date | None = None,
-    use_mock: bool = False,
-    scrape_ljse: bool = False,
-    ljse_cache_path: Path = DEFAULT_LJSE_CACHE_PATH,
-    ljse_days: int = 365,
+def _run_legacy_single_feed(
+    config: WatchlistConfig,
+    output_path: Path,
+    start_date: date,
+    end_date: date,
+    provider: EarningsProvider | None,
+    use_mock: bool,
+    scrape_ljse: bool,
+    ljse_cache_path: Path,
+    ljse_days: int,
 ) -> int:
-    """Execute the earnings calendar generation pipeline.
-
-    Returns 0 on success, or non-zero if configuration or API fetching fails.
-    Never overwrites `output_path` on error.
-    """
-    try:
-        config = load_config(config_path)
-    except Exception as exc:
-        logger.error("Failed to load config from %s: %s", config_path, exc)
-        return 1
-
+    """Legacy single-feed pipeline for backward compatibility with single-file callers."""
     if not config.tickers and not config.tickers_ljse and not config.manual_events:
-        logger.error("No tickers, tickers-ljse, or manual_events found in %s", config_path)
+        logger.error("No tickers, tickers-ljse, or manual_events found in configuration")
         return 1
-
-    start_date = today or date.today()
-    end_date = start_date + timedelta(days=days)
 
     api_events = []
     if config.tickers:
@@ -111,7 +105,6 @@ def run(
         if active_provider is None:
             env_key = os.environ.get("FINNHUB_API_KEY", "").strip()
             if use_mock or env_key.lower() == "mock":
-                logger.info("Using MockEarningsProvider for earnings calendar generation.")
                 active_provider = MockEarningsProvider()
             else:
                 try:
@@ -126,11 +119,8 @@ def run(
                 start_date=start_date,
                 end_date=end_date,
             )
-        except ProviderError as exc:
-            logger.error("Aborting update to preserve existing .ics: %s", exc)
-            return 1
         except Exception as exc:
-            logger.error("Unexpected provider error: %s", exc)
+            logger.error("Aborting update to preserve existing .ics: %s", exc)
             return 1
 
     if scrape_ljse and config.tickers_ljse:
@@ -140,15 +130,10 @@ def run(
             lookahead_days=ljse_days,
         )
         if scraped:
-            # Preserve existing cached events for any ticker that failed transiently during this scrape
             scraped_tickers = {ev.ticker for ev in scraped}
             existing_cached = load_ljse_cache(ljse_cache_path, allowed_tickers=config.tickers_ljse)
             preserved = [ev for ev in existing_cached if ev.ticker not in scraped_tickers]
-            combined_ljse = preserved + scraped
-            save_ljse_cache(combined_ljse, ljse_cache_path)
-            logger.info("Cached %d upcoming LJSE event(s) in %s", len(combined_ljse), ljse_cache_path)
-        else:
-            logger.warning("LJSE scrape returned 0 upcoming events; keeping existing cache if any.")
+            save_ljse_cache(preserved + scraped, ljse_cache_path)
 
     ljse_events = load_ljse_cache(ljse_cache_path, allowed_tickers=config.tickers_ljse)
     merged = merge_events(api_events, ljse_events, config.manual_events)
@@ -156,13 +141,105 @@ def run(
         logger.error("No events to write; preserving existing .ics file.")
         return 1
 
-    changed = write_calendar(merged, output_path)
-    if changed:
-        logger.info("Wrote %d event(s) to %s", len(merged), output_path)
-    else:
-        logger.info("No changes detected in %s (%d event(s))", output_path, len(merged))
-
+    write_calendar(merged, output_path)
     return 0
+
+
+def run(
+    config_path: Path = Path("tickers.yaml"),
+    output_path: Path | None = None,
+    days: int = 90,
+    provider: EarningsProvider | None = None,
+    today: date | None = None,
+    use_mock: bool = False,
+    scrape_ljse: bool = False,
+    ljse_cache_path: Path = DEFAULT_LJSE_CACHE_PATH,
+    ljse_days: int = 365,
+    output_dir: Path | None = None,
+) -> int:
+    """Execute the multi-market calendar generation pipeline.
+
+    Builds one `.ics` feed per registered market in `output_dir` (default `docs/`),
+    plus `docs/earnings.ics` as an alias of `docs/us.ics`, and `docs/index.html`.
+    One failing market never blocks the others: its error is logged, its existing
+    `.ics` file is preserved, and `run()` exits non-zero at the end.
+    """
+    try:
+        config = load_config(config_path)
+    except Exception as exc:
+        logger.error("Failed to load config from %s: %s", config_path, exc)
+        return 1
+
+    start_date = today or date.today()
+    end_date = start_date + timedelta(days=days)
+    window = DateWindow(start=start_date, end=end_date)
+
+    # Preserve backward compatibility when legacy-only config + explicit output_path are passed
+    if config.is_legacy_only and output_path is not None and output_dir is None:
+        return _run_legacy_single_feed(
+            config=config,
+            output_path=output_path,
+            start_date=start_date,
+            end_date=end_date,
+            provider=provider,
+            use_mock=use_mock,
+            scrape_ljse=scrape_ljse,
+            ljse_cache_path=ljse_cache_path,
+            ljse_days=ljse_days,
+        )
+
+    target_dir = output_dir or (output_path.parent if output_path is not None else Path("docs"))
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    markets = instantiate_markets(
+        config=config,
+        provider=provider,
+        use_mock=use_mock,
+    )
+
+    had_failure = False
+
+    for market in markets:
+        feed_path = target_dir / market.feed_filename
+        try:
+            events = market.fetch_events(window)
+            if not events:
+                raise ProviderError(f"Market '{market.id}' returned zero events.")
+        except Exception as exc:
+            logger.error(
+                "Market '%s' (%s) failed: %s. Keeping existing %s untouched.",
+                market.id,
+                market.display_name,
+                exc,
+                feed_path,
+            )
+            had_failure = True
+            continue
+
+        changed = write_calendar(
+            events,
+            feed_path,
+            calendar_name=market.calendar_name,
+            timezone_name=market.timezone,
+        )
+        if changed:
+            logger.info("Wrote %d event(s) for market '%s' to %s", len(events), market.id, feed_path)
+        else:
+            logger.info("No changes for market '%s' in %s (%d event(s))", market.id, feed_path, len(events))
+
+        # Write any legacy alias feeds (e.g. docs/earnings.ics as an alias of docs/us.ics)
+        for alias_name in getattr(market, "legacy_aliases", ()) or ():
+            alias_path = target_dir / alias_name
+            write_calendar(
+                events,
+                alias_path,
+                calendar_name=market.calendar_name,
+                timezone_name=market.timezone,
+            )
+
+    write_index_html(markets, target_dir / "index.html")
+
+    return 1 if had_failure else 0
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -174,6 +251,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     return run(
         config_path=args.config,
         output_path=args.output,
+        output_dir=args.output_dir if args.output is None else None,
         days=args.days,
         use_mock=args.mock,
         scrape_ljse=args.scrape_ljse,
