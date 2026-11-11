@@ -25,7 +25,10 @@ class EventKind(StrEnum):
 
     EARNINGS = "earnings"
     DIVIDEND = "dividend"
+    DIVIDEND_DECISION = "dividend_decision"
     EX_DIVIDEND = "ex_dividend"
+    RECORD_DATE = "record_date"
+    DIVIDEND_PAYMENT = "dividend_payment"
     AGM = "agm"
     MACRO = "macro"
     OTHER = "other"
@@ -141,6 +144,10 @@ class Event:
     market_timezone: str | None = None
     timing: EventTiming | str | None = None
     duration_minutes: int = 60
+    amount_per_share: float | None = None
+    currency: str = "EUR"
+    computed: bool = False
+    computed_note: str | None = None
 
     def __post_init__(self) -> None:
         normalized_market = str(self.market or "us").strip().lower()
@@ -211,6 +218,20 @@ class Event:
             cleaned_note = str(self.note).strip()
             object.__setattr__(self, "note", cleaned_note or None)
 
+        if self.amount_per_share is not None:
+            amount = float(self.amount_per_share)
+            if amount <= 0:
+                raise ValueError(f"Event 'amount_per_share' must be positive, got {amount}")
+            object.__setattr__(self, "amount_per_share", amount)
+
+        cleaned_currency = str(self.currency or "EUR").strip().upper() or "EUR"
+        object.__setattr__(self, "currency", cleaned_currency)
+
+        object.__setattr__(self, "computed", bool(self.computed))
+        if self.computed_note is not None:
+            cleaned_cnote = str(self.computed_note).strip()
+            object.__setattr__(self, "computed_note", cleaned_cnote or None)
+
         resolved_title = (str(self.title).strip() if self.title else "") or self._default_title()
         object.__setattr__(self, "title", resolved_title)
 
@@ -232,8 +253,14 @@ class Event:
             return f"{self.ticker} earnings"
         if self.kind == EventKind.DIVIDEND:
             return f"{self.ticker} dividend"
+        if self.kind == EventKind.DIVIDEND_DECISION:
+            return f"{self.ticker} dividend decision"
         if self.kind == EventKind.EX_DIVIDEND:
             return f"{self.ticker} ex-dividend"
+        if self.kind == EventKind.RECORD_DATE:
+            return f"{self.ticker} record date"
+        if self.kind == EventKind.DIVIDEND_PAYMENT:
+            return f"{self.ticker} dividend payment"
         if self.kind == EventKind.AGM:
             return f"{self.ticker} AGM"
         if self.kind == EventKind.MACRO:
@@ -262,6 +289,9 @@ class Event:
         if self.eps_estimate is not None:
             _append_line(f"EPS Estimate: ${self.eps_estimate:.2f}")
 
+        if self.amount_per_share is not None:
+            _append_line(f"Dividend Amount: {self.amount_per_share:.2f} {self.currency} per share")
+
         if self.time:
             _append_line(f"Time: {self.time}")
 
@@ -270,6 +300,10 @@ class Event:
 
         if self.note and self.note not in existing_lines:
             _append_line(f"Note: {self.note}")
+
+        if self.computed:
+            reason = self.computed_note or "verify against exchange settlement rules"
+            _append_line(f"Flag: Computed date ({reason})")
 
         if self.source_url and not any(self.source_url in line for line in lines):
             _append_line(f"Source: {self.source_url}")
@@ -289,6 +323,8 @@ class Event:
         market_tz_name = self.timezone
         market_tz = ZoneInfo(market_tz_name)
         base_title = self.title or self._default_title()
+        if self.computed:
+            base_title = f"{base_title} [computed — verify settlement]"
         base_desc_lines = [self.description] if self.description else []
 
         timing = self.timing if isinstance(self.timing, EventTiming) else EventTiming(self.timing)
@@ -539,6 +575,18 @@ def parse_date_value(value: Any) -> date:
     raise ValueError(f"Unsupported date value: {value!r}")
 
 
+def _parse_amount_per_share(value: Any) -> float | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    cleaned = str(value).strip().upper()
+    cleaned = re.sub(r"\b(EUR|USD|BRUTO|GROSS|PER SHARE|NA DELNICO)\b", "", cleaned).strip()
+    if "," in cleaned and "." not in cleaned:
+        cleaned = cleaned.replace(",", ".")
+    return float(cleaned)
+
+
 def parse_event_dict(entry: dict[str, Any], default_market: str = "us") -> Event:
     """Parse a raw YAML event mapping into an `Event`."""
     if not isinstance(entry, dict):
@@ -554,6 +602,7 @@ def parse_event_dict(entry: dict[str, Any], default_market: str = "us") -> Event
     duration_minutes = (
         int(entry["duration_minutes"]) if entry.get("duration_minutes") is not None else 60
     )
+    amount_per_share = _parse_amount_per_share(entry.get("amount_per_share"))
     raw_kind = entry.get("kind") or entry.get("type") or EventKind.EARNINGS
     market_id = str(entry.get("market") or default_market).strip().lower()
 
@@ -579,6 +628,10 @@ def parse_event_dict(entry: dict[str, Any], default_market: str = "us") -> Event
         ),
         timing=entry.get("timing"),
         duration_minutes=duration_minutes,
+        amount_per_share=amount_per_share,
+        currency=str(entry.get("currency") or "EUR").strip() or "EUR",
+        computed=bool(entry.get("computed", False)),
+        computed_note=str(entry["computed_note"]).strip() if entry.get("computed_note") else None,
     )
 
 

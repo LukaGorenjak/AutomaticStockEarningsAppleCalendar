@@ -1,4 +1,4 @@
-"""Candidate date extraction from SEOnet announcement text and PDFs."""
+"""Candidate date and dividend amount extraction from SEOnet announcement text and PDFs."""
 
 from __future__ import annotations
 
@@ -120,6 +120,22 @@ _WRITTEN_MDY_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Partial numeric date split across a line wrap in PDFs, e.g. "29. 6.\n2026."
+_WRAPPED_DATE_RE = re.compile(r"(\d{1,2}\.\s*\d{1,2}\.)\s*\n\s*(20\d{2}\b)")
+
+# Dividend amount per share expressions observed in SEOnet notices:
+# "9,10 EUR bruto na delnico", "1,80 EUR na delnico", "2,30 evra na navadno delnico",
+# "6,43 evra bruto na delnico", "Višina predlagane dividende: 6,92 EUR", "EUR 6.92"
+_PER_SHARE_AMOUNT_RE = re.compile(
+    r"(?:"
+    r"(\d+[.,]\d{2})\s*(?:EUR|€|evr[ao]v?)(?:\s+bruto|\s+gross)?\s+na\s+(?:\S+\s+){0,2}delnic\w*"
+    r"|(?:visina\s+predlagane\s+dividende|proposed\s+amount\s+of\s+dividend)[^\d]{1,30}(?:EUR\s*)?(\d+[.,]\d{2})(?:\s*EUR)?"
+    r"|(\d+[.,]\d{2})\s*(?:EUR|€)\s+per\s+share"
+    r"|EUR\s+(\d+[.,]\d{2})\s+per\s+share"
+    r")",
+    re.IGNORECASE,
+)
+
 
 @dataclass(frozen=True)
 class DateCandidate:
@@ -147,11 +163,14 @@ def _safe_date(year: int, month: int, day: int) -> date | None:
         return None
 
 
+def _preprocess_wrapped_dates(text: str) -> str:
+    """Join numeric dates split at PDF line wraps (e.g. `29. 6.\\n2026.` -> `29. 6. 2026.`)."""
+    return _WRAPPED_DATE_RE.sub(r"\1 \2", text)
+
+
 def _extract_dates_from_line(line: str) -> list[tuple[date, tuple[int, int]]]:
     """Return ordered `(date, (start, end))` matches from a single line."""
     normalized = normalize_text(line)
-    # Use normalized string for month-name matching, while spans align on word tokens.
-    # For numeric regexes, run on raw line; for month names, run on normalized line.
     matches: list[tuple[date, tuple[int, int]]] = []
     used_spans: list[tuple[int, int]] = []
 
@@ -195,7 +214,6 @@ def _extract_dates_from_line(line: str) -> list[tuple[date, tuple[int, int]]]:
         if dt is not None:
             matches.append((dt, m.span()))
 
-    # Deduplicate same date on the same line while preserving order
     deduped: list[tuple[date, tuple[int, int]]] = []
     seen_dates: set[date] = set()
     for dt, span in matches:
@@ -209,7 +227,6 @@ def _strip_dates_from_line(line: str) -> str:
     """Remove matched date tokens from a line to check remaining descriptive label text."""
     cleaned = _RANGE_SHARED_YEAR_RE.sub(" ", line)
     cleaned = _NUMERIC_DATE_RE.sub(" ", cleaned)
-    # Remove written month patterns on normalized-like tokens via regex
     cleaned_norm = normalize_text(cleaned)
     if _WRITTEN_DMY_RE.search(cleaned_norm) or _WRITTEN_MDY_RE.search(cleaned_norm):
         cleaned = re.sub(
@@ -222,11 +239,11 @@ def _strip_dates_from_line(line: str) -> str:
             " ",
             cleaned,
         )
-    cleaned = re.sub(r"^[\s•\-–:*|]+|[\s•\-–:*|]+$", "", cleaned)
+    cleaned = re.sub(r"^[\s•\-–:*|,]+|[\s•\-–:*|,]+$", "", cleaned)
     return " ".join(cleaned.split())
 
 
-_WEEKDAY_WORDS = {
+_NON_LABEL_TOKENS = {
     "ponedeljek",
     "torek",
     "sreda",
@@ -241,6 +258,11 @@ _WEEKDAY_WORDS = {
     "friday",
     "saturday",
     "sunday",
+    "ob",
+    "uri",
+    "at",
+    "am",
+    "pm",
 }
 
 
@@ -248,7 +270,7 @@ def _line_has_meaningful_label(text: str) -> bool:
     tokens = [
         tok
         for tok in re.findall(r"[^\s,;:.]+", normalize_text(text))
-        if tok not in _WEEKDAY_WORDS and not re.fullmatch(r"\d{1,2}:\d{2}", tok)
+        if tok not in _NON_LABEL_TOKENS and not re.fullmatch(r"\d{1,2}[.:]\d{2}", tok)
     ]
     letters = sum(1 for tok in tokens for ch in tok if ch.isalpha())
     return letters >= 3
@@ -258,33 +280,37 @@ def _build_label_context(lines: list[str], idx: int) -> str:
     """Build nearby label context for line `idx`, pulling adjacent lines when needed."""
     current_leftover = _strip_dates_from_line(lines[idx])
     if _line_has_meaningful_label(current_leftover):
-        # If previous line is an incomplete bullet/heading without dates, prepend it if concise
         parts = [current_leftover]
         if idx > 0:
             prev = lines[idx - 1].strip()
             if (
                 prev
                 and not _extract_dates_from_line(prev)
-                and (prev.startswith("•") or prev.endswith("in") or len(current_leftover) < 25)
+                and (prev.startswith("•") or prev.endswith(("in", ":")) or len(current_leftover) < 25)
             ):
                 parts.insert(0, prev.lstrip("•").strip())
         combined = " ".join(parts)
         return combined[:200]
 
-    # Current line is mostly/only the date (common in multi-line PDF table rows);
-    # gather up to 2 preceding non-date lines plus 1 following non-date line.
+    # Current line is mostly/only the date (common in multi-line PDF/HTML table rows)
     context_parts: list[str] = []
+    prev_ended_with_colon = False
     for back in (1, 2):
         if idx - back >= 0:
             prev = lines[idx - back].strip()
             if not prev or _extract_dates_from_line(prev):
                 break
+            if back == 1 and prev.endswith(":"):
+                prev_ended_with_colon = True
             context_parts.insert(0, prev.lstrip("•").strip())
-            if prev.startswith("•"):
+            if prev.startswith("•") or prev.endswith(":"):
                 break
-    if idx + 1 < len(lines):
+
+    # Do not append the following line if the preceding line already ended with `:`
+    # (HTML key-value layout where the next line is the next field's label).
+    if not prev_ended_with_colon and idx + 1 < len(lines):
         nxt = lines[idx + 1].strip()
-        if nxt and not _extract_dates_from_line(nxt):
+        if nxt and not _extract_dates_from_line(nxt) and not nxt.endswith(":"):
             context_parts.append(nxt.lstrip("•").strip())
 
     if context_parts:
@@ -292,12 +318,31 @@ def _build_label_context(lines: list[str], idx: int) -> str:
     return lines[idx].strip()[:200]
 
 
+def extract_dividend_amounts(text: str) -> list[float]:
+    """Extract dividend per-share amounts (in EUR) explicitly stated in `text`."""
+    if not text or not text.strip():
+        return []
+    normalized = normalize_text(text)
+    amounts: list[float] = []
+    seen: set[float] = set()
+    for match in _PER_SHARE_AMOUNT_RE.finditer(normalized):
+        raw_val = next((g for g in match.groups() if g), None)
+        if not raw_val:
+            continue
+        val = float(raw_val.replace(",", "."))
+        if val > 0 and val not in seen:
+            seen.add(val)
+            amounts.append(val)
+    return amounts
+
+
 def extract_candidate_dates(text: str) -> list[DateCandidate]:
     """Extract candidate dates and nearby label context from extracted document text."""
     if not text or not text.strip():
         return []
 
-    lines = [" ".join(raw.split()) for raw in text.splitlines() if raw.strip()]
+    preprocessed = _preprocess_wrapped_dates(text)
+    lines = [" ".join(raw.split()) for raw in preprocessed.splitlines() if raw.strip()]
     candidates: list[DateCandidate] = []
     seen_pairs: set[tuple[date, str]] = set()
 

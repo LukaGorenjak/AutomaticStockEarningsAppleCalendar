@@ -112,7 +112,15 @@ ljse:
     NLBR: "NLB, d. d., Ljubljana"
 ```
 
-LJSE corporate events live in `ljse_events.yaml` with `kind` (`earnings`, `dividend`, `ex_dividend`, `agm`, `macro`, `other`), `date`, optional `time`, `title`, `description`, and `source_url`.
+LJSE corporate events live in `ljse_events.yaml` and support:
+- `earnings`
+- `dividend_decision` (requires `ticker`, `date`, `source_url`, `amount_per_share`)
+- `ex_dividend` (requires `ticker`, `date`, `source_url`)
+- `record_date` (requires `ticker`, `date`, `source_url`)
+- `dividend_payment` (requires `ticker`, `date`, `source_url`; optional `amount_per_share` shown in the calendar description when stated)
+- `agm` (requires `ticker`, `date`, `source_url`; optional `time` for timed VEVENTs)
+
+When both `ex_dividend` and `record_date` come from an announcement, validation enforces `ex_dividend < record_date` (never derived from one another unless explicitly flagged with `computed: true` and `computed_note`). The SEOnet watcher (`python -m earnings_cal.seonet`) monitors both **financial calendar** announcements and **dividend / AGM** announcements (`dividend`, `izplačilo dividend`, `presečni dan`, `skupščina`, `ex-dividend`, `annual general meeting`) and outputs manual-review Markdown reports with `type: TODO` snippets without auto-writing to `ljse_events.yaml` or `.ics`.
 
 ---
 

@@ -76,9 +76,14 @@ def test_filter_titles_and_watchlist_issuers() -> None:
     # Watch KRKA only -> KRKA has no financial calendar in rss_all.xml
     assert filter_items(items, {"KRKG": "KRKA, d. d., Novo mesto"}) == []
 
-    # Watch NLB -> matches both 93282 (sl) and 93283 (en), ignores all non-calendar NLB items
+    # Watch NLB -> matches both financial calendars (93282, 93283) and AGM/dividend notice (93270)
     nlb_matches = filter_items(items, {"NLBR": "NLB, d. d., Ljubljana"})
-    assert [m.item.id for m in nlb_matches] == ["93282", "93283"]
+    assert [m.item.id for m in nlb_matches] == ["93282", "93283", "93270"]
+    assert [m.category for m in nlb_matches] == [
+        "financial_calendar",
+        "financial_calendar",
+        "dividend_agm",
+    ]
     assert all(m.ticker == "NLBR" for m in nlb_matches)
 
 
@@ -406,7 +411,8 @@ def test_cli_against_saved_fixtures(tmp_path: Path, capsys: pytest.CaptureFixtur
     assert "# New financial calendar: NLBR" in out
     assert "https://www.nlbgroup.com/int-en/investor-relations/financial-calendar" in out
     assert (reports_dir / "NLBR_93283.md").exists()
-    assert load_seen(state_path) == {"93283"}
+    assert (reports_dir / "NLBR_93268.md").exists()
+    assert load_seen(state_path) == {"93268", "93283"}
 
 
 def test_ljse_search_parsing_and_earnings_classification() -> None:

@@ -173,7 +173,7 @@ SUMMARY:KRKG Dividend Payment
 DTSTART;VALUE=DATE:20270723
 DTEND;VALUE=DATE:20270724
 DTSTAMP:20260101T000000Z
-UID:ljse-KRKG-2027-07-23-dividend@earnings-cal
+UID:ljse-KRKG-2027-07-23-dividend_payment@earnings-cal
 DESCRIPTION:Izplačilo dividend delničarjem družbe Krka\, d. d.\, Novo m
  esto\nSource: https://seonet.ljse.si/?doc_id=92042\nTiming: Unknown (all-d
  ay\; market date: 2027-07-23\, market timezone: Europe/Ljubljana)

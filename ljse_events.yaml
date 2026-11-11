@@ -1,5 +1,6 @@
-# Curated Ljubljana Stock Exchange (LJSE) financial calendar events
+# Curated Ljubljana Stock Exchange (LJSE) financial & corporate calendar events
 ljse_events:
+  # --- 2026 Earnings ---
   - ticker: CICG
     date: "2026-11-11"
     kind: earnings
@@ -29,6 +30,124 @@ ljse_events:
     description: "Objava nerevidiranega poročila o poslovanju Skupine in družbe Luka Koper, d. d., za obdobje januar - september 2026"
     source_url: "https://seonet.ljse.si/?doc_id=92849"
 
+  # --- 2026 Confirmed Dividends & AGMs (SEOnet) ---
+  - ticker: CICG
+    date: "2026-05-20"
+    kind: dividend_decision
+    amount_per_share: 1.80
+    currency: EUR
+    title: "CICG 30th AGM Dividend Decision"
+    description: "Sklepi 30. redne skupščine delničarjev Cinkarne Celje, d. d."
+    source_url: "https://seonet.ljse.si/?doc_id=92794"
+
+  - ticker: CICG
+    date: "2026-06-29"
+    kind: record_date
+    amount_per_share: 1.80
+    currency: EUR
+    title: "CICG Dividend Record Date"
+    description: "Presečni dan pri KDD za izplačilo dividende Cinkarne Celje"
+    source_url: "https://seonet.ljse.si/?doc_id=92794"
+
+  - ticker: CICG
+    date: "2026-06-30"
+    kind: dividend_payment
+    amount_per_share: 1.80
+    currency: EUR
+    title: "CICG Dividend Payment"
+    description: "Izplačilo dividend Cinkarne Celje, d. d."
+    source_url: "https://seonet.ljse.si/?doc_id=92794"
+
+  - ticker: LKPG
+    date: "2026-05-22"
+    kind: dividend_decision
+    amount_per_share: 2.30
+    currency: EUR
+    title: "LKPG 40th AGM Dividend Decision"
+    description: "Sklepi 40. skupščine delničarjev Luke Koper, d. d."
+    source_url: "https://seonet.ljse.si/?doc_id=92821"
+
+  - ticker: LKPG
+    date: "2026-08-28"
+    kind: record_date
+    amount_per_share: 2.30
+    currency: EUR
+    title: "LKPG Dividend Record Date"
+    description: "Presečni dan pri KDD za izplačilo dividende Luke Koper"
+    source_url: "https://seonet.ljse.si/?doc_id=92821"
+
+  - ticker: LKPG
+    date: "2026-08-31"
+    kind: dividend_payment
+    amount_per_share: 2.30
+    currency: EUR
+    title: "LKPG Dividend Payment"
+    description: "Izplačilo dividend Luke Koper, d. d."
+    source_url: "https://seonet.ljse.si/?doc_id=92821"
+
+  - ticker: KRKG
+    date: "2026-07-09"
+    kind: dividend_decision
+    amount_per_share: 9.10
+    currency: EUR
+    title: "KRKG 32nd AGM Dividend Decision"
+    description: "Sklepi 32. skupščine delničarjev Krke, d. d., Novo mesto"
+    source_url: "https://seonet.ljse.si/?doc_id=92979"
+
+  - ticker: KRKG
+    date: "2026-07-22"
+    kind: record_date
+    amount_per_share: 9.10
+    currency: EUR
+    title: "KRKG Dividend Record Date"
+    description: "Stanje vpisov v delniški knjigi pri KDD za dividendo Krke"
+    source_url: "https://seonet.ljse.si/?doc_id=92979"
+
+  - ticker: KRKG
+    date: "2026-07-23"
+    kind: dividend_payment
+    amount_per_share: 9.10
+    currency: EUR
+    title: "KRKG Dividend Payment"
+    description: "Začetek izplačevanja dividend delničarjem Krke, d. d."
+    source_url: "https://seonet.ljse.si/?doc_id=92979"
+
+  - ticker: NLBR
+    date: "2026-12-14"
+    kind: agm
+    time: "11:00"
+    title: "NLBR General Meeting of Shareholders"
+    description: "Sklic skupščine delničarjev NLB, d. d., Ljubljana (predlog 2. tranše dividende)"
+    source_url: "https://seonet.ljse.si/?doc_id=93272"
+
+  - ticker: NLBR
+    date: "2026-12-18"
+    kind: ex_dividend
+    amount_per_share: 6.92
+    currency: EUR
+    title: "NLBR Ex-Dividend Date (Proposed 2nd Tranche)"
+    description: "Prvi trgovalni dan brez upravičenja do dividende (Ljubljanska borza)"
+    source_url: "https://seonet.ljse.si/?doc_id=93272"
+
+  - ticker: NLBR
+    date: "2026-12-21"
+    kind: record_date
+    amount_per_share: 6.92
+    currency: EUR
+    title: "NLBR Dividend Record Date (Proposed 2nd Tranche)"
+    description: "Presečni dan v delniški knjigi za upravičenost do dividende"
+    source_url: "https://seonet.ljse.si/?doc_id=93272"
+
+  - ticker: NLBR
+    date: "2026-12-22"
+    kind: dividend_payment
+    amount_per_share: 6.92
+    currency: EUR
+    title: "NLBR Dividend Payment (Proposed 2nd Tranche)"
+    description: "Datum začetka izplačil druge tranše dividende NLB, d. d."
+    source_url: "https://seonet.ljse.si/?doc_id=93272"
+
+  # --- 2027 Financial Calendar Projections (KRKG) ---
   - ticker: KRKG
     date: "2027-01-28"
     kind: earnings
@@ -70,7 +189,7 @@ ljse_events:
 
   - ticker: KRKG
     date: "2027-07-23"
-    kind: dividend
+    kind: dividend_payment
     title: "KRKG Dividend Payment"
     description: "Izplačilo dividend delničarjem družbe Krka, d. d., Novo mesto"
     source_url: "https://seonet.ljse.si/?doc_id=92042"
