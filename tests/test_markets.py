@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import date
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock
@@ -135,6 +136,10 @@ def test_uid_uniqueness_across_markets_and_event_kinds() -> None:
     assert len(all_uids) == 7
     assert "Time: 08:15" in ljse_ev.description
     assert "Source: https://seonet.ljse.si/?doc_id=92042" in ljse_ev.description
+
+    # Verify dataclasses.replace() does not duplicate generated description lines
+    cloned = replace(us_quarterly, market="us", kind=EventKind.EARNINGS)
+    assert cloned.description.count("Fiscal Period: Q1 2027") == 1
 
 
 def test_dummy_third_market_added_in_test_only(

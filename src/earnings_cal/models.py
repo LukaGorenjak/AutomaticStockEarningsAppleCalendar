@@ -113,30 +113,37 @@ class Event:
 
     def _build_description(self, explicit_description: str | None) -> str:
         lines: list[str] = []
+        existing_lines: set[str] = set()
         if explicit_description and str(explicit_description).strip():
-            lines.append(str(explicit_description).strip())
+            cleaned_desc = str(explicit_description).strip()
+            lines.append(cleaned_desc)
+            existing_lines = {part.strip() for part in cleaned_desc.splitlines() if part.strip()}
+
+        def _append_line(line: str) -> None:
+            if line not in existing_lines and line not in lines:
+                lines.append(line)
 
         if self.quarter is not None and self.fiscal_year is not None:
-            lines.append(f"Fiscal Period: Q{self.quarter} {self.fiscal_year}")
+            _append_line(f"Fiscal Period: Q{self.quarter} {self.fiscal_year}")
         elif self.fiscal_year is not None:
-            lines.append(f"Fiscal Year: {self.fiscal_year}")
+            _append_line(f"Fiscal Year: {self.fiscal_year}")
         elif self.quarter is not None:
-            lines.append(f"Fiscal Quarter: Q{self.quarter}")
+            _append_line(f"Fiscal Quarter: Q{self.quarter}")
 
         if self.eps_estimate is not None:
-            lines.append(f"EPS Estimate: ${self.eps_estimate:.2f}")
+            _append_line(f"EPS Estimate: ${self.eps_estimate:.2f}")
 
         if self.time:
-            lines.append(f"Time: {self.time}")
+            _append_line(f"Time: {self.time}")
 
         if self.status:
-            lines.append(f"Status: {self.status}")
+            _append_line(f"Status: {self.status}")
 
-        if self.note and self.note not in lines:
-            lines.append(f"Note: {self.note}")
+        if self.note and self.note not in existing_lines:
+            _append_line(f"Note: {self.note}")
 
         if self.source_url and not any(self.source_url in line for line in lines):
-            lines.append(f"Source: {self.source_url}")
+            _append_line(f"Source: {self.source_url}")
 
         if not lines:
             if self.kind == EventKind.EARNINGS:
