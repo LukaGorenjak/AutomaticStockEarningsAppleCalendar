@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-11T18:59:47.715439+00:00",
+  "generated_at": "2026-11-11T19:27:02.622643+00:00",
   "markets": {
     "ljse": {
       "age_days": 0,
       "errors": [],
       "healthy": true,
-      "last_attempt_at": "2026-11-11T18:59:47.715439+00:00",
-      "last_success_at": "2026-11-11T18:59:47.715439+00:00",
+      "last_attempt_at": "2026-11-11T19:27:02.622643+00:00",
+      "last_success_at": "2026-11-11T19:27:02.622643+00:00",
       "last_success_date": "2026-11-11",
       "max_age_days": 3,
       "min_upcoming_events": 1,
@@ -17,8 +17,8 @@
       "age_days": 0,
       "errors": [],
       "healthy": true,
-      "last_attempt_at": "2026-11-11T18:59:47.715439+00:00",
-      "last_success_at": "2026-11-11T18:59:47.715439+00:00",
+      "last_attempt_at": "2026-11-11T19:27:02.622643+00:00",
+      "last_success_at": "2026-11-11T19:27:02.622643+00:00",
       "last_success_date": "2026-11-11",
       "max_age_days": 3,
       "min_upcoming_events": 1,
@@ -27,12 +27,10 @@
     },
     "us": {
       "age_days": 0,
-      "errors": [
-        "Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."
-      ],
-      "healthy": false,
-      "last_attempt_at": "2026-11-11T18:59:47.715439+00:00",
-      "last_success_at": "2026-11-11T18:41:05.140979+00:00",
+      "errors": [],
+      "healthy": true,
+      "last_attempt_at": "2026-11-11T19:27:02.622643+00:00",
+      "last_success_at": "2026-11-11T19:27:02.622643+00:00",
       "last_success_date": "2026-11-11",
       "max_age_days": 3,
       "min_upcoming_events": 1,
@@ -43,12 +41,10 @@
   "sources": {
     "api": {
       "age_days": 0,
-      "errors": [
-        "Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."
-      ],
-      "healthy": false,
-      "last_attempt_at": "2026-11-11T18:59:47.715439+00:00",
-      "last_success_at": "2026-11-11T18:41:05.140979+00:00",
+      "errors": [],
+      "healthy": true,
+      "last_attempt_at": "2026-11-11T19:27:02.622643+00:00",
+      "last_success_at": "2026-11-11T19:27:02.622643+00:00",
       "last_success_date": "2026-11-11",
       "max_age_days": 3,
       "stale": false

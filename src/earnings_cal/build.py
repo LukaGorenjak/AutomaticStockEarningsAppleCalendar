@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import html
 from collections.abc import Iterable, Mapping, Sequence
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from icalendar import Alarm, Calendar, Event as ICalEvent, vDuration
 
@@ -19,6 +18,7 @@ from earnings_cal.models import (
 
 if TYPE_CHECKING:
     from earnings_cal.markets.base import Market
+    from earnings_cal.results import EarningsResultRow
 
 # Fixed epoch timestamp so identical event data produces byte-for-byte identical .ics output.
 DETERMINISTIC_DTSTAMP = datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
@@ -162,87 +162,32 @@ def render_index_html(
     markets: Sequence[Market | type[Market]],
     base_host: str = DEFAULT_PAGES_HOST,
     display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
+    events_by_market: Mapping[str, Sequence[Event]] | Sequence[Event] | None = None,
+    status_data: Mapping[str, Any] | None = None,
+    changes_records: Sequence[Mapping[str, Any]] | None = None,
+    results_rows: Sequence[EarningsResultRow | Mapping[str, Any]] | None = None,
+    output_dir: Path | None = None,
+    status_path: Path | str | None = None,
+    changes_path: Path | str | None = None,
+    results_path: Path | str | None = None,
 ) -> str:
-    """Render `docs/index.html` listing every registered market feed and its `webcal://` link."""
-    clean_host = base_host.strip().rstrip("/")
-    tz_label = html.escape(validate_timezone(display_timezone, field_name="display_timezone"))
-    rows_html: list[str] = []
+    """Render static dashboard `docs/index.html` from existing markets, events, status, changes, and results."""
+    from earnings_cal.dashboard import build_dashboard_payload, render_dashboard_html
 
-    for m in markets:
-        m_id = html.escape(str(getattr(m, "id", "")))
-        display_name = html.escape(str(getattr(m, "display_name", m_id)))
-        cal_name = html.escape(str(getattr(m, "calendar_name", display_name)))
-        tz_name = html.escape(str(getattr(m, "timezone", "UTC")))
-        feed_file = f"{m_id}.ics"
-        webcal_url = f"webcal://{clean_host}/{feed_file}"
-        aliases = getattr(m, "legacy_aliases", ()) or ()
-        alias_note = ""
-        if aliases:
-            alias_list = ", ".join(f"<code>{html.escape(a)}</code>" for a in aliases)
-            alias_note = f"<br><small>Legacy alias: {alias_list} (please migrate to <code>{feed_file}</code>)</small>"
-
-        rows_html.append(
-            f"      <tr>\n"
-            f"        <td><strong>{display_name}</strong> (<code>{m_id}</code>){alias_note}</td>\n"
-            f"        <td><code>{cal_name}</code></td>\n"
-            f"        <td><code>{tz_name}</code></td>\n"
-            f'        <td><a class="webcal-link" data-feed="{feed_file}" href="{webcal_url}">{webcal_url}</a></td>\n'
-            f'        <td><a href="{feed_file}">{feed_file}</a></td>\n'
-            f"      </tr>"
-        )
-
-    table_body = "\n".join(rows_html)
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Earnings &amp; Market Events Calendars</title>
-  <style>
-    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; color: #1d1d1f; line-height: 1.5; }}
-    h1 {{ font-size: 1.6rem; margin-bottom: 0.4rem; }}
-    table {{ width: 100%; border-collapse: collapse; margin-top: 1.2rem; }}
-    th, td {{ text-align: left; padding: 0.65rem 0.75rem; border-bottom: 1px solid #e5e5ea; vertical-align: top; }}
-    th {{ background: #f5f5f7; font-weight: 600; }}
-    code {{ background: #f2f2f7; padding: 0.15rem 0.35rem; border-radius: 4px; font-size: 0.9em; }}
-    a {{ color: #0066cc; text-decoration: none; }}
-    a:hover {{ text-decoration: underline; }}
-    small {{ color: #6e6e73; }}
-  </style>
-</head>
-<body>
-  <h1>Market Calendar Feeds (<code>.ics</code>)</h1>
-  <p>Subscribe in Apple Calendar (macOS / iOS) using the <code>webcal://</code> links below. Event times are converted to <code>{tz_label}</code>.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Market</th>
-        <th>Calendar Name (<code>X-WR-CALNAME</code>)</th>
-        <th>Market Timezone</th>
-        <th>Subscribe (<code>webcal://</code>)</th>
-        <th>Direct Download</th>
-      </tr>
-    </thead>
-    <tbody>
-{table_body}
-    </tbody>
-  </table>
-  <script>
-    (function () {{
-      if (!window.location.host) return;
-      var basePath = window.location.pathname.replace(/\\/?(index\\.html)?$/, "/");
-      var links = document.querySelectorAll("a.webcal-link[data-feed]");
-      for (var i = 0; i < links.length; i++) {{
-        var feed = links[i].getAttribute("data-feed");
-        var url = "webcal://" + window.location.host + basePath + feed;
-        links[i].setAttribute("href", url);
-        links[i].textContent = url;
-      }}
-    }})();
-  </script>
-</body>
-</html>
-"""
+    payload = build_dashboard_payload(
+        markets=markets,
+        base_host=base_host,
+        display_timezone=display_timezone,
+        events_by_market=events_by_market,
+        status_data=status_data,
+        changes_records=changes_records,
+        results_rows=results_rows,
+        output_dir=output_dir,
+        status_path=status_path,
+        changes_path=changes_path,
+        results_path=results_path,
+    )
+    return render_dashboard_html(payload)
 
 
 def write_index_html(
@@ -250,6 +195,13 @@ def write_index_html(
     output_path: Path | str = Path("docs/index.html"),
     base_host: str = DEFAULT_PAGES_HOST,
     display_timezone: str = DEFAULT_DISPLAY_TIMEZONE,
+    events_by_market: Mapping[str, Sequence[Event]] | Sequence[Event] | None = None,
+    status_data: Mapping[str, Any] | None = None,
+    changes_records: Sequence[Mapping[str, Any]] | None = None,
+    results_rows: Sequence[EarningsResultRow | Mapping[str, Any]] | None = None,
+    status_path: Path | str | None = None,
+    changes_path: Path | str | None = None,
+    results_path: Path | str | None = None,
 ) -> bool:
     """Write `docs/index.html` only if content changed. Returns True if file was updated."""
     path = Path(output_path)
@@ -257,6 +209,14 @@ def write_index_html(
         markets,
         base_host=base_host,
         display_timezone=display_timezone,
+        events_by_market=events_by_market,
+        status_data=status_data,
+        changes_records=changes_records,
+        results_rows=results_rows,
+        output_dir=path.parent,
+        status_path=status_path,
+        changes_path=changes_path,
+        results_path=results_path,
     )
 
     if path.exists():

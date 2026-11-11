@@ -3,66 +3,2609 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Earnings &amp; Market Events Calendars</title>
+  <title>Earnings &amp; Market Events Dashboard</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; color: #1d1d1f; line-height: 1.5; }
-    h1 { font-size: 1.6rem; margin-bottom: 0.4rem; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1.2rem; }
-    th, td { text-align: left; padding: 0.65rem 0.75rem; border-bottom: 1px solid #e5e5ea; vertical-align: top; }
-    th { background: #f5f5f7; font-weight: 600; }
-    code { background: #f2f2f7; padding: 0.15rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
-    a { color: #0066cc; text-decoration: none; }
+    :root {
+      color-scheme: light dark;
+      --bg: #f8f9fb;
+      --card-bg: #ffffff;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --border: #e5e5ea;
+      --th-bg: #f2f3f7;
+      --code-bg: #eef0f5;
+      --accent: #0066cc;
+      --accent-fg: #ffffff;
+      --ok-bg: #e8f8ee;
+      --ok-fg: #137333;
+      --ok-border: #a8dab5;
+      --warn-bg: #fef7e0;
+      --warn-fg: #b06000;
+      --warn-border: #fdd663;
+      --stale-bg: #fce8e6;
+      --stale-fg: #c5221f;
+      --stale-border: #f6aea9;
+      --pos: #137333;
+      --neg: #c5221f;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115;
+        --card-bg: #181b22;
+        --text: #e8eaed;
+        --muted: #9aa0a6;
+        --border: #2d323e;
+        --th-bg: #222631;
+        --code-bg: #262b38;
+        --accent: #4da3ff;
+        --accent-fg: #0b121e;
+        --ok-bg: #132a1c;
+        --ok-fg: #81c995;
+        --ok-border: #285436;
+        --warn-bg: #2f2611;
+        --warn-fg: #fdd663;
+        --warn-border: #5e4b1c;
+        --stale-bg: #361518;
+        --stale-fg: #f28b82;
+        --stale-border: #70262b;
+        --pos: #81c995;
+        --neg: #f28b82;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+      line-height: 1.5;
+    }
+    header { margin-bottom: 1.25rem; }
+    h1 { font-size: 1.75rem; margin: 0 0 0.35rem; }
+    h2 { font-size: 1.2rem; margin: 0 0 0.75rem; }
+    p.subtitle { margin: 0 0 1rem; color: var(--muted); }
+    section.card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .health-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+    .health-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+    }
+    .health-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .health-ok { background: var(--ok-bg); color: var(--ok-fg); border-color: var(--ok-border); }
+    .health-warn { background: var(--warn-bg); color: var(--warn-fg); border-color: var(--warn-border); }
+    .health-stale {
+      background: var(--stale-bg);
+      color: var(--stale-fg);
+      border-color: var(--stale-border);
+      font-weight: 600;
+    }
+    .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    th, td {
+      text-align: left;
+      padding: 0.6rem 0.7rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { background: var(--th-bg); font-weight: 600; white-space: nowrap; }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { text-decoration: underline; }
+    code {
+      background: var(--code-bg);
+      padding: 0.12rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    small { color: #6e6e73; }
+    .btn-subscribe {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--accent-fg);
+      font-weight: 600;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-right: 0.4rem;
+    }
+    .btn-subscribe:hover { text-decoration: none; opacity: 0.92; }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+    .controls label { font-size: 0.88rem; color: var(--muted); }
+    .controls select, .controls input {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.38rem 0.6rem;
+      font-size: 0.9rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      background: var(--code-bg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .badge-date_changed { background: var(--warn-bg); color: var(--warn-fg); }
+    .badge-removed { background: var(--stale-bg); color: var(--stale-fg); }
+    .badge-added { background: var(--ok-bg); color: var(--ok-fg); }
+    .num-pos { color: var(--pos); font-weight: 600; }
+    .num-neg { color: var(--neg); font-weight: 600; }
+    .empty-state {
+      padding: 1rem;
+      color: var(--muted);
+      background: var(--bg);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.92rem;
+    }
+    small { color: var(--muted); }
+    @media (max-width: 640px) {
+      body { padding: 1rem 0.65rem 2rem; }
+      section.card { padding: 0.9rem; }
+      th, td { padding: 0.5rem; font-size: 0.85rem; }
+      .webcal-url-text { display: block; margin-top: 0.25rem; word-break: break-all; }
+    }
   </style>
 </head>
 <body>
-  <h1>Market Calendar Feeds (<code>.ics</code>)</h1>
-  <p>Subscribe in Apple Calendar (macOS / iOS) using the <code>webcal://</code> links below. Event times are converted to <code>Europe/Ljubljana</code>.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Market</th>
-        <th>Calendar Name (<code>X-WR-CALNAME</code>)</th>
-        <th>Market Timezone</th>
-        <th>Subscribe (<code>webcal://</code>)</th>
-        <th>Direct Download</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>United States</strong> (<code>us</code>)<br><small>Legacy alias: <code>earnings.ics</code> (please migrate to <code>us.ics</code>)</small></td>
-        <td><code>Earnings US</code></td>
-        <td><code>America/New_York</code></td>
-        <td><a class="webcal-link" data-feed="us.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/us.ics">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/us.ics</a></td>
-        <td><a href="us.ics">us.ics</a></td>
-      </tr>
-      <tr>
-        <td><strong>Ljubljana Stock Exchange</strong> (<code>ljse</code>)</td>
-        <td><code>Events LJSE</code></td>
-        <td><code>Europe/Ljubljana</code></td>
-        <td><a class="webcal-link" data-feed="ljse.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/ljse.ics">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/ljse.ics</a></td>
-        <td><a href="ljse.ics">ljse.ics</a></td>
-      </tr>
-      <tr>
-        <td><strong>Macroeconomic Events</strong> (<code>macro</code>)</td>
-        <td><code>Macro Calendar</code></td>
-        <td><code>Europe/Ljubljana</code></td>
-        <td><a class="webcal-link" data-feed="macro.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics</a></td>
-        <td><a href="macro.ics">macro.ics</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <header>
+    <h1>Market Calendar Feeds &amp; Events Dashboard</h1>
+    <p class="subtitle">Subscribe in Apple Calendar (macOS / iOS) via <code>webcal://</code>. All event times are shown in <code>Europe/Ljubljana</code>.</p>
+    <!-- (5) Data Health Bar from docs/status.json -->
+    <div class="health-bar" id="health-bar">
+      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-11)</span></div>
+      <div class="health-pill health-ok" data-source="seonet" title="Source healthy"><span class="health-dot"></span><strong>Source: SEONET</strong> <span class="health-meta">(OK · last update: never)</span></div>
+      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 10 upcoming · last update: 2026-11-11)</span></div>
+      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-11)</span></div>
+      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 9 upcoming · last update: 2026-11-11)</span></div>
+    </div>
+  </header>
+
+  <!-- (1) Feed Links with webcal:// Subscribe Buttons -->
+  <section class="card" id="section-feeds">
+    <h2>1. Calendar Feeds (<code>.ics</code>)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Market</th>
+            <th>Calendar Name (<code>X-WR-CALNAME</code>)</th>
+            <th>Market Timezone</th>
+            <th>Subscribe (<code>webcal://</code>)</th>
+            <th>Direct Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>United States</strong> (<code>us</code>)<br><small>Legacy alias: <code>earnings.ics</code> (please migrate to <code>us.ics</code>)</small></td>
+            <td><code>Earnings US</code></td>
+            <td><code>America/New_York</code></td>
+            <td><a class="btn-subscribe webcal-link" data-feed="us.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/us.ics">Subscribe (webcal://)</a> <small class="webcal-url-text">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/us.ics</small></td>
+            <td><a href="us.ics">us.ics</a></td>
+          </tr>
+          <tr>
+            <td><strong>Ljubljana Stock Exchange</strong> (<code>ljse</code>)</td>
+            <td><code>Events LJSE</code></td>
+            <td><code>Europe/Ljubljana</code></td>
+            <td><a class="btn-subscribe webcal-link" data-feed="ljse.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/ljse.ics">Subscribe (webcal://)</a> <small class="webcal-url-text">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/ljse.ics</small></td>
+            <td><a href="ljse.ics">ljse.ics</a></td>
+          </tr>
+          <tr>
+            <td><strong>Macroeconomic Events</strong> (<code>macro</code>)</td>
+            <td><code>Macro Calendar</code></td>
+            <td><code>Europe/Ljubljana</code></td>
+            <td><a class="btn-subscribe webcal-link" data-feed="macro.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics">Subscribe (webcal://)</a> <small class="webcal-url-text">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics</small></td>
+            <td><a href="macro.ics">macro.ics</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- (2) Upcoming Events Table (Sortable & Filterable by Market and Kind) -->
+  <section class="card" id="section-upcoming">
+    <h2>2. Upcoming Events (<span id="upcoming-count">54</span>)</h2>
+    <div class="controls">
+      <label for="filter-market">Market:</label>
+      <select id="filter-market">
+        <option value="all">All markets</option><option value="us">United States (us)</option><option value="ljse">Ljubljana Stock Exchange (ljse)</option><option value="macro">Macroeconomic Events (macro)</option>
+      </select>
+      <label for="filter-kind">Kind:</label>
+      <select id="filter-kind">
+        <option value="all">All event kinds</option><option value="agm">agm</option><option value="central_bank_meeting">central bank meeting</option><option value="dividend_payment">dividend payment</option><option value="earnings">earnings</option><option value="ex_dividend">ex dividend</option><option value="inflation_release">inflation release</option>
+      </select>
+      <label for="filter-search">Search:</label>
+      <input type="search" id="filter-search" placeholder="Filter ticker or title...">
+    </div>
+    <div id="upcoming-empty" class="empty-state" style="display:none;">No upcoming events match the current filter.</div>
+    <div class="table-wrap" id="upcoming-table-wrap">
+      <table id="upcoming-table">
+        <thead>
+          <tr>
+            <th class="sortable" data-sort="date">Date &#8597;</th>
+            <th class="sortable" data-sort="market">Market &#8597;</th>
+            <th class="sortable" data-sort="ticker">Ticker &#8597;</th>
+            <th class="sortable" data-sort="kind">Kind &#8597;</th>
+            <th class="sortable" data-sort="title">Event &#8597;</th>
+            <th>Local Time (<code>Europe/Ljubljana</code>)</th>
+          </tr>
+        </thead>
+        <tbody id="upcoming-tbody">
+          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-11" data-ticker="CICG">
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>CICG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=91972" target="_blank" rel="noopener">CICG Q1–Q3 2026 Interim Report</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-12" data-ticker="TLSG">
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>TLSG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92747" target="_blank" rel="noopener">TLSG Q1–Q3 2026 Interim Report</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-12" data-ticker="KRKG">
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG Q1–Q3 2026 Interim Report</a></td>
+            <td><code>08:15 CET</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-19" data-ticker="LKPG">
+            <td><code>2026-11-19</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>LKPG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92849" target="_blank" rel="noopener">LKPG Q1–Q3 2026 Interim Report</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2026-11-25" data-ticker="AAPL">
+            <td><code>2026-11-25</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>AAPL</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>AAPL earnings</td>
+            <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2026-11-29" data-ticker="MSFT">
+            <td><code>2026-11-29</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>MSFT</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>MSFT earnings</td>
+            <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2026-12-01" data-ticker="EA_HICP">
+            <td><code>2026-12-01</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://ec.europa.eu/eurostat/web/main/news/release-calendar" target="_blank" rel="noopener">Euro area flash HICP</a></td>
+            <td><code>11:00 CET</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2026-12-02" data-ticker="NVDA">
+            <td><code>2026-12-02</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>NVDA</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>NVDA earnings</td>
+            <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2026-12-06" data-ticker="GOOGL">
+            <td><code>2026-12-06</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>GOOGL</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>GOOGL earnings</td>
+            <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2026-12-08" data-ticker="FOMC">
+            <td><code>2026-12-08</code> <small>&rarr; 2026-12-09</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2026-12-09 20:00 CET (Europe)</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2026-12-09" data-ticker="AMZN">
+            <td><code>2026-12-09</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>AMZN</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>AMZN earnings</td>
+            <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2026-12-10" data-ticker="US_CPI">
+            <td><code>2026-12-10</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CET</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2026-12-13" data-ticker="META">
+            <td><code>2026-12-13</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>META</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>META earnings</td>
+            <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2026-12-16" data-ticker="ECB">
+            <td><code>2026-12-16</code> <small>&rarr; 2026-12-17</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2026-12-17 14:15 CET (Europe)</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2026-12-16" data-ticker="TSLA">
+            <td><code>2026-12-16</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>TSLA</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>TSLA earnings</td>
+            <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-01-06" data-ticker="EA_HICP">
+            <td><code>2027-01-06</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://ec.europa.eu/eurostat/web/main/news/release-calendar" target="_blank" rel="noopener">Euro area flash HICP</a></td>
+            <td><code>11:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-01-13" data-ticker="US_CPI">
+            <td><code>2027-01-13</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CET</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2027-01-14" data-ticker="TSM">
+            <td><code>2027-01-14</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>TSM</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>TSM earnings</td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-01-26" data-ticker="FOMC">
+            <td><code>2027-01-26</code> <small>&rarr; 2027-01-27</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2027-01-27 20:00 CET (Europe)</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2027-01-27" data-ticker="ASML">
+            <td><code>2027-01-27</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>ASML</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>ASML earnings</td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2027-01-28" data-ticker="KRKG">
+            <td><code>2027-01-28</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG 2026 Preliminary Results</a></td>
+            <td><code>08:15 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-02-02" data-ticker="EA_HICP">
+            <td><code>2027-02-02</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://ec.europa.eu/eurostat/web/main/news/release-calendar" target="_blank" rel="noopener">Euro area flash HICP</a></td>
+            <td><code>11:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-02-03" data-ticker="ECB">
+            <td><code>2027-02-03</code> <small>&rarr; 2027-02-04</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2027-02-04 14:15 CET (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-02-11" data-ticker="US_CPI">
+            <td><code>2027-02-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-03-02" data-ticker="EA_HICP">
+            <td><code>2027-03-02</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://ec.europa.eu/eurostat/web/main/news/release-calendar" target="_blank" rel="noopener">Euro area flash HICP</a></td>
+            <td><code>11:00 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-03-10" data-ticker="US_CPI">
+            <td><code>2027-03-10</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CET</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2027-03-11" data-ticker="KRKG">
+            <td><code>2027-03-11</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG 2026 Unaudited Financial Statements</a></td>
+            <td><code>08:15 CET</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-03-16" data-ticker="FOMC">
+            <td><code>2027-03-16</code> <small>&rarr; 2027-03-17</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2027-03-17 19:00 CET (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-03-17" data-ticker="ECB">
+            <td><code>2027-03-17</code> <small>&rarr; 2027-03-18</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2027-03-18 14:15 CET (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-04-01" data-ticker="EA_HICP">
+            <td><code>2027-04-01</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://ec.europa.eu/eurostat/web/main/news/release-calendar" target="_blank" rel="noopener">Euro area flash HICP</a></td>
+            <td><code>11:00 CEST</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2027-04-08" data-ticker="KRKG">
+            <td><code>2027-04-08</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG 2026 Annual Report</a></td>
+            <td><code>08:15 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-04-13" data-ticker="US_CPI">
+            <td><code>2027-04-13</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-04-27" data-ticker="FOMC">
+            <td><code>2027-04-27</code> <small>&rarr; 2027-04-28</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2027-04-28 20:00 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-04-28" data-ticker="ECB">
+            <td><code>2027-04-28</code> <small>&rarr; 2027-04-29</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2027-04-29 14:15 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-05-03" data-ticker="EA_HICP">
+            <td><code>2027-05-03</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://ec.europa.eu/eurostat/web/main/news/release-calendar" target="_blank" rel="noopener">Euro area flash HICP</a></td>
+            <td><code>11:00 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-05-12" data-ticker="US_CPI">
+            <td><code>2027-05-12</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-06-01" data-ticker="EA_HICP">
+            <td><code>2027-06-01</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://ec.europa.eu/eurostat/web/main/news/release-calendar" target="_blank" rel="noopener">Euro area flash HICP</a></td>
+            <td><code>11:00 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-06-08" data-ticker="FOMC">
+            <td><code>2027-06-08</code> <small>&rarr; 2027-06-09</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2027-06-09 20:00 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-06-09" data-ticker="ECB">
+            <td><code>2027-06-09</code> <small>&rarr; 2027-06-10</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2027-06-10 14:15 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-06-10" data-ticker="US_CPI">
+            <td><code>2027-06-10</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CEST</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="agm" data-date="2027-07-08" data-ticker="KRKG">
+            <td><code>2027-07-08</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><span class="badge badge-kind">agm</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG Annual General Meeting</a></td>
+            <td><code>13:00 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-07-14" data-ticker="US_CPI">
+            <td><code>2027-07-14</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CEST</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="ex_dividend" data-date="2027-07-21" data-ticker="KRKG">
+            <td><code>2027-07-21</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><span class="badge badge-kind">ex_dividend</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG Ex-Dividend Date</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-07-21" data-ticker="ECB">
+            <td><code>2027-07-21</code> <small>&rarr; 2027-07-22</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2027-07-22 14:15 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="dividend_payment" data-date="2027-07-23" data-ticker="KRKG">
+            <td><code>2027-07-23</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><span class="badge badge-kind">dividend_payment</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG Dividend Payment</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-07-27" data-ticker="FOMC">
+            <td><code>2027-07-27</code> <small>&rarr; 2027-07-28</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2027-07-28 20:00 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-08-11" data-ticker="US_CPI">
+            <td><code>2027-08-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-09-08" data-ticker="ECB">
+            <td><code>2027-09-08</code> <small>&rarr; 2027-09-09</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2027-09-09 14:15 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-09-14" data-ticker="FOMC">
+            <td><code>2027-09-14</code> <small>&rarr; 2027-09-15</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2027-09-15 20:00 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-09-14" data-ticker="US_CPI">
+            <td><code>2027-09-14</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-10-14" data-ticker="US_CPI">
+            <td><code>2027-10-14</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CEST</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-10-26" data-ticker="FOMC">
+            <td><code>2027-10-26</code> <small>&rarr; 2027-10-27</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC decision</a></td>
+            <td><code>All-day (decision: 2027-10-27 20:00 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="central_bank_meeting" data-date="2027-10-27" data-ticker="ECB">
+            <td><code>2027-10-27</code> <small>&rarr; 2027-10-28</small></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-kind">central_bank_meeting</span></td>
+            <td><a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener">ECB decision</a></td>
+            <td><code>All-day (decision: 2027-10-28 14:15 CEST (Europe)</code></td>
+          </tr>
+          <tr data-market="macro" data-kind="inflation_release" data-date="2027-11-10" data-ticker="US_CPI">
+            <td><code>2027-11-10</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-kind">inflation_release</span></td>
+            <td><a href="https://www.bls.gov/schedule/news_release/cpi.htm" target="_blank" rel="noopener">US CPI</a></td>
+            <td><code>14:30 CET</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- (3) Recent Changes from data/changes.jsonl -->
+  <section class="card" id="section-changes">
+    <h2>3. Recent Changelog (<span id="changes-count">35</span>)</h2>
+    <div class="table-wrap">
+      <table id="changes-table">
+        <thead>
+          <tr>
+            <th>Run Date</th>
+            <th>Market</th>
+            <th>Ticker</th>
+            <th>Change Type</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-11-10</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-10-14</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-09-14</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-08-11</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-07-14</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-06-10</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-05-12</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-04-13</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-03-10</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-02-11</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-01-13</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>US_CPI</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-10</code> (US CPI)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-10-26</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-09-14</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-07-27</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-06-08</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-04-27</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-03-16</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-01-26</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>FOMC</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-08</code> (FOMC decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-10-27</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-09-08</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-07-21</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-06-09</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-04-28</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-03-17</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-02-03</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>ECB</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-16</code> (ECB decision)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-06-01</code> (Euro area flash HICP)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-05-03</code> (Euro area flash HICP)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-04-01</code> (Euro area flash HICP)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-03-02</code> (Euro area flash HICP)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-02-02</code> (Euro area flash HICP)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-01-06</code> (Euro area flash HICP)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">macro</span></td>
+            <td><strong>EA_HICP</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-01</code> (Euro area flash HICP)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- (4) Post-Earnings Results History from data/results.csv -->
+  <section class="card" id="section-results">
+    <h2>4. Post-Earnings Results History (<span id="results-count">6</span>)</h2>
+    <div class="table-wrap">
+      <table id="results-table">
+        <thead>
+          <tr>
+            <th>Report Date</th>
+            <th>Market</th>
+            <th>Ticker</th>
+            <th>Fiscal Period</th>
+            <th>EPS Est.</th>
+            <th>EPS Act.</th>
+            <th>Surprise (%)</th>
+            <th>1D Move (%)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>2026-10-30</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>AMZN</strong></td>
+            <td><code>2026Q3</code></td>
+            <td>1.14</td>
+            <td>1.43</td>
+            <td><span class="num-pos">+25.44%</span></td>
+            <td><span class="num-pos">+6.00%</span></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td><code>2026-10-29</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>AAPL</strong></td>
+            <td><code>2026Q4</code></td>
+            <td>1.60</td>
+            <td>1.64</td>
+            <td><span class="num-pos">+2.50%</span></td>
+            <td><span class="num-pos">+1.50%</span></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td><code>2026-10-28</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>MSFT</strong></td>
+            <td><code>2027Q1</code></td>
+            <td>3.10</td>
+            <td>3.30</td>
+            <td><span class="num-pos">+6.45%</span></td>
+            <td><span class="num-pos">+1.60%</span></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td><code>2026-10-28</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>META</strong></td>
+            <td><code>2026Q3</code></td>
+            <td>5.25</td>
+            <td>6.03</td>
+            <td><span class="num-pos">+14.86%</span></td>
+            <td><span class="num-neg">-2.00%</span></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td><code>2026-10-27</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>GOOGL</strong></td>
+            <td><code>2026Q3</code></td>
+            <td>1.85</td>
+            <td>2.12</td>
+            <td><span class="num-pos">+14.59%</span></td>
+            <td><span class="num-pos">+3.00%</span></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td><code>2026-10-21</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>TSLA</strong></td>
+            <td><code>2026Q3</code></td>
+            <td>0.58</td>
+            <td>0.72</td>
+            <td><span class="num-pos">+24.14%</span></td>
+            <td><span class="num-pos">+12.00%</span></td>
+            <td>&mdash;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Embedded Dashboard Data (JSON) -->
+  <script id="dashboard-data" type="application/json">
+{
+  "display_timezone": "Europe/Ljubljana",
+  "event_kinds": [
+    "agm",
+    "central_bank_meeting",
+    "dividend_payment",
+    "earnings",
+    "ex_dividend",
+    "inflation_release"
+  ],
+  "feeds": [
+    {
+      "calendar_name": "Earnings US",
+      "display_name": "United States",
+      "feed_file": "us.ics",
+      "id": "us",
+      "legacy_aliases": [
+        "earnings.ics"
+      ],
+      "timezone": "America/New_York",
+      "webcal_url": "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/us.ics"
+    },
+    {
+      "calendar_name": "Events LJSE",
+      "display_name": "Ljubljana Stock Exchange",
+      "feed_file": "ljse.ics",
+      "id": "ljse",
+      "legacy_aliases": [],
+      "timezone": "Europe/Ljubljana",
+      "webcal_url": "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/ljse.ics"
+    },
+    {
+      "calendar_name": "Macro Calendar",
+      "display_name": "Macroeconomic Events",
+      "feed_file": "macro.ics",
+      "id": "macro",
+      "legacy_aliases": [],
+      "timezone": "Europe/Ljubljana",
+      "webcal_url": "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics"
+    }
+  ],
+  "recent_changes": [
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-11-10",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "0301ba4eaacf647f",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-11-10-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-10-14",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "fb944a79a61da2c5",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-10-14-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-09-14",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "17703040bf610154",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-09-14-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-08-11",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "52861b27a0d92208",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-08-11-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-07-14",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "2641dd7844c29345",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-07-14-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-06-10",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "93cf9ee5e6383268",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-06-10-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-05-12",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "6561d81667df6a19",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-05-12-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-04-13",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "954e02bb59be30eb",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-04-13-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-03-10",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "bed126f76d5ffbaf",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-03-10-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-02-11",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "ce33daa4c200252c",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-02-11-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-01-13",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "90b4952abfd49a16",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2027-01-13-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2026-12-10",
+      "new_summary": "US CPI",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "554b1c92ddfd024f",
+      "run_date": "2026-11-11",
+      "ticker": "US_CPI",
+      "uid": "macro-US_CPI-2026-12-10-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-10-26",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "2b6e735281da4ddc",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2027-10-26-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-09-14",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "d3499837ffed1929",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2027-09-14-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-07-27",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "38cce26f6198da32",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2027-07-27-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-06-08",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "ff7f3303666c3a62",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2027-06-08-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-04-27",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "d84fe1cc8d4de1eb",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2027-04-27-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-03-16",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "7e80a5274651994b",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2027-03-16-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-01-26",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "4a28aab33af36ff3",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2027-01-26-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2026-12-08",
+      "new_summary": "FOMC decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "25343e4aebe6a0c7",
+      "run_date": "2026-11-11",
+      "ticker": "FOMC",
+      "uid": "macro-FOMC-2026-12-08-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-10-27",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "d373cdbcb93e3d62",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2027-10-27-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-09-08",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "6eee231c8eca2674",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2027-09-08-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-07-21",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "0a9ade42d51c9d55",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2027-07-21-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-06-09",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "c94e010d1bacfef8",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2027-06-09-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-04-28",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "72294110aa9e379e",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2027-04-28-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-03-17",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "564e5e30893118a2",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2027-03-17-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-02-03",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "ff54e98cd7596cc8",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2027-02-03-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2026-12-16",
+      "new_summary": "ECB decision",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "bdbf976446c6bebc",
+      "run_date": "2026-11-11",
+      "ticker": "ECB",
+      "uid": "macro-ECB-2026-12-16-central_bank_meeting@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-06-01",
+      "new_summary": "Euro area flash HICP",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "78d4ede2ceafcd5a",
+      "run_date": "2026-11-11",
+      "ticker": "EA_HICP",
+      "uid": "macro-EA_HICP-2027-06-01-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-05-03",
+      "new_summary": "Euro area flash HICP",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "d1c9cfc6b3e49645",
+      "run_date": "2026-11-11",
+      "ticker": "EA_HICP",
+      "uid": "macro-EA_HICP-2027-05-03-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-04-01",
+      "new_summary": "Euro area flash HICP",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "102d9ad6d4b4d7ff",
+      "run_date": "2026-11-11",
+      "ticker": "EA_HICP",
+      "uid": "macro-EA_HICP-2027-04-01-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-03-02",
+      "new_summary": "Euro area flash HICP",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "03d90bd5f6e5da8a",
+      "run_date": "2026-11-11",
+      "ticker": "EA_HICP",
+      "uid": "macro-EA_HICP-2027-03-02-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-02-02",
+      "new_summary": "Euro area flash HICP",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "66d8fb68486375d5",
+      "run_date": "2026-11-11",
+      "ticker": "EA_HICP",
+      "uid": "macro-EA_HICP-2027-02-02-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2027-01-06",
+      "new_summary": "Euro area flash HICP",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "c28854bfa82f97f1",
+      "run_date": "2026-11-11",
+      "ticker": "EA_HICP",
+      "uid": "macro-EA_HICP-2027-01-06-inflation_release@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "macro",
+      "new_date": "2026-12-01",
+      "new_summary": "Euro area flash HICP",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "cb76959b6c815a1d",
+      "run_date": "2026-11-11",
+      "ticker": "EA_HICP",
+      "uid": "macro-EA_HICP-2026-12-01-inflation_release@earnings-cal"
+    }
+  ],
+  "results": [
+    {
+      "eps_actual": 1.43,
+      "eps_estimate": 1.14,
+      "fiscal_period": "2026Q3",
+      "manual_notes": "",
+      "market": "us",
+      "price_move_1d_pct": 6.0,
+      "recorded_at": "2026-11-11T19:12:49Z",
+      "report_date": "2026-10-30",
+      "surprise_pct": 25.44,
+      "ticker": "AMZN"
+    },
+    {
+      "eps_actual": 1.64,
+      "eps_estimate": 1.6,
+      "fiscal_period": "2026Q4",
+      "manual_notes": "",
+      "market": "us",
+      "price_move_1d_pct": 1.5,
+      "recorded_at": "2026-11-11T19:12:49Z",
+      "report_date": "2026-10-29",
+      "surprise_pct": 2.5,
+      "ticker": "AAPL"
+    },
+    {
+      "eps_actual": 3.3,
+      "eps_estimate": 3.1,
+      "fiscal_period": "2027Q1",
+      "manual_notes": "",
+      "market": "us",
+      "price_move_1d_pct": 1.6,
+      "recorded_at": "2026-11-11T19:12:49Z",
+      "report_date": "2026-10-28",
+      "surprise_pct": 6.45,
+      "ticker": "MSFT"
+    },
+    {
+      "eps_actual": 6.03,
+      "eps_estimate": 5.25,
+      "fiscal_period": "2026Q3",
+      "manual_notes": "",
+      "market": "us",
+      "price_move_1d_pct": -2.0,
+      "recorded_at": "2026-11-11T19:12:49Z",
+      "report_date": "2026-10-28",
+      "surprise_pct": 14.86,
+      "ticker": "META"
+    },
+    {
+      "eps_actual": 2.12,
+      "eps_estimate": 1.85,
+      "fiscal_period": "2026Q3",
+      "manual_notes": "",
+      "market": "us",
+      "price_move_1d_pct": 3.0,
+      "recorded_at": "2026-11-11T19:12:49Z",
+      "report_date": "2026-10-27",
+      "surprise_pct": 14.59,
+      "ticker": "GOOGL"
+    },
+    {
+      "eps_actual": 0.72,
+      "eps_estimate": 0.58,
+      "fiscal_period": "2026Q3",
+      "manual_notes": "",
+      "market": "us",
+      "price_move_1d_pct": 12.0,
+      "recorded_at": "2026-11-11T19:12:49Z",
+      "report_date": "2026-10-21",
+      "surprise_pct": 24.14,
+      "ticker": "TSLA"
+    }
+  ],
+  "status": {
+    "markets": {
+      "ljse": {
+        "age_days": 0,
+        "errors": [],
+        "healthy": true,
+        "last_success_date": "2026-11-11",
+        "max_age_days": 3,
+        "min_upcoming_events": 1,
+        "stale": false,
+        "upcoming_events": 10
+      },
+      "macro": {
+        "age_days": 0,
+        "errors": [],
+        "healthy": true,
+        "last_success_date": "2026-11-11",
+        "max_age_days": 3,
+        "min_upcoming_events": 1,
+        "stale": false,
+        "upcoming_events": 35
+      },
+      "us": {
+        "age_days": 0,
+        "errors": [],
+        "healthy": true,
+        "last_success_date": "2026-11-11",
+        "max_age_days": 3,
+        "min_upcoming_events": 1,
+        "stale": false,
+        "upcoming_events": 9
+      }
+    },
+    "sources": {
+      "api": {
+        "age_days": 0,
+        "errors": [],
+        "healthy": true,
+        "last_success_date": "2026-11-11",
+        "max_age_days": 3,
+        "stale": false
+      },
+      "seonet": {
+        "age_days": null,
+        "errors": [],
+        "healthy": true,
+        "last_success_date": null,
+        "max_age_days": 8,
+        "stale": false
+      }
+    }
+  },
+  "upcoming_events": [
+    {
+      "date": "2026-11-11",
+      "description": "Objava Poročila o poslovanju Cinkarne Celje, d.d. za obdobje januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=91972\nTiming: Unknown (all-day; market date: 2026-11-11, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=91972",
+      "summary": "CICG Q1–Q3 2026 Interim Report",
+      "ticker": "CICG",
+      "title": "CICG Q1–Q3 2026 Interim Report",
+      "uid": "ljse-CICG-2026-11-11-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-11-12",
+      "description": "Objava nerevidiranega poročila o poslovanju Skupine Telekom Slovenije in družbe Telekom Slovenije, d.d., za obdobje januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=92747\nTiming: Unknown (all-day; market date: 2026-11-12, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=92747",
+      "summary": "TLSG Q1–Q3 2026 Interim Report",
+      "ticker": "TLSG",
+      "title": "TLSG Q1–Q3 2026 Interim Report",
+      "uid": "ljse-TLSG-2026-11-12-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-11-12",
+      "description": "Objava poročila o poslovanju skupine Krka in družbe Krka za obdobje januar - september 2026\nTime: 08:15\nSource: https://seonet.ljse.si/?doc_id=92042\nLocal Time: 2026-11-12 08:15 CET (Europe/Ljubljana)\nMarket Time: 2026-11-12 08:15 CET (Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "earnings",
+      "local_time": "08:15 CET",
+      "market": "ljse",
+      "sort_time": "08:15",
+      "source_url": "https://seonet.ljse.si/?doc_id=92042",
+      "summary": "KRKG Q1–Q3 2026 Interim Report",
+      "ticker": "KRKG",
+      "title": "KRKG Q1–Q3 2026 Interim Report",
+      "uid": "ljse-KRKG-2026-11-12-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-11-19",
+      "description": "Objava nerevidiranega poročila o poslovanju Skupine in družbe Luka Koper, d. d., za obdobje januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=92849\nTiming: Unknown (all-day; market date: 2026-11-19, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=92849",
+      "summary": "LKPG Q1–Q3 2026 Interim Report",
+      "ticker": "LKPG",
+      "title": "LKPG Q1–Q3 2026 Interim Report",
+      "uid": "ljse-LKPG-2026-11-19-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-11-25",
+      "description": "Fiscal Period: Q1 2027\nEPS Estimate: $2.35\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. after 22:00 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "AAPL earnings (approx. after 22:00 CET)",
+      "ticker": "AAPL",
+      "title": "AAPL earnings",
+      "uid": "us-AAPL-2027Q1-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-11-29",
+      "description": "Fiscal Period: Q2 2027\nEPS Estimate: $3.12\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. after 22:00 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "MSFT earnings (approx. after 22:00 CET)",
+      "ticker": "MSFT",
+      "title": "MSFT earnings",
+      "uid": "us-MSFT-2027Q2-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-12-01",
+      "description": "Eurostat euro-area annual inflation flash estimate (Reference Month: November 2026).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/main/news/release-calendar\nLocal Time: 2026-12-01 11:00 CET (Europe/Ljubljana)\nMarket Time: 2026-12-01 11:00 CET (Europe/Brussels)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "11:00 CET",
+      "market": "macro",
+      "sort_time": "11:00",
+      "source_url": "https://ec.europa.eu/eurostat/web/main/news/release-calendar",
+      "summary": "Euro area flash HICP",
+      "ticker": "EA_HICP",
+      "title": "Euro area flash HICP",
+      "uid": "macro-EA_HICP-2026-12-01-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2026-12-02",
+      "description": "Fiscal Period: Q3 2027\nEPS Estimate: $0.89\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. after 22:00 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "NVDA earnings (approx. after 22:00 CET)",
+      "ticker": "NVDA",
+      "title": "NVDA earnings",
+      "uid": "us-NVDA-2027Q3-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-12-06",
+      "description": "Fiscal Period: Q4 2026\nEPS Estimate: $2.15\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. after 22:00 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "GOOGL earnings (approx. after 22:00 CET)",
+      "ticker": "GOOGL",
+      "title": "GOOGL earnings",
+      "uid": "us-GOOGL-2026Q4-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-12-08",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Dec 8-9, 2026). Decision Day: 2026-12-09.\nMeeting Dates: 2026-12-08 to 2026-12-09\nDecision Day: 2026-12-09\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2026-12-09 20:00 CET (Europe/Ljubljana) / 2026-12-09 14:00 EST (America/New_York)",
+      "end_date": "2026-12-09",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2026-12-09 20:00 CET (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2026-12-08-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2026-12-09",
+      "description": "Fiscal Period: Q4 2026\nEPS Estimate: $1.48\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. after 22:00 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "AMZN earnings (approx. after 22:00 CET)",
+      "ticker": "AMZN",
+      "title": "AMZN earnings",
+      "uid": "us-AMZN-2026Q4-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-12-10",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: November 2026).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2026-12-10 14:30 CET (Europe/Ljubljana)\nMarket Time: 2026-12-10 08:30 EST (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CET",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2026-12-10-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2026-12-13",
+      "description": "Fiscal Period: Q4 2026\nEPS Estimate: $6.75\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. after 22:00 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "META earnings (approx. after 22:00 CET)",
+      "ticker": "META",
+      "title": "META earnings",
+      "uid": "us-META-2026Q4-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-12-16",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Dec 16-17, 2026). Decision Day: 2026-12-17.\nMeeting Dates: 2026-12-16 to 2026-12-17\nDecision Day: 2026-12-17\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2026-12-17 14:15 CET (Europe/Ljubljana) / 2026-12-17 14:15 CET (Europe/Berlin)",
+      "end_date": "2026-12-17",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2026-12-17 14:15 CET (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2026-12-16-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2026-12-16",
+      "description": "Fiscal Period: Q4 2026\nEPS Estimate: $0.78\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. after 22:00 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "TSLA earnings (approx. after 22:00 CET)",
+      "ticker": "TSLA",
+      "title": "TSLA earnings",
+      "uid": "us-TSLA-2026Q4-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-01-06",
+      "description": "Eurostat euro-area annual inflation flash estimate (Reference Month: December 2026).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/main/news/release-calendar\nLocal Time: 2027-01-06 11:00 CET (Europe/Ljubljana)\nMarket Time: 2027-01-06 11:00 CET (Europe/Brussels)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "11:00 CET",
+      "market": "macro",
+      "sort_time": "11:00",
+      "source_url": "https://ec.europa.eu/eurostat/web/main/news/release-calendar",
+      "summary": "Euro area flash HICP",
+      "ticker": "EA_HICP",
+      "title": "Euro area flash HICP",
+      "uid": "macro-EA_HICP-2027-01-06-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-01-13",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: December 2026).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-01-13 14:30 CET (Europe/Ljubljana)\nMarket Time: 2027-01-13 08:30 EST (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CET",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-01-13-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-01-14",
+      "description": "Note: Q4 2026 earnings release\nTiming: Unknown (all-day; market date: 2027-01-14, market timezone: America/New_York)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "All-day",
+      "market": "us",
+      "sort_time": "00:00",
+      "source_url": "",
+      "summary": "TSM earnings",
+      "ticker": "TSM",
+      "title": "TSM earnings",
+      "uid": "us-TSM-2027-01-14-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-01-26",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting (Jan 26-27, 2027). Decision Day: 2027-01-27.\nMeeting Dates: 2027-01-26 to 2027-01-27\nDecision Day: 2027-01-27\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2027-01-27 20:00 CET (Europe/Ljubljana) / 2027-01-27 14:00 EST (America/New_York)",
+      "end_date": "2027-01-27",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-01-27 20:00 CET (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2027-01-26-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-01-27",
+      "description": "Note: Q4 2026 earnings release (manual entry)\nTiming: Unknown (all-day; market date: 2027-01-27, market timezone: America/New_York)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "All-day",
+      "market": "us",
+      "sort_time": "00:00",
+      "source_url": "",
+      "summary": "ASML earnings",
+      "ticker": "ASML",
+      "title": "ASML earnings",
+      "uid": "us-ASML-2027-01-27-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-01-28",
+      "description": "Predhodna ocena poslovanja skupine Krka za leto 2026\nTime: 08:15\nSource: https://seonet.ljse.si/?doc_id=92042\nLocal Time: 2027-01-28 08:15 CET (Europe/Ljubljana)\nMarket Time: 2027-01-28 08:15 CET (Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "earnings",
+      "local_time": "08:15 CET",
+      "market": "ljse",
+      "sort_time": "08:15",
+      "source_url": "https://seonet.ljse.si/?doc_id=92042",
+      "summary": "KRKG 2026 Preliminary Results",
+      "ticker": "KRKG",
+      "title": "KRKG 2026 Preliminary Results",
+      "uid": "ljse-KRKG-2027-01-28-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-02-02",
+      "description": "Eurostat euro-area annual inflation flash estimate (Reference Month: January 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/main/news/release-calendar\nLocal Time: 2027-02-02 11:00 CET (Europe/Ljubljana)\nMarket Time: 2027-02-02 11:00 CET (Europe/Brussels)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "11:00 CET",
+      "market": "macro",
+      "sort_time": "11:00",
+      "source_url": "https://ec.europa.eu/eurostat/web/main/news/release-calendar",
+      "summary": "Euro area flash HICP",
+      "ticker": "EA_HICP",
+      "title": "Euro area flash HICP",
+      "uid": "macro-EA_HICP-2027-02-02-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-02-03",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt (Feb 3-4, 2027). Decision Day: 2027-02-04.\nMeeting Dates: 2027-02-03 to 2027-02-04\nDecision Day: 2027-02-04\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-02-04 14:15 CET (Europe/Ljubljana) / 2027-02-04 14:15 CET (Europe/Berlin)",
+      "end_date": "2027-02-04",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-02-04 14:15 CET (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2027-02-03-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-02-11",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: January 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-02-11 14:30 CET (Europe/Ljubljana)\nMarket Time: 2027-02-11 08:30 EST (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CET",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-02-11-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-03-02",
+      "description": "Eurostat euro-area annual inflation flash estimate (Reference Month: February 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/main/news/release-calendar\nLocal Time: 2027-03-02 11:00 CET (Europe/Ljubljana)\nMarket Time: 2027-03-02 11:00 CET (Europe/Brussels)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "11:00 CET",
+      "market": "macro",
+      "sort_time": "11:00",
+      "source_url": "https://ec.europa.eu/eurostat/web/main/news/release-calendar",
+      "summary": "Euro area flash HICP",
+      "ticker": "EA_HICP",
+      "title": "Euro area flash HICP",
+      "uid": "macro-EA_HICP-2027-03-02-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-03-10",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: February 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-03-10 14:30 CET (Europe/Ljubljana)\nMarket Time: 2027-03-10 08:30 EST (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CET",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-03-10-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-03-11",
+      "description": "Objava nerevidiranih računovodskih izkazov skupine Krka in družbe Krka za leto 2026\nTime: 08:15\nSource: https://seonet.ljse.si/?doc_id=92042\nLocal Time: 2027-03-11 08:15 CET (Europe/Ljubljana)\nMarket Time: 2027-03-11 08:15 CET (Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "earnings",
+      "local_time": "08:15 CET",
+      "market": "ljse",
+      "sort_time": "08:15",
+      "source_url": "https://seonet.ljse.si/?doc_id=92042",
+      "summary": "KRKG 2026 Unaudited Financial Statements",
+      "ticker": "KRKG",
+      "title": "KRKG 2026 Unaudited Financial Statements",
+      "uid": "ljse-KRKG-2027-03-11-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-03-16",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Mar 16-17, 2027). Decision Day: 2027-03-17.\nMeeting Dates: 2027-03-16 to 2027-03-17\nDecision Day: 2027-03-17\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2027-03-17 19:00 CET (Europe/Ljubljana) / 2027-03-17 14:00 EDT (America/New_York)",
+      "end_date": "2027-03-17",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-03-17 19:00 CET (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2027-03-16-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-03-17",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Mar 17-18, 2027). Decision Day: 2027-03-18.\nMeeting Dates: 2027-03-17 to 2027-03-18\nDecision Day: 2027-03-18\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-03-18 14:15 CET (Europe/Ljubljana) / 2027-03-18 14:15 CET (Europe/Berlin)",
+      "end_date": "2027-03-18",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-03-18 14:15 CET (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2027-03-17-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-04-01",
+      "description": "Eurostat euro-area annual inflation flash estimate (Reference Month: March 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/main/news/release-calendar\nLocal Time: 2027-04-01 11:00 CEST (Europe/Ljubljana)\nMarket Time: 2027-04-01 11:00 CEST (Europe/Brussels)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "11:00 CEST",
+      "market": "macro",
+      "sort_time": "11:00",
+      "source_url": "https://ec.europa.eu/eurostat/web/main/news/release-calendar",
+      "summary": "Euro area flash HICP",
+      "ticker": "EA_HICP",
+      "title": "Euro area flash HICP",
+      "uid": "macro-EA_HICP-2027-04-01-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-04-08",
+      "description": "Objava letnega poročila skupine Krka in družbe Krka za leto 2026\nTime: 08:15\nSource: https://seonet.ljse.si/?doc_id=92042\nLocal Time: 2027-04-08 08:15 CEST (Europe/Ljubljana)\nMarket Time: 2027-04-08 08:15 CEST (Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "earnings",
+      "local_time": "08:15 CEST",
+      "market": "ljse",
+      "sort_time": "08:15",
+      "source_url": "https://seonet.ljse.si/?doc_id=92042",
+      "summary": "KRKG 2026 Annual Report",
+      "ticker": "KRKG",
+      "title": "KRKG 2026 Annual Report",
+      "uid": "ljse-KRKG-2027-04-08-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-04-13",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: March 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-04-13 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2027-04-13 08:30 EDT (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CEST",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-04-13-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-04-27",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting (Apr 27-28, 2027). Decision Day: 2027-04-28.\nMeeting Dates: 2027-04-27 to 2027-04-28\nDecision Day: 2027-04-28\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2027-04-28 20:00 CEST (Europe/Ljubljana) / 2027-04-28 14:00 EDT (America/New_York)",
+      "end_date": "2027-04-28",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-04-28 20:00 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2027-04-27-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-04-28",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt (Apr 28-29, 2027). Decision Day: 2027-04-29.\nMeeting Dates: 2027-04-28 to 2027-04-29\nDecision Day: 2027-04-29\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-04-29 14:15 CEST (Europe/Ljubljana) / 2027-04-29 14:15 CEST (Europe/Berlin)",
+      "end_date": "2027-04-29",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-04-29 14:15 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2027-04-28-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-05-03",
+      "description": "Eurostat euro-area annual inflation flash estimate (Reference Month: April 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/main/news/release-calendar\nLocal Time: 2027-05-03 11:00 CEST (Europe/Ljubljana)\nMarket Time: 2027-05-03 11:00 CEST (Europe/Brussels)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "11:00 CEST",
+      "market": "macro",
+      "sort_time": "11:00",
+      "source_url": "https://ec.europa.eu/eurostat/web/main/news/release-calendar",
+      "summary": "Euro area flash HICP",
+      "ticker": "EA_HICP",
+      "title": "Euro area flash HICP",
+      "uid": "macro-EA_HICP-2027-05-03-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-05-12",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: April 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-05-12 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2027-05-12 08:30 EDT (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CEST",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-05-12-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-06-01",
+      "description": "Eurostat euro-area annual inflation flash estimate (Reference Month: May 2027).\nTime: 11:00\nSource: https://ec.europa.eu/eurostat/web/main/news/release-calendar\nLocal Time: 2027-06-01 11:00 CEST (Europe/Ljubljana)\nMarket Time: 2027-06-01 11:00 CEST (Europe/Brussels)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "11:00 CEST",
+      "market": "macro",
+      "sort_time": "11:00",
+      "source_url": "https://ec.europa.eu/eurostat/web/main/news/release-calendar",
+      "summary": "Euro area flash HICP",
+      "ticker": "EA_HICP",
+      "title": "Euro area flash HICP",
+      "uid": "macro-EA_HICP-2027-06-01-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-06-08",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Jun 8-9, 2027). Decision Day: 2027-06-09.\nMeeting Dates: 2027-06-08 to 2027-06-09\nDecision Day: 2027-06-09\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2027-06-09 20:00 CEST (Europe/Ljubljana) / 2027-06-09 14:00 EDT (America/New_York)",
+      "end_date": "2027-06-09",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-06-09 20:00 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2027-06-08-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-06-09",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Jun 9-10, 2027). Decision Day: 2027-06-10.\nMeeting Dates: 2027-06-09 to 2027-06-10\nDecision Day: 2027-06-10\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-06-10 14:15 CEST (Europe/Ljubljana) / 2027-06-10 14:15 CEST (Europe/Berlin)",
+      "end_date": "2027-06-10",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-06-10 14:15 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2027-06-09-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-06-10",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: May 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-06-10 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2027-06-10 08:30 EDT (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CEST",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-06-10-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-07-08",
+      "description": "Redna skupščina delničarjev družbe Krka, d. d., Novo mesto\nTime: 13:00\nSource: https://seonet.ljse.si/?doc_id=92042\nLocal Time: 2027-07-08 13:00 CEST (Europe/Ljubljana)\nMarket Time: 2027-07-08 13:00 CEST (Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "agm",
+      "local_time": "13:00 CEST",
+      "market": "ljse",
+      "sort_time": "13:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=92042",
+      "summary": "KRKG Annual General Meeting",
+      "ticker": "KRKG",
+      "title": "KRKG Annual General Meeting",
+      "uid": "ljse-KRKG-2027-07-08-agm@earnings-cal"
+    },
+    {
+      "date": "2027-07-14",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: June 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-07-14 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2027-07-14 08:30 EDT (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CEST",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-07-14-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-07-21",
+      "description": "Prvi trgovalni dan brez pravice do dividende\nSource: https://seonet.ljse.si/?doc_id=92042\nTiming: Unknown (all-day; market date: 2027-07-21, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "ex_dividend",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=92042",
+      "summary": "KRKG Ex-Dividend Date",
+      "ticker": "KRKG",
+      "title": "KRKG Ex-Dividend Date",
+      "uid": "ljse-KRKG-2027-07-21-ex_dividend@earnings-cal"
+    },
+    {
+      "date": "2027-07-21",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt (Jul 21-22, 2027). Decision Day: 2027-07-22.\nMeeting Dates: 2027-07-21 to 2027-07-22\nDecision Day: 2027-07-22\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-07-22 14:15 CEST (Europe/Ljubljana) / 2027-07-22 14:15 CEST (Europe/Berlin)",
+      "end_date": "2027-07-22",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-07-22 14:15 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2027-07-21-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-07-23",
+      "description": "Izplačilo dividend delničarjem družbe Krka, d. d., Novo mesto\nSource: https://seonet.ljse.si/?doc_id=92042\nTiming: Unknown (all-day; market date: 2027-07-23, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "dividend_payment",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=92042",
+      "summary": "KRKG Dividend Payment",
+      "ticker": "KRKG",
+      "title": "KRKG Dividend Payment",
+      "uid": "ljse-KRKG-2027-07-23-dividend_payment@earnings-cal"
+    },
+    {
+      "date": "2027-07-27",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting (Jul 27-28, 2027). Decision Day: 2027-07-28.\nMeeting Dates: 2027-07-27 to 2027-07-28\nDecision Day: 2027-07-28\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2027-07-28 20:00 CEST (Europe/Ljubljana) / 2027-07-28 14:00 EDT (America/New_York)",
+      "end_date": "2027-07-28",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-07-28 20:00 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2027-07-27-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-08-11",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: July 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-08-11 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2027-08-11 08:30 EDT (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CEST",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-08-11-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-09-08",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Sep 8-9, 2027). Decision Day: 2027-09-09.\nMeeting Dates: 2027-09-08 to 2027-09-09\nDecision Day: 2027-09-09\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-09-09 14:15 CEST (Europe/Ljubljana) / 2027-09-09 14:15 CEST (Europe/Berlin)",
+      "end_date": "2027-09-09",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-09-09 14:15 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2027-09-08-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-09-14",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting with Summary of Economic Projections (Sep 14-15, 2027). Decision Day: 2027-09-15.\nMeeting Dates: 2027-09-14 to 2027-09-15\nDecision Day: 2027-09-15\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2027-09-15 20:00 CEST (Europe/Ljubljana) / 2027-09-15 14:00 EDT (America/New_York)",
+      "end_date": "2027-09-15",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-09-15 20:00 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2027-09-14-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-09-14",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: August 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-09-14 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2027-09-14 08:30 EDT (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CEST",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-09-14-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-10-14",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: September 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-10-14 14:30 CEST (Europe/Ljubljana)\nMarket Time: 2027-10-14 08:30 EDT (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CEST",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-10-14-inflation_release@earnings-cal"
+    },
+    {
+      "date": "2027-10-26",
+      "description": "Federal Reserve FOMC two-day monetary policy meeting (Oct 26-27, 2027). Decision Day: 2027-10-27.\nMeeting Dates: 2027-10-26 to 2027-10-27\nDecision Day: 2027-10-27\nSource: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm\nDecision Release Time: 2027-10-27 20:00 CEST (Europe/Ljubljana) / 2027-10-27 14:00 EDT (America/New_York)",
+      "end_date": "2027-10-27",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-10-27 20:00 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "summary": "FOMC decision",
+      "ticker": "FOMC",
+      "title": "FOMC decision",
+      "uid": "macro-FOMC-2027-10-26-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-10-27",
+      "description": "ECB Governing Council monetary policy meeting in Frankfurt (Oct 27-28, 2027). Decision Day: 2027-10-28.\nMeeting Dates: 2027-10-27 to 2027-10-28\nDecision Day: 2027-10-28\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2027-10-28 14:15 CEST (Europe/Ljubljana) / 2027-10-28 14:15 CEST (Europe/Berlin)",
+      "end_date": "2027-10-28",
+      "is_timed": false,
+      "kind": "central_bank_meeting",
+      "local_time": "All-day (decision: 2027-10-28 14:15 CEST (Europe)",
+      "market": "macro",
+      "sort_time": "00:00",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "summary": "ECB decision",
+      "ticker": "ECB",
+      "title": "ECB decision",
+      "uid": "macro-ECB-2027-10-27-central_bank_meeting@earnings-cal"
+    },
+    {
+      "date": "2027-11-10",
+      "description": "U.S. BLS Consumer Price Index release (Reference Month: October 2027).\nTime: 08:30\nSource: https://www.bls.gov/schedule/news_release/cpi.htm\nLocal Time: 2027-11-10 14:30 CET (Europe/Ljubljana)\nMarket Time: 2027-11-10 08:30 EST (America/New_York)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "inflation_release",
+      "local_time": "14:30 CET",
+      "market": "macro",
+      "sort_time": "14:30",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "summary": "US CPI",
+      "ticker": "US_CPI",
+      "title": "US CPI",
+      "uid": "macro-US_CPI-2027-11-10-inflation_release@earnings-cal"
+    }
+  ]
+}
+  </script>
+
+  <!-- Vanilla JS for webcal:// host resolution, filtering, and column sorting -->
   <script>
     (function () {
-      if (!window.location.host) return;
-      var basePath = window.location.pathname.replace(/\/?(index\.html)?$/, "/");
-      var links = document.querySelectorAll("a.webcal-link[data-feed]");
-      for (var i = 0; i < links.length; i++) {
-        var feed = links[i].getAttribute("data-feed");
-        var url = "webcal://" + window.location.host + basePath + feed;
-        links[i].setAttribute("href", url);
-        links[i].textContent = url;
+      if (window.location.host) {
+        var basePath = window.location.pathname.replace(/\/?(index\.html)?$/, "/");
+        var links = document.querySelectorAll("a.webcal-link[data-feed]");
+        for (var i = 0; i < links.length; i++) {
+          var feed = links[i].getAttribute("data-feed");
+          var url = "webcal://" + window.location.host + basePath + feed;
+          links[i].setAttribute("href", url);
+          var urlText = links[i].parentNode.querySelector(".webcal-url-text");
+          if (urlText) urlText.textContent = url;
+        }
+      }
+
+      var dataEl = document.getElementById("dashboard-data");
+      if (!dataEl) return;
+      var payload = JSON.parse(dataEl.textContent || "{}");
+      var events = (payload.upcoming_events || []).slice();
+      var sortKey = "date";
+      var sortAsc = true;
+
+      var marketSelect = document.getElementById("filter-market");
+      var kindSelect = document.getElementById("filter-kind");
+      var searchInput = document.getElementById("filter-search");
+      var tbody = document.getElementById("upcoming-tbody");
+      var countEl = document.getElementById("upcoming-count");
+      var emptyEl = document.getElementById("upcoming-empty");
+      var tableWrap = document.getElementById("upcoming-table-wrap");
+
+      function escapeHtml(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function renderEvents() {
+        if (!tbody) return;
+        var mVal = marketSelect ? marketSelect.value : "all";
+        var kVal = kindSelect ? kindSelect.value : "all";
+        var qVal = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+        var filtered = events.filter(function (ev) {
+          if (mVal !== "all" && ev.market !== mVal) return false;
+          if (kVal !== "all" && ev.kind !== kVal) return false;
+          if (qVal) {
+            var hay = (ev.ticker + " " + ev.title + " " + ev.kind + " " + ev.market).toLowerCase();
+            if (hay.indexOf(qVal) === -1) return false;
+          }
+          return true;
+        });
+
+        filtered.sort(function (a, b) {
+          var va = String(a[sortKey] || "");
+          var vb = String(b[sortKey] || "");
+          if (sortKey === "date") {
+            va = a.date + " " + (a.sort_time || "");
+            vb = b.date + " " + (b.sort_time || "");
+          }
+          var cmp = va.localeCompare(vb);
+          return sortAsc ? cmp : -cmp;
+        });
+
+        if (countEl) countEl.textContent = String(filtered.length);
+        if (filtered.length === 0) {
+          tbody.innerHTML = "";
+          if (emptyEl) emptyEl.style.display = "";
+          if (tableWrap) tableWrap.style.display = "none";
+          return;
+        }
+        if (emptyEl) emptyEl.style.display = "none";
+        if (tableWrap) tableWrap.style.display = "";
+
+        var rowsHtml = filtered.map(function (ev) {
+          var endNote = ev.end_date ? " <small>&rarr; " + escapeHtml(ev.end_date) + "</small>" : "";
+          var titleHtml = ev.source_url
+            ? '<a href="' + escapeHtml(ev.source_url) + '" target="_blank" rel="noopener">' + escapeHtml(ev.title) + "</a>"
+            : escapeHtml(ev.title);
+          return (
+            '<tr data-market="' + escapeHtml(ev.market) + '" data-kind="' + escapeHtml(ev.kind) + '">' +
+            "<td><code>" + escapeHtml(ev.date) + "</code>" + endNote + "</td>" +
+            '<td><span class="badge badge-market">' + escapeHtml(ev.market) + "</span></td>" +
+            "<td><strong>" + escapeHtml(ev.ticker) + "</strong></td>" +
+            '<td><span class="badge badge-kind">' + escapeHtml(ev.kind) + "</span></td>" +
+            "<td>" + titleHtml + "</td>" +
+            "<td><code>" + escapeHtml(ev.local_time) + "</code></td>" +
+            "</tr>"
+          );
+        });
+        tbody.innerHTML = rowsHtml.join("\n");
+      }
+
+      if (marketSelect) marketSelect.addEventListener("change", renderEvents);
+      if (kindSelect) kindSelect.addEventListener("change", renderEvents);
+      if (searchInput) searchInput.addEventListener("input", renderEvents);
+
+      var headers = document.querySelectorAll("#upcoming-table th.sortable[data-sort]");
+      for (var j = 0; j < headers.length; j++) {
+        headers[j].addEventListener("click", function () {
+          var key = this.getAttribute("data-sort");
+          if (sortKey === key) {
+            sortAsc = !sortAsc;
+          } else {
+            sortKey = key;
+            sortAsc = true;
+          }
+          renderEvents();
+        });
       }
     })();
   </script>

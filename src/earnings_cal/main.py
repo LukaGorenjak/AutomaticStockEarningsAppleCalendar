@@ -371,6 +371,7 @@ def run(
     had_failure = False
     all_changes: list[CalendarChange] = []
     market_status_entries: dict[str, dict] = {}
+    healthy_events_by_market: dict[str, list] = {}
     api_succeeded: bool | None = None
     api_errors: list[str] = []
 
@@ -452,6 +453,7 @@ def run(
 
         # Healthy run: diff, append changes, write clean calendar (removes any stale warning VEVENT)
         assert fetched_events is not None
+        healthy_events_by_market[market.id] = list(fetched_events)
         market_window = market.effective_window(window)
         market_changes = diff_feed(
             previous_ics_path=feed_path,
@@ -525,23 +527,6 @@ def run(
     )
     write_status(status_snapshot, resolved_status_path)
 
-    write_index_html(
-        markets,
-        target_dir / "index.html",
-        display_timezone=active_display_tz,
-    )
-
-    if all_changes:
-        logger.info("Calendar change summary:\n%s", render_change_summary(all_changes))
-    else:
-        logger.info("No calendar changes detected across markets.")
-
-    _write_workflow_outputs(
-        all_changes=all_changes,
-        commit_msg_file=commit_msg_file,
-        alert_file=alert_file,
-    )
-
     # Record post-earnings results for past watchlist events (missing data is never an error)
     if provider is None or use_mock or results_path is not None or surprise_provider is not None or price_provider is not None:
         try:
@@ -559,6 +544,27 @@ def run(
             )
         except Exception as exc:
             logger.warning("Post-earnings results update skipped: %s", exc)
+
+    write_index_html(
+        markets,
+        target_dir / "index.html",
+        display_timezone=active_display_tz,
+        events_by_market=healthy_events_by_market,
+        status_data=status_snapshot,
+        changes_path=resolved_changes_path,
+        results_path=resolved_results_path,
+    )
+
+    if all_changes:
+        logger.info("Calendar change summary:\n%s", render_change_summary(all_changes))
+    else:
+        logger.info("No calendar changes detected across markets.")
+
+    _write_workflow_outputs(
+        all_changes=all_changes,
+        commit_msg_file=commit_msg_file,
+        alert_file=alert_file,
+    )
 
     return 1 if had_failure else 0
 

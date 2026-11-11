@@ -20,7 +20,11 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 
 - **Modular Multi-Market Design (`src/earnings_cal/markets/`)**:
   - Each market implements `Market` (`id`, `display_name`, `timezone`, `calendar_name`, `fetch_events(window) -> list[Event]`) in its own module and is registered in `src/earnings_cal/markets/registry.py`.
-  - One `.ics` feed per market (`docs/us.ics`, `docs/ljse.ics`, `docs/macro.ics`) plus an auto-generated `docs/index.html` listing every registered feed and its `webcal://` link.
+  - One `.ics` feed per market (`docs/us.ics`, `docs/ljse.ics`, `docs/macro.ics`) plus an auto-generated static dashboard at `docs/index.html`.
+- **Static Dashboard (`docs/index.html` & `src/earnings_cal/dashboard.py`)**:
+  - Self-contained static HTML/CSS/vanilla JS dashboard built strictly from existing local data (`markets`, `docs/status.json`, `data/changes.jsonl`, `data/results.csv`) with zero external CDNs or frameworks, responsive mobile layout, and automatic `prefers-color-scheme: dark` support.
+  - Five integrated sections: (1) **Calendar Feeds** with `webcal://` subscribe buttons per market; (2) **Upcoming Events** table with `display_timezone` local times, sortable by column and filterable by market, event kind, and search query; (3) **Recent Changelog** (`data/changes.jsonl`); (4) **Post-Earnings Results History** (`data/results.csv`) with EPS surprise and 1-day price move; and (5) **Data Health Bar** (`docs/status.json`) highlighting stale sources/markets in red.
+  - Embeds the normalized dataset as deterministic JSON (`<script id="dashboard-data" type="application/json">`) so GitHub Actions only commits `docs/index.html` when underlying data changes.
 - **Macroeconomic Calendar (`docs/macro.ics`)**:
   - Curated 2026–2027 schedule in `data/macro_events.yaml` covering four configurable series (`macro.series` in `tickers.yaml`):
     - **ECB monetary policy meetings** (`ecb`, `central_bank_meeting`, `Europe/Berlin`)
@@ -65,7 +69,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── seonet.yml                 # Daily SEOnet RSS watcher opening review issues
 │   └── update.yml                 # Daily cron + manual workflow building all registered markets
 ├── docs/
-│   ├── index.html                 # Auto-generated directory of all market feeds & webcal:// links
+│   ├── index.html                 # Static dashboard (feeds, upcoming events, changes, results, health bar)
 │   ├── status.json                # Per-market and per-source freshness, event counts & errors
 │   ├── us.ics                     # US equities earnings feed (X-WR-CALNAME: Earnings US)
 │   ├── ljse.ics                   # LJSE corporate events feed (X-WR-CALNAME: Events LJSE)
@@ -80,6 +84,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
 │   ├── build.py                   # Deterministic iCalendar (.ics) & docs/index.html builder
 │   ├── changes.py                 # Run-to-run .ics diffing & GitHub issue alert payload builder
+│   ├── dashboard.py               # Self-contained static HTML/CSS/JS dashboard generator
 │   ├── fetch.py                   # EarningsProvider interface & FinnhubProvider
 │   ├── main.py                    # Multi-market CLI orchestration & failure isolation
 │   ├── models.py                  # Event, EventKind, DateWindow & YAML config loader
@@ -96,6 +101,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 ├── tests/
 │   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
 │   ├── test_changes.py            # Run-to-run diffing, window-edge handling & idempotency tests
+│   ├── test_dashboard.py          # Static dashboard generation, empty states & embedded JSON tests
 │   ├── test_earnings_cal.py       # Finnhub & iCalendar unit/integration tests
 │   ├── test_ljse_corporate.py     # LJSE corporate event validation & SEOnet dividend/AGM tests
 │   ├── test_macro.py              # Macro YAML validation, multi-day meetings & UID stability tests
