@@ -8,24 +8,6 @@ REFRESH-INTERVAL;VALUE=DURATION:P1D
 X-PUBLISHED-TTL:P1D
 X-WR-TIMEZONE:Europe/Ljubljana
 BEGIN:VEVENT
-SUMMARY:CICG Q1–Q3 2026 Interim Report
-DTSTART;VALUE=DATE:20261111
-DTEND;VALUE=DATE:20261112
-DTSTAMP:20260101T000000Z
-UID:ljse-CICG-2026-11-11-earnings@earnings-cal
-DESCRIPTION:Objava Poročila o poslovanju Cinkarne Celje\, d.d. za obdobje
-  januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=91972\nTi
- ming: Unknown (all-day\; market date: 2026-11-11\, market timezone: Europe
- /Ljubljana)
-TRANSP:TRANSPARENT
-URL:https://seonet.ljse.si/?doc_id=91972
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Reminder: CICG Q1–Q3 2026 Interim Report
-TRIGGER:-PT15H
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 SUMMARY:TLSG Q1–Q3 2026 Interim Report
 DTSTART;VALUE=DATE:20261112
 DTEND;VALUE=DATE:20261113

@@ -185,11 +185,11 @@
     <p class="subtitle">Subscribe in Apple Calendar (macOS / iOS) via <code>webcal://</code>. All event times are shown in <code>Europe/Ljubljana</code>.</p>
     <!-- (5) Data Health Bar from docs/status.json -->
     <div class="health-bar" id="health-bar">
-      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-11)</span></div>
+      <div class="health-pill health-warn" data-source="api" title="Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(WARN · last update: 2026-11-11)</span></div>
       <div class="health-pill health-ok" data-source="seonet" title="Source healthy"><span class="health-dot"></span><strong>Source: SEONET</strong> <span class="health-meta">(OK · last update: never)</span></div>
-      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 10 upcoming · last update: 2026-11-11)</span></div>
-      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-11)</span></div>
-      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 9 upcoming · last update: 2026-11-11)</span></div>
+      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 9 upcoming · last update: 2026-11-12)</span></div>
+      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-12)</span></div>
+      <div class="health-pill health-warn" data-market-health="us" title="Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(WARN · 9 upcoming · last update: 2026-11-11)</span></div>
     </div>
   </header>
 
@@ -236,7 +236,7 @@
 
   <!-- (2) Upcoming Events Table (Sortable & Filterable by Market and Kind) -->
   <section class="card" id="section-upcoming">
-    <h2>2. Upcoming Events (<span id="upcoming-count">54</span>)</h2>
+    <h2>2. Upcoming Events (<span id="upcoming-count">53</span>)</h2>
     <div class="controls">
       <label for="filter-market">Market:</label>
       <select id="filter-market">
@@ -263,14 +263,6 @@
           </tr>
         </thead>
         <tbody id="upcoming-tbody">
-          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-11" data-ticker="CICG">
-            <td><code>2026-11-11</code></td>
-            <td><span class="badge badge-market">ljse</span></td>
-            <td><strong>CICG</strong></td>
-            <td><span class="badge badge-kind">earnings</span></td>
-            <td><a href="https://seonet.ljse.si/?doc_id=91972" target="_blank" rel="noopener">CICG Q1–Q3 2026 Interim Report</a></td>
-            <td><code>All-day</code></td>
-          </tr>
           <tr data-market="ljse" data-kind="earnings" data-date="2026-11-12" data-ticker="TLSG">
             <td><code>2026-11-12</code></td>
             <td><span class="badge badge-market">ljse</span></td>
@@ -967,7 +959,7 @@
 
   <!-- (4) Post-Earnings Results History from data/results.csv -->
   <section class="card" id="section-results">
-    <h2>4. Post-Earnings Results History (<span id="results-count">6</span>)</h2>
+    <h2>4. Post-Earnings Results History (<span id="results-count">7</span>)</h2>
     <div class="table-wrap">
       <table id="results-table">
         <thead>
@@ -984,6 +976,17 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td><code>2026-11-11</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>CICG</strong></td>
+            <td><code>2026Q1-Q3</code></td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td><span class="num-neg">-1.10%</span></td>
+            <td>&mdash;</td>
+          </tr>
           <tr>
             <td><code>2026-10-30</code></td>
             <td><span class="badge badge-market">us</span></td>
@@ -1557,6 +1560,18 @@
   ],
   "results": [
     {
+      "eps_actual": null,
+      "eps_estimate": null,
+      "fiscal_period": "2026Q1-Q3",
+      "manual_notes": "",
+      "market": "ljse",
+      "price_move_1d_pct": -1.1,
+      "recorded_at": "2026-11-12T14:19:49Z",
+      "report_date": "2026-11-11",
+      "surprise_pct": null,
+      "ticker": "CICG"
+    },
+    {
       "eps_actual": 1.43,
       "eps_estimate": 1.14,
       "fiscal_period": "2026Q3",
@@ -1635,17 +1650,17 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-11",
+        "last_success_date": "2026-11-12",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
-        "upcoming_events": 10
+        "upcoming_events": 9
       },
       "macro": {
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-11",
+        "last_success_date": "2026-11-12",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1653,8 +1668,10 @@
       },
       "us": {
         "age_days": 0,
-        "errors": [],
-        "healthy": true,
+        "errors": [
+          "Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."
+        ],
+        "healthy": false,
         "last_success_date": "2026-11-11",
         "max_age_days": 3,
         "min_upcoming_events": 1,
@@ -1665,8 +1682,10 @@
     "sources": {
       "api": {
         "age_days": 0,
-        "errors": [],
-        "healthy": true,
+        "errors": [
+          "Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."
+        ],
+        "healthy": false,
         "last_success_date": "2026-11-11",
         "max_age_days": 3,
         "stale": false
@@ -1682,21 +1701,6 @@
     }
   },
   "upcoming_events": [
-    {
-      "date": "2026-11-11",
-      "description": "Objava Poročila o poslovanju Cinkarne Celje, d.d. za obdobje januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=91972\nTiming: Unknown (all-day; market date: 2026-11-11, market timezone: Europe/Ljubljana)",
-      "end_date": null,
-      "is_timed": false,
-      "kind": "earnings",
-      "local_time": "All-day",
-      "market": "ljse",
-      "sort_time": "00:00",
-      "source_url": "https://seonet.ljse.si/?doc_id=91972",
-      "summary": "CICG Q1–Q3 2026 Interim Report",
-      "ticker": "CICG",
-      "title": "CICG Q1–Q3 2026 Interim Report",
-      "uid": "ljse-CICG-2026-11-11-earnings@earnings-cal"
-    },
     {
       "date": "2026-11-12",
       "description": "Objava nerevidiranega poročila o poslovanju Skupine Telekom Slovenije in družbe Telekom Slovenije, d.d., za obdobje januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=92747\nTiming: Unknown (all-day; market date: 2026-11-12, market timezone: Europe/Ljubljana)",
