@@ -23,12 +23,27 @@ ljse_events:
     description: "Objava nerevidiranega poročila o poslovanju Skupine Telekom Slovenije in družbe Telekom Slovenije, d.d., za obdobje januar - september 2026"
     source_url: "https://seonet.ljse.si/?doc_id=92747"
 
+  - ticker: ZVTG
+    date: "2026-11-18"
+    kind: earnings
+    time: "08:30"
+    title: "ZVTG Q1–Q3 2026 Business Results"
+    description: "Informacija o devetmesečnem poslovanju Zavarovalnice Triglav v letu 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92028"
+
   - ticker: LKPG
     date: "2026-11-19"
     kind: earnings
     title: "LKPG Q1–Q3 2026 Interim Report"
     description: "Objava nerevidiranega poročila o poslovanju Skupine in družbe Luka Koper, d. d., za obdobje januar - september 2026"
     source_url: "https://seonet.ljse.si/?doc_id=92849"
+
+  - ticker: PETG
+    date: "2026-11-20"
+    kind: earnings
+    title: "PETG Q1–Q3 2026 Interim Report"
+    description: "Javna objava poročila o poslovanju družbe Petrol d.d., Ljubljana v prvih devetih mesecih leta 2026"
+    source_url: "https://seonet.ljse.si/?doc_id=92350"
 
   # --- 2026 Confirmed Dividends & AGMs (SEOnet) ---
   - ticker: CICG

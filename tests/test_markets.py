@@ -17,6 +17,7 @@ from earnings_cal.main import run
 from earnings_cal.markets import (
     MARKET_REGISTRY,
     DateWindow,
+    EUMarket,
     LJSEMarket,
     Market,
     USMarket,
@@ -64,6 +65,15 @@ def test_registry_discovery_and_market_metadata() -> None:
     assert ljse.timezone == "Europe/Ljubljana"
     assert ljse.calendar_name == "Events LJSE"
     assert ljse.feed_filename == "ljse.ics"
+
+    eu = markets["eu"]
+    assert isinstance(eu, EUMarket)
+    assert eu.id == "eu"
+    assert eu.display_name == "Europe"
+    assert eu.timezone == "Europe/Berlin"
+    assert eu.calendar_name == "Events EU"
+    assert eu.feed_filename == "eu.ics"
+    assert eu.optional_when_unconfigured is True
 
 
 def test_uid_uniqueness_across_markets_and_event_kinds() -> None:

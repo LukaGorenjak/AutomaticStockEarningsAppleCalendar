@@ -1,0 +1,109 @@
+# Synchronization rules for mapping a local Excel portfolio workbook -> tickers.yaml.
+# Keep portfolio.xlsx in local/OneDrive storage only; never commit share counts or EUR values to Git.
+
+excel_path: "C:\\Users\\lukag\\OneDrive\\Namizje\\Podatki\\Finance\\portfolio.xlsx"
+sheet_name: null  # null = scan all sheets in workbook
+min_quantity: 0
+
+ticker_column: "Ticker"
+name_column: "Ime delnice"
+quantity_column: "Količina"
+stop_markers:
+  - SKUPAJ
+  - TOTAL
+
+# Non-earnings assets (cash and ETFs) excluded from earnings feeds
+ignore_tickers:
+  - CASH
+  - VWCE
+  - VUAA
+  - QUTM
+
+ignore_name_substrings:
+  - ETF
+  - Denar
+
+# Explicit symbol aliases and market routing:
+# - NOV in IBKR is Novo Nordisk (EUR), NOT US NOV Inc. -> mapped to NYSE ADR `NVO`
+# - RHM in IBKR is Rheinmetall AG (EUR) -> mapped to Xetra `RHM.DE` under `eu`
+routing:
+  PETG:
+    market: ljse
+    ticker: PETG
+  KRKG:
+    market: ljse
+    ticker: KRKG
+  LKPG:
+    market: ljse
+    ticker: LKPG
+  CICG:
+    market: ljse
+    ticker: CICG
+  ZVTG:
+    market: ljse
+    ticker: ZVTG
+  TLSG:
+    market: ljse
+    ticker: TLSG
+  NLBR:
+    market: ljse
+    ticker: NLBR
+  NOV:
+    market: us
+    ticker: NVO
+  RHM:
+    market: eu
+    ticker: RHM.DE
+
+# Exchange suffix routing for newly added unmapped tickers
+suffix_markets:
+  ".LJ":
+    market: ljse
+    strip_suffix: true
+  ".DE":
+    market: eu
+    strip_suffix: false
+  ".PA":
+    market: eu
+    strip_suffix: false
+  ".AS":
+    market: eu
+    strip_suffix: false
+  ".MI":
+    market: eu
+    strip_suffix: false
+  ".CO":
+    market: eu
+    strip_suffix: false
+  ".SW":
+    market: eu
+    strip_suffix: false
+  ".HE":
+    market: eu
+    strip_suffix: false
+  ".ST":
+    market: eu
+    strip_suffix: false
+  ".OL":
+    market: eu
+    strip_suffix: false
+  ".VI":
+    market: eu
+    strip_suffix: false
+  ".PR":
+    market: eu
+    strip_suffix: false
+  ".WA":
+    market: eu
+    strip_suffix: false
+  ".L":
+    market: eu
+    strip_suffix: false
+
+default_market: us
+
+# Optional extra tickers to always retain alongside Excel holdings (kept empty for strict Excel sync)
+extra_tickers:
+  us: []
+  ljse: []
+  eu: []

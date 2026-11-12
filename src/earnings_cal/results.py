@@ -774,43 +774,55 @@ def _discover_past_watchlist_earnings(
     past_window = DateWindow(start=window_start, end=yesterday)
     discovered: list[Event] = []
 
-    # 1. US watchlist (Finnhub past window + manual_events)
-    us_section = config.get_market_section("us")
-    us_tickers = [str(t).strip().upper() for t in (us_section.get("tickers") or config.tickers) if str(t).strip()]
-    us_manual: list[Event] = list(us_section.get("manual_events") or config.manual_events or [])
+    # 1. US & EU watchlists (Finnhub past window + manual_events)
+    active_provider = earnings_provider
+    if active_provider is None:
+        env_key = os.environ.get("FINNHUB_API_KEY", "").strip()
+        if use_mock or env_key.lower() == "mock":
+            active_provider = MockEarningsProvider()
+        elif env_key:
+            try:
+                active_provider = FinnhubProvider(api_key=env_key)
+            except ProviderError as exc:
+                logger.warning("Skipping API past earnings lookup: %s", exc)
 
-    if us_tickers:
-        active_provider = earnings_provider
-        if active_provider is None:
-            env_key = os.environ.get("FINNHUB_API_KEY", "").strip()
-            if use_mock or env_key.lower() == "mock":
-                active_provider = MockEarningsProvider()
-            elif env_key:
-                try:
-                    active_provider = FinnhubProvider(api_key=env_key)
-                except ProviderError as exc:
-                    logger.warning("Skipping US past earnings lookup: %s", exc)
+    for api_market_id in ("us", "eu"):
+        if api_market_id != "us" and api_market_id not in config.markets:
+            continue
+        section = config.get_market_section(api_market_id)
+        raw_tickers = section.get("tickers") if api_market_id != "us" else (section.get("tickers") or config.tickers)
+        api_tickers = [str(t).strip().upper() for t in (raw_tickers or []) if str(t).strip()]
+        raw_manual = section.get("manual_events") if api_market_id != "us" else (section.get("manual_events") or config.manual_events)
+        manual_list: list[Event] = list(raw_manual or [])
 
-        if active_provider is not None:
+        if api_tickers and active_provider is not None and section.get("use_api", True):
             try:
                 api_past = active_provider.fetch_earnings(
-                    us_tickers,
+                    api_tickers,
                     start_date=window_start,
                     end_date=yesterday,
                 )
                 for ev in api_past:
                     if ev.kind == EventKind.EARNINGS and past_window.contains(ev.date):
                         discovered.append(
-                            replace(ev, market="us", kind=EventKind.EARNINGS)
-                            if ev.market != "us"
+                            replace(ev, market=api_market_id, kind=EventKind.EARNINGS)
+                            if ev.market != api_market_id
                             else ev
                         )
             except Exception as exc:
-                logger.info("No past US API earnings returned for [%s, %s]: %s", window_start, yesterday, exc)
+                logger.info(
+                    "No past %s API earnings returned for [%s, %s]: %s",
+                    api_market_id.upper(),
+                    window_start,
+                    yesterday,
+                    exc,
+                )
 
-    for ev in us_manual:
-        if ev.kind == EventKind.EARNINGS and past_window.contains(ev.date):
-            discovered.append(ev)
+        for ev in manual_list:
+            if ev.kind == EventKind.EARNINGS and past_window.contains(ev.date):
+                discovered.append(
+                    replace(ev, market=api_market_id) if ev.market != api_market_id else ev
+                )
 
     # 2. LJSE watchlist (`ljse_events.yaml`, only `kind == EventKind.EARNINGS`)
     ljse_section = config.get_market_section("ljse")

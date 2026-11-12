@@ -11,6 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from earnings_cal.markets.base import Market
+from earnings_cal.markets.eu import EUMarket
 from earnings_cal.markets.ljse import LJSEMarket
 from earnings_cal.markets.macro import MacroMarket
 from earnings_cal.markets.us import USMarket
@@ -21,6 +22,7 @@ MARKET_REGISTRY: dict[str, type[Market] | Market] = {
     USMarket.id: USMarket,
     LJSEMarket.id: LJSEMarket,
     MacroMarket.id: MacroMarket,
+    EUMarket.id: EUMarket,
 }
 
 

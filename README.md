@@ -9,6 +9,7 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 | **United States (`us`)** | `docs/us.ics` | `Earnings US` | `America/New_York` | `webcal://<user>.github.io/<repo>/us.ics` |
 | **Ljubljana Stock Exchange (`ljse`)** | `docs/ljse.ics` | `Events LJSE` | `Europe/Ljubljana` | `webcal://<user>.github.io/<repo>/ljse.ics` |
 | **Macroeconomic Events (`macro`)** | `docs/macro.ics` | `Macro Calendar` | `Europe/Ljubljana` | `webcal://<user>.github.io/<repo>/macro.ics` |
+| **European Equities (`eu`)** | `docs/eu.ics` | `Events EU` | `Europe/Berlin` | `webcal://<user>.github.io/<repo>/eu.ics` |
 | **Legacy US Alias** | `docs/earnings.ics` | `Earnings US` | `America/New_York` | `webcal://<user>.github.io/<repo>/earnings.ics` |
 
 > **Migration notice (`docs/earnings.ics` -> `docs/us.ics`):**
@@ -20,7 +21,10 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 
 - **Modular Multi-Market Design (`src/earnings_cal/markets/`)**:
   - Each market implements `Market` (`id`, `display_name`, `timezone`, `calendar_name`, `fetch_events(window) -> list[Event]`) in its own module and is registered in `src/earnings_cal/markets/registry.py`.
-  - One `.ics` feed per market (`docs/us.ics`, `docs/ljse.ics`, `docs/macro.ics`) plus an auto-generated static dashboard at `docs/index.html`.
+  - One `.ics` feed per market (`docs/us.ics`, `docs/ljse.ics`, `docs/macro.ics`, `docs/eu.ics`) plus an auto-generated static dashboard at `docs/index.html`.
+- **Excel Portfolio Sync (`src/earnings_cal/sync_excel.py`, `portfolio_sync.yaml`, `scripts/sync_portfolio.bat`)**:
+  - Reads stacked portfolio tables (`Ticker`, `Ime delnice`, `Količina`, ending at `SKUPAJ`/`TOTAL`) directly from a local Excel workbook (`portfolio.xlsx`) without copying holdings quantities or EUR values into Git.
+  - Filters out `CASH`, ETFs (`VWCE`, `VUAA`, `QUTM`, or instruments containing `ETF`), and zero-quantity rows, routes symbols across `us`, `ljse`, and `eu` (handling aliases such as `NOV` -> `NVO` and `RHM` -> `RHM.DE`), updates `tickers.yaml` cleanly, and with `--push` commits/pushes `tickers.yaml` to trigger an automatic GitHub Actions rebuild.
 - **Static Dashboard (`docs/index.html` & `src/earnings_cal/dashboard.py`)**:
   - Self-contained static HTML/CSS/vanilla JS dashboard built strictly from existing local data (`markets`, `docs/status.json`, `data/changes.jsonl`, `data/results.csv`) with zero external CDNs or frameworks, responsive mobile layout, and automatic `prefers-color-scheme: dark` support.
   - Five integrated sections: (1) **Calendar Feeds** with `webcal://` subscribe buttons per market; (2) **Upcoming Events** table with `display_timezone` local times, sortable by column and filterable by market, event kind, and search query; (3) **Recent Changelog** (`data/changes.jsonl`); (4) **Post-Earnings Results History** (`data/results.csv`) with EPS surprise and 1-day price move; and (5) **Data Health Bar** (`docs/status.json`) highlighting stale sources/markets in red.
@@ -66,7 +70,6 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 .
 ├── .github/workflows/
 │   ├── ljse.yml                   # Weekly cron + push workflow for LJSE SEOnet cache
-│   ├── seonet.yml                 # Daily SEOnet RSS watcher opening review issues
 │   └── update.yml                 # Daily cron + manual workflow building all registered markets
 ├── docs/
 │   ├── index.html                 # Static dashboard (feeds, upcoming events, changes, results, health bar)
@@ -74,11 +77,14 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── us.ics                     # US equities earnings feed (X-WR-CALNAME: Earnings US)
 │   ├── ljse.ics                   # LJSE corporate events feed (X-WR-CALNAME: Events LJSE)
 │   ├── macro.ics                  # Macroeconomic calendar feed (X-WR-CALNAME: Macro Calendar)
+│   ├── eu.ics                     # European equities feed (X-WR-CALNAME: Events EU)
 │   └── earnings.ics               # Legacy alias of docs/us.ics
 ├── data/
 │   ├── changes.jsonl              # Append-only deterministic log of detected feed changes
 │   ├── macro_events.yaml          # Curated 2026-2027 FOMC, ECB, US CPI, and Euro-area flash HICP schedule
 │   └── results.csv                # Post-earnings EPS surprise & 1-day price reaction log
+├── scripts/
+│   └── sync_portfolio.bat         # One-click Windows wrapper for `sync_excel --push`
 ├── src/earnings_cal/
 │   ├── __init__.py
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
@@ -90,13 +96,15 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── models.py                  # Event, EventKind, DateWindow & YAML config loader
 │   ├── results.py                 # Post-earnings surprise/price tracker (data/results.csv) & summary CLI
 │   ├── status.py                  # Health status (docs/status.json) & stale-warning VEVENT injector
+│   ├── sync_excel.py              # Local Excel portfolio -> `tickers.yaml` sync & git push helper
 │   ├── markets/
 │   │   ├── __init__.py
-│   │   ├── base.py                # Market abstract base class
+│   │   ├── base.py                # Market & EquitiesAPIMarket abstract base classes
 │   │   ├── registry.py            # Central MARKET_REGISTRY
 │   │   ├── us.py                  # USMarket (Finnhub + manual_events)
 │   │   ├── ljse.py                # LJSEMarket (ljse_events.yaml)
-│   │   └── macro.py               # MacroMarket (data/macro_events.yaml + online validator)
+│   │   ├── macro.py               # MacroMarket (data/macro_events.yaml + online validator)
+│   │   └── eu.py                  # EUMarket (Finnhub best-effort + manual_events)
 │   └── seonet/                    # SEOnet RSS watcher & PDF candidate date extractor
 ├── tests/
 │   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
@@ -109,8 +117,11 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── test_results.py            # Post-earnings results CSV, late data & summary CLI tests
 │   ├── test_seonet.py             # SEOnet watcher & scraper tests
 │   ├── test_status.py             # Health status, staleness thresholds & stale warning tests
+│   ├── test_sync_excel.py         # Excel stacked-table parsing, routing, git safety & EUMarket tests
 │   └── test_timezone.py           # ZoneInfo conversions, DST mismatch weeks & timed vs all-day tests
+├── AGENTS.md                      # Persistent project summary & documentation sync rules
 ├── ljse_events.yaml               # Curated LJSE events (earnings, AGM, ex_dividend, dividend)
+├── portfolio_sync.yaml            # Excel column, ignore, and ticker routing configuration
 ├── tickers.yaml                   # Per-market watchlists and configuration sections
 ├── pyproject.toml
 └── requirements.txt
@@ -127,27 +138,23 @@ display_timezone: Europe/Ljubljana
 
 us:
   tickers:
-    - AAPL
+    - ABAT
+    - IREN
+    - MCD
     - MSFT
-    - NVDA
-    - GOOGL
-    - AMZN
-    - META
-    - TSLA
-  manual_events:
-    - ticker: ASML
-      date: "2027-01-27"
-      note: "Q4 2026 earnings release (manual entry)"
-    - ticker: TSM
-      date: "2027-01-14"
-      note: "Q4 2026 earnings release"
+    - NVO
+    - TTWO
+  manual_events: []
 
 ljse:
   tickers:
-    - KRKG
     - CICG
-    - TLSG
+    - KRKG
     - LKPG
+    - NLBR
+    - PETG
+    - TLSG
+    - ZVTG
   events_file: ljse_events.yaml
   issuers:
     KRKG: "KRKA, d. d., Novo mesto"
@@ -155,6 +162,13 @@ ljse:
     TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
     LKPG: "LUKA KOPER, d.d., Koper"
     NLBR: "NLB, d. d., Ljubljana"
+    PETG: "PETROL d.d., Ljubljana"
+    ZVTG: "ZAVAROVALNICA TRIGLAV, d.d., Ljubljana"
+
+eu:
+  tickers:
+    - RHM.DE
+  manual_events: []
 
 macro:
   series:
@@ -231,6 +245,13 @@ python -m earnings_cal.markets.macro --verify-online
 
 # Print per-ticker average EPS surprise and 1-day price move from data/results.csv
 python -m earnings_cal.results summary
+
+# Preview ticker updates from your local Excel portfolio workbook without writing
+python -m earnings_cal.sync_excel --dry-run
+
+# Sync tickers from portfolio.xlsx -> tickers.yaml and push to trigger GitHub Actions
+python -m earnings_cal.sync_excel --push
+# (Or double-click scripts\sync_portfolio.bat on Windows; pass --no-pause for Task Scheduler)
 
 # Run the full test suite
 pytest -v

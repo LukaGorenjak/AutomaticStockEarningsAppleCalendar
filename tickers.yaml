@@ -1,7 +1,4 @@
-# Local timezone used when displaying converted event times
 display_timezone: Europe/Ljubljana
-
-# Staleness & minimum upcoming event thresholds (make silent failures visible)
 thresholds:
   max_age_days: 3
   min_upcoming_events: 1
@@ -20,43 +17,44 @@ thresholds:
     macro:
       max_age_days: 3
       min_upcoming_events: 1
-
-# Per-market watchlists and configuration
+    eu:
+      max_age_days: 3
+      min_upcoming_events: 0
 us:
   tickers:
-    - AAPL
-    - MSFT
-    - NVDA
-    - GOOGL
-    - AMZN
-    - META
-    - TSLA
-  manual_events:
-    - ticker: ASML
-      date: "2027-01-27"
-      note: "Q4 2026 earnings release (manual entry)"
-    - ticker: TSM
-      date: "2027-01-14"
-      note: "Q4 2026 earnings release"
-
+  - ABAT
+  - IREN
+  - MCD
+  - MSFT
+  - NVO
+  - TTWO
+  manual_events: []
 ljse:
   tickers:
-    - KRKG
-    - CICG
-    - TLSG
-    - LKPG
+  - CICG
+  - KRKG
+  - LKPG
+  - NLBR
+  - PETG
+  - TLSG
+  - ZVTG
   events_file: ljse_events.yaml
   issuers:
-    KRKG: "KRKA, d. d., Novo mesto"
-    CICG: "CINKARNA CELJE, d.d., Celje"
-    TLSG: "TELEKOM SLOVENIJE, d.d., Ljubljana"
-    LKPG: "LUKA KOPER, d.d., Koper"
-    NLBR: "NLB, d. d., Ljubljana"
-
+    KRKG: KRKA, d. d., Novo mesto
+    CICG: CINKARNA CELJE, d.d., Celje
+    TLSG: TELEKOM SLOVENIJE, d.d., Ljubljana
+    LKPG: LUKA KOPER, d.d., Koper
+    NLBR: NLB, d. d., Ljubljana
+    PETG: PETROL d.d., Ljubljana
+    ZVTG: ZAVAROVALNICA TRIGLAV, d.d., Ljubljana
+eu:
+  tickers:
+  - RHM.DE
+  manual_events: []
 macro:
   series:
-    - ecb
-    - fomc
-    - us_cpi
-    - ea_hicp
+  - ecb
+  - fomc
+  - us_cpi
+  - ea_hicp
   events_file: data/macro_events.yaml

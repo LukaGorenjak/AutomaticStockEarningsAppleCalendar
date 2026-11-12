@@ -367,6 +367,11 @@ def run(
         provider=provider,
         use_mock=use_mock,
     )
+    active_markets = [
+        m
+        for m in markets
+        if not (getattr(m, "optional_when_unconfigured", False) and m.id not in config.markets)
+    ]
 
     had_failure = False
     all_changes: list[CalendarChange] = []
@@ -375,7 +380,7 @@ def run(
     api_succeeded: bool | None = None
     api_errors: list[str] = []
 
-    for market in markets:
+    for market in active_markets:
         feed_path = target_dir / market.feed_filename
         max_age = thresholds.get_market_max_age_days(market.id)
         min_upcoming = thresholds.get_market_min_upcoming_events(market.id)
@@ -546,7 +551,7 @@ def run(
             logger.warning("Post-earnings results update skipped: %s", exc)
 
     write_index_html(
-        markets,
+        active_markets,
         target_dir / "index.html",
         display_timezone=active_display_tz,
         events_by_market=healthy_events_by_market,

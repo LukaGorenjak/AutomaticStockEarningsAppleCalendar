@@ -20,6 +20,7 @@ DEFAULT_MARKET_TIMEZONES: dict[str, str] = {
     "us": "America/New_York",
     "ljse": "Europe/Ljubljana",
     "macro": "Europe/Ljubljana",
+    "eu": "Europe/Berlin",
 }
 
 

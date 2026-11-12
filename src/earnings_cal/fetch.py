@@ -91,6 +91,7 @@ class FinnhubProvider(EarningsProvider):
 
         events: list[EarningsEvent] = []
         succeeded_tickers = 0
+        ticker_errors: list[str] = []
 
         for ticker in normalized_tickers:
             try:
@@ -99,10 +100,14 @@ class FinnhubProvider(EarningsProvider):
                 events.extend(ticker_events)
             except Exception as exc:
                 logger.warning("Skipping ticker %s due to error: %s", ticker, exc)
+                ticker_errors.append(str(exc))
 
         if succeeded_tickers == 0:
+            detail = "; ".join(ticker_errors)
             raise ProviderError(
-                f"Finnhub API requests failed for all {len(normalized_tickers)} ticker(s)."
+                f"Finnhub API requests failed for all {len(normalized_tickers)} ticker(s): {detail}"
+                if detail
+                else f"Finnhub API requests failed for all {len(normalized_tickers)} ticker(s)."
             )
 
         if not events:

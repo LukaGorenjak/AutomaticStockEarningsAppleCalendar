@@ -204,6 +204,7 @@ def test_dashboard_generation_from_fixture_data_and_embedded_json_parses(tmp_pat
     assert "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/us.ics" in html_out
     assert "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/ljse.ics" in html_out
     assert "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics" in html_out
+    assert "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/eu.ics" in html_out
     assert 'class="btn-subscribe webcal-link"' in html_out
 
     # 2. Upcoming events table, sortable and filterable by market and kind, with local time
@@ -250,7 +251,8 @@ def test_dashboard_generation_from_fixture_data_and_embedded_json_parses(tmp_pat
     # Embedded JSON parses cleanly and matches rendered data
     parsed_json = _extract_embedded_json(html_out)
     assert parsed_json["display_timezone"] == "Europe/Ljubljana"
-    assert len(parsed_json["feeds"]) == 3
+    assert len(parsed_json["feeds"]) == len(markets)
+    assert {f["id"] for f in parsed_json["feeds"]} == {"us", "ljse", "macro", "eu"}
     assert len(parsed_json["upcoming_events"]) == 4
     assert len(parsed_json["recent_changes"]) == 2
     assert len(parsed_json["results"]) == 2
@@ -309,4 +311,4 @@ def test_dashboard_empty_data_states() -> None:
     assert parsed["upcoming_events"] == []
     assert parsed["recent_changes"] == []
     assert parsed["results"] == []
-    assert len(parsed["feeds"]) == 3
+    assert len(parsed["feeds"]) == len(markets)
