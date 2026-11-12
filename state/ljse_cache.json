@@ -1,11 +1,6 @@
 {
   "events": [
     {
-      "date": "2026-11-11",
-      "note": "Objava Poročila o poslovanju Cinkarne Celje, d.d. za obdobje januar - september 2026 | Source: https://seonet.ljse.si/?doc_id=91972",
-      "ticker": "CICG"
-    },
-    {
       "date": "2026-11-12",
       "note": "četrtek, 8:15 objava poročila o poslovanju za obdobje januar - september | Source: https://seonet.ljse.si/?doc_id=92042",
       "ticker": "KRKG"
@@ -16,9 +11,64 @@
       "ticker": "TLSG"
     },
     {
+      "date": "2026-11-18",
+      "note": "Sreda, 8:30 Informacija o devetmesečnem poslovanju v letu 2026 Od srede | Source: https://seonet.ljse.si/?doc_id=92028",
+      "ticker": "ZVTG"
+    },
+    {
       "date": "2026-11-19",
       "note": "Objava nerevidiranega poročila o poslovanju Skupine in | Source: https://seonet.ljse.si/?doc_id=92849",
       "ticker": "LKPG"
+    },
+    {
+      "date": "2026-11-20",
+      "note": "Ljubljana ne posreduje informacij o poslovanju, z izjemo objave poročila o poslovanju v prvih devetih mesecih leta 2026, dne . | Source: https://seonet.ljse.si/?doc_id=92350",
+      "ticker": "PETG"
+    },
+    {
+      "date": "2027-02-03",
+      "note": "Preliminarni rezultati o poslovanju v 2026 | Source: https://seonet.ljse.si/?doc_id=93304",
+      "ticker": "CICG"
+    },
+    {
+      "date": "2027-02-25",
+      "note": "Objava nerevidiranih rezultatov poslovanja Skupine Telekom Slovenije in družbe Telekom Slovenije, d.d., za leto 2026 | Source: https://seonet.ljse.si/?doc_id=93310",
+      "ticker": "TLSG"
+    },
+    {
+      "date": "2027-03-03",
+      "note": "Objava nerevidiranega Letnega poročila o poslovanju Cinkarne Celje, d. d., za leto 2026 | Source: https://seonet.ljse.si/?doc_id=93304",
+      "ticker": "CICG"
+    },
+    {
+      "date": "2027-04-08",
+      "note": "Letno poročilo 2026Četrtek | Source: https://www.nlbgroup.com/si-sl/vlagatelji/financni-koledar",
+      "ticker": "NLBR"
+    },
+    {
+      "date": "2027-05-06",
+      "note": "Medletno poročilo - marec 2027Četrtek, 6. 5. 202722. 4. 2027 - Četrtek | Source: https://www.nlbgroup.com/si-sl/vlagatelji/financni-koledar",
+      "ticker": "NLBR"
+    },
+    {
+      "date": "2027-08-05",
+      "note": "Polletno poročilo 2027Četrtek, 5. 8. 202722. 7. 2027 - Četrtek | Source: https://www.nlbgroup.com/si-sl/vlagatelji/financni-koledar",
+      "ticker": "NLBR"
+    },
+    {
+      "date": "2027-08-26",
+      "note": "Objava nerevidiranega poročila o poslovanju Skupine Telekom Slovenije | Source: https://seonet.ljse.si/?doc_id=93310",
+      "ticker": "TLSG"
+    },
+    {
+      "date": "2027-11-04",
+      "note": "Medletno poročilo - september 2027Četrtek, 4. 11. 202721. 10. 2027 - Četrtek | Source: https://www.nlbgroup.com/si-sl/vlagatelji/financni-koledar",
+      "ticker": "NLBR"
+    },
+    {
+      "date": "2027-11-11",
+      "note": "Objava nerevidiranega poročila o poslovanju Skupine Telekom Slovenije | Source: https://seonet.ljse.si/?doc_id=93310",
+      "ticker": "TLSG"
     }
   ]
 }

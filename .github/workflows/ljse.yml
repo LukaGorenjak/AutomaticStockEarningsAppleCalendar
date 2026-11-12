@@ -15,6 +15,10 @@ permissions:
   contents: write
   issues: write
 
+concurrency:
+  group: calendar-pipeline-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   scrape-ljse:
     runs-on: ubuntu-latest
@@ -46,11 +50,11 @@ jobs:
           CAL_EXIT=$?
           echo "cal_exit=$CAL_EXIT" >> "$GITHUB_OUTPUT"
 
-      - name: Commit state/ljse_cache.json, data/changes.jsonl, docs/status.json, and docs feeds if changed
+      - name: Commit state/ljse_cache.json, data/changes.jsonl, data/results.csv, docs/status.json, and docs feeds if changed
         run: |
-          git add state/ljse_cache.json data/changes.jsonl docs/*.ics docs/index.html docs/status.json
+          git add state/ljse_cache.json data/changes.jsonl data/results.csv docs/*.ics docs/index.html docs/status.json
           if git diff --cached --quiet; then
-            echo "No changes to LJSE cache, changes log, status, or docs feeds"
+            echo "No changes to LJSE cache, changes log, results, status, or docs feeds"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -59,7 +63,7 @@ jobs:
             else
               git commit -m "chore: update LJSE cache, market calendars, and status"
             fi
-            git pull --rebase
+            git pull --rebase --autostash
             git push
           fi
 

@@ -14,7 +14,7 @@ if not exist ".venv\Scripts\python.exe" (
     exit /b 1
 )
 
-".venv\Scripts\python.exe" -m earnings_cal.sync_excel --push %1 %2 %3 %4 %5
+".venv\Scripts\python.exe" -m earnings_cal.sync_excel --build --push %1 %2 %3 %4 %5
 set EXIT_CODE=%ERRORLEVEL%
 
 if "%NO_PAUSE%"=="0" (

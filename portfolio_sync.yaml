@@ -2,7 +2,7 @@
 # Keep portfolio.xlsx in local/OneDrive storage only; never commit share counts or EUR values to Git.
 
 excel_path: "C:\\Users\\lukag\\OneDrive\\Namizje\\Podatki\\Finance\\portfolio.xlsx"
-sheet_name: null  # null = scan all sheets in workbook
+sheet_name: "Delnice"  # Only scan the equity holdings worksheet (ignores Dividende, Nabave, Vrednost)
 min_quantity: 0
 
 ticker_column: "Ticker"
@@ -12,12 +12,23 @@ stop_markers:
   - SKUPAJ
   - TOTAL
 
-# Non-earnings assets (cash and ETFs) excluded from earnings feeds
+# Non-equity sections/sheets to skip automatically (e.g. PORTFELJ – KRIPTO (HOLDINGS) BINANCE)
+ignore_sections:
+  - KRIPTO
+  - CRYPTO
+  - BINANCE
+  - DIVIDENDE
+  - NABAVE
+
+# Non-earnings assets (cash, ETFs, and crypto) excluded from earnings feeds
 ignore_tickers:
   - CASH
   - VWCE
   - VUAA
   - QUTM
+  - BTC
+  - XRP
+  - HBAR
 
 ignore_name_substrings:
   - ETF
@@ -54,6 +65,21 @@ routing:
   RHM:
     market: eu
     ticker: RHM.DE
+  MSFT:
+    market: us
+    ticker: MSFT
+  IREN:
+    market: us
+    ticker: IREN
+  MCD:
+    market: us
+    ticker: MCD
+  ABAT:
+    market: us
+    ticker: ABAT
+  TTWO:
+    market: us
+    ticker: TTWO
 
 # Exchange suffix routing for newly added unmapped tickers
 suffix_markets:

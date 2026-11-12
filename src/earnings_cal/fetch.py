@@ -7,8 +7,9 @@ import os
 import time
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Sequence
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -17,6 +18,13 @@ from earnings_cal.models import EarningsEvent
 logger = logging.getLogger(__name__)
 
 FINNHUB_EARNINGS_URL = "https://finnhub.io/api/v1/calendar/earnings"
+YAHOO_FC_URL = "https://fc.yahoo.com"
+YAHOO_CRUMB_URL = "https://query2.finance.yahoo.com/v1/test/getcrumb"
+YAHOO_QUOTE_SUMMARY_URL = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/{symbol}"
+YAHOO_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 RETRYABLE_STATUS_CODES = {429, 500, 502, 503, 504}
 
 
@@ -269,6 +277,256 @@ class FinnhubProvider(EarningsProvider):
             )
 
         return parsed
+
+
+class YahooFinanceProvider(EarningsProvider):
+    """Keyless earnings provider backed by Yahoo Finance `v10/finance/quoteSummary` (`calendarEvents` + `earningsHistory`).
+
+    Works without an API key for both US symbols (e.g. `MSFT`, `NVO`) and international/European
+    exchange-suffixed symbols (e.g. `RHM.DE`), and serves as an automatic fallback when
+    `FINNHUB_API_KEY` is not configured or when Finnhub free tier lacks coverage.
+    """
+
+    def __init__(
+        self,
+        session: requests.Session | None = None,
+        timeout: float = 15.0,
+    ) -> None:
+        self.session = session or requests.Session()
+        self.timeout = timeout
+        self._crumb: str | None = None
+
+    def _ensure_crumb(self) -> str:
+        if self._crumb:
+            return self._crumb
+        headers = {"User-Agent": YAHOO_USER_AGENT, "Accept": "*/*"}
+        try:
+            self.session.get(YAHOO_FC_URL, headers=headers, timeout=self.timeout)
+        except requests.RequestException:
+            pass
+        try:
+            resp = self.session.get(YAHOO_CRUMB_URL, headers=headers, timeout=self.timeout)
+        except requests.RequestException as exc:
+            raise ProviderError(f"Yahoo Finance crumb request failed: {exc}") from exc
+        if resp.status_code >= 400 or not resp.text.strip():
+            raise ProviderError(f"Yahoo Finance crumb HTTP {resp.status_code}")
+        self._crumb = resp.text.strip()
+        return self._crumb
+
+    def fetch_earnings(
+        self,
+        tickers: Sequence[str],
+        start_date: date,
+        end_date: date,
+    ) -> list[EarningsEvent]:
+        normalized_tickers = [t.strip().upper() for t in tickers if t and t.strip()]
+        if not normalized_tickers:
+            return []
+
+        crumb = self._ensure_crumb()
+        events: list[EarningsEvent] = []
+        succeeded_tickers = 0
+        ticker_errors: list[str] = []
+
+        for ticker in normalized_tickers:
+            try:
+                ticker_events = self._fetch_single_ticker(ticker, crumb, start_date, end_date)
+                succeeded_tickers += 1
+                events.extend(ticker_events)
+            except Exception as exc:
+                logger.warning("Skipping ticker %s on Yahoo Finance due to error: %s", ticker, exc)
+                ticker_errors.append(str(exc))
+
+        if succeeded_tickers == 0:
+            detail = "; ".join(ticker_errors)
+            raise ProviderError(
+                f"Yahoo Finance requests failed for all {len(normalized_tickers)} ticker(s): {detail}"
+                if detail
+                else f"Yahoo Finance requests failed for all {len(normalized_tickers)} ticker(s)."
+            )
+
+        if not events:
+            raise ProviderError(
+                f"Yahoo Finance returned no earnings events for any of the "
+                f"{len(normalized_tickers)} ticker(s) between {start_date} and {end_date}."
+            )
+
+        return events
+
+    def _fetch_single_ticker(
+        self,
+        ticker: str,
+        crumb: str,
+        start_date: date,
+        end_date: date,
+    ) -> list[EarningsEvent]:
+        url = YAHOO_QUOTE_SUMMARY_URL.format(symbol=ticker)
+        params = {
+            "modules": "calendarEvents,earningsHistory,earningsTrend",
+            "crumb": crumb,
+        }
+        headers = {"User-Agent": YAHOO_USER_AGENT, "Accept": "application/json"}
+        try:
+            resp = self.session.get(url, params=params, headers=headers, timeout=self.timeout)
+        except requests.RequestException as exc:
+            raise ProviderError(f"Yahoo Finance request failed for {ticker}: {exc}") from exc
+
+        if resp.status_code >= 400:
+            raise ProviderError(f"Yahoo Finance HTTP {resp.status_code} for {ticker}")
+
+        try:
+            payload = resp.json()
+        except ValueError as exc:
+            raise ProviderError(f"Invalid Yahoo Finance JSON for {ticker}") from exc
+
+        results = ((payload or {}).get("quoteSummary") or {}).get("result") or []
+        if not results or not isinstance(results[0], dict):
+            return []
+
+        return self._parse_quote_summary(ticker, results[0], start_date, end_date)
+
+    @staticmethod
+    def _parse_quote_summary(
+        ticker: str,
+        summary_obj: dict[str, Any],
+        start_date: date,
+        end_date: date,
+    ) -> list[EarningsEvent]:
+        cal_earnings = ((summary_obj.get("calendarEvents") or {}).get("earnings")) or {}
+        raw_dates = cal_earnings.get("earningsDate") or []
+        if not isinstance(raw_dates, list) or not raw_dates:
+            return []
+
+        first_dt_item = raw_dates[0] if isinstance(raw_dates[0], dict) else {}
+        fmt_date = str(first_dt_item.get("fmt") or "").strip()
+        raw_ts = first_dt_item.get("raw")
+
+        event_date: date | None = None
+        if fmt_date:
+            try:
+                event_date = date.fromisoformat(fmt_date)
+            except ValueError:
+                event_date = None
+        if event_date is None and isinstance(raw_ts, (int, float)):
+            event_date = datetime.fromtimestamp(raw_ts, tz=timezone.utc).date()
+
+        if event_date is None or not (start_date <= event_date <= end_date):
+            return []
+
+        # Infer BMO / AMC / DMH in the ticker's local exchange timezone
+        hour: str | None = None
+        if isinstance(raw_ts, (int, float)):
+            local_tz = ZoneInfo("Europe/Berlin" if "." in ticker else "America/New_York")
+            dt_local = datetime.fromtimestamp(raw_ts, tz=timezone.utc).astimezone(local_tz)
+            if dt_local.hour < 10:
+                hour = "bmo"
+            elif dt_local.hour >= 16:
+                hour = "amc"
+            else:
+                hour = "dmh"
+
+        is_est = cal_earnings.get("isEarningsDateEstimate")
+        status = "Estimated" if is_est is True else ("Confirmed" if is_est is False else None)
+
+        eps_estimate = _optional_float((cal_earnings.get("earningsAverage") or {}).get("raw"))
+        revenue_estimate = _optional_float((cal_earnings.get("revenueAverage") or {}).get("raw"))
+        eps_actual: float | None = None
+
+        quarter: int | None = None
+        fiscal_year: int | None = None
+
+        # Match against earningsTrend ("0q") for upcoming or earningsHistory ("-1q") for recent past
+        history_list = ((summary_obj.get("earningsHistory") or {}).get("history")) or []
+        trend_list = ((summary_obj.get("earningsTrend") or {}).get("trend")) or []
+
+        for item in trend_list:
+            if isinstance(item, dict) and item.get("period") == "0q":
+                end_str = str(item.get("endDate") or "").strip()
+                try:
+                    q_end = date.fromisoformat(end_str)
+                    quarter = (q_end.month - 1) // 3 + 1
+                    fiscal_year = q_end.year
+                except ValueError:
+                    pass
+                break
+
+        if isinstance(history_list, list) and history_list:
+            last_hist = history_list[-1] if isinstance(history_list[-1], dict) else {}
+            hist_eps_act = _optional_float((last_hist.get("epsActual") or {}).get("raw"))
+            hist_eps_est = _optional_float((last_hist.get("epsEstimate") or {}).get("raw"))
+            hist_q_fmt = str((last_hist.get("quarter") or {}).get("fmt") or "").strip()
+            # If this event is already reported (status Confirmed & EPS actual present on latest history)
+            if is_est is False and hist_eps_act is not None and event_date <= date.today():
+                eps_actual = hist_eps_act
+                if hist_eps_est is not None:
+                    eps_estimate = hist_eps_est
+                if hist_q_fmt:
+                    try:
+                        hq_date = date.fromisoformat(hist_q_fmt)
+                        quarter = (hq_date.month - 1) // 3 + 1
+                        fiscal_year = hq_date.year
+                    except ValueError:
+                        pass
+
+        if quarter is None:
+            quarter = (event_date.month - 1) // 3 + 1
+        if fiscal_year is None:
+            fiscal_year = event_date.year
+
+        return [
+            EarningsEvent(
+                ticker=ticker.upper(),
+                date=event_date,
+                hour=hour,
+                quarter=quarter,
+                fiscal_year=fiscal_year,
+                eps_estimate=eps_estimate,
+                eps_actual=eps_actual,
+                revenue_estimate=revenue_estimate,
+                status=status,
+            )
+        ]
+
+
+class FallbackEarningsProvider(EarningsProvider):
+    """Tries `primary` first and falls back to `fallback` for missing tickers or on primary failure."""
+
+    def __init__(self, primary: EarningsProvider, fallback: EarningsProvider) -> None:
+        self.primary = primary
+        self.fallback = fallback
+
+    def fetch_earnings(
+        self,
+        tickers: Sequence[str],
+        start_date: date,
+        end_date: date,
+    ) -> list[EarningsEvent]:
+        normalized = [t.strip().upper() for t in tickers if t and t.strip()]
+        if not normalized:
+            return []
+
+        primary_events: list[EarningsEvent] = []
+        primary_error: Exception | None = None
+        try:
+            primary_events = self.primary.fetch_earnings(normalized, start_date, end_date)
+        except Exception as exc:
+            primary_error = exc
+            logger.info("Primary provider did not return all events (%s); trying fallback provider.", exc)
+
+        covered = {ev.ticker.upper() for ev in primary_events}
+        missing = [t for t in normalized if t not in covered]
+        if not missing:
+            return primary_events
+
+        try:
+            fallback_events = self.fallback.fetch_earnings(missing, start_date, end_date)
+            return primary_events + fallback_events
+        except Exception as fb_exc:
+            if primary_events:
+                return primary_events
+            if primary_error is not None:
+                raise ProviderError(f"{primary_error}; fallback also failed: {fb_exc}") from fb_exc
+            raise
 
 
 class MockEarningsProvider(EarningsProvider):

@@ -19,10 +19,16 @@ from typing import Any
 import requests
 
 from earnings_cal.fetch import (
+    YAHOO_CRUMB_URL,
+    YAHOO_FC_URL,
+    YAHOO_QUOTE_SUMMARY_URL,
+    YAHOO_USER_AGENT,
     EarningsProvider,
+    FallbackEarningsProvider,
     FinnhubProvider,
     MockEarningsProvider,
     ProviderError,
+    YahooFinanceProvider,
 )
 from earnings_cal.markets.ljse import DEFAULT_LJSE_EVENTS_FILE, load_ljse_events_yaml
 from earnings_cal.models import (
@@ -334,6 +340,102 @@ class FinnhubSurpriseProvider(EarningsSurpriseProvider):
         except Exception as exc:
             logger.warning("Finnhub /stock/earnings surprise lookup failed for %s: %s", symbol, exc)
 
+        return records
+
+
+class YahooSurpriseProvider(EarningsSurpriseProvider):
+    """Keyless EPS surprise provider backed by Yahoo Finance `v10/finance/quoteSummary` (`earningsHistory`)."""
+
+    def __init__(
+        self,
+        session: requests.Session | None = None,
+        timeout: float = 15.0,
+    ) -> None:
+        self.session = session or requests.Session()
+        self.timeout = timeout
+        self._crumb: str | None = None
+
+    def _ensure_crumb(self) -> str:
+        if self._crumb:
+            return self._crumb
+        headers = {"User-Agent": YAHOO_USER_AGENT, "Accept": "*/*"}
+        try:
+            self.session.get(YAHOO_FC_URL, headers=headers, timeout=self.timeout)
+        except requests.RequestException:
+            pass
+        resp = self.session.get(YAHOO_CRUMB_URL, headers=headers, timeout=self.timeout)
+        if resp.status_code >= 400 or not resp.text.strip():
+            raise ProviderError(f"Yahoo Finance crumb HTTP {resp.status_code}")
+        self._crumb = resp.text.strip()
+        return self._crumb
+
+    def fetch_surprises(
+        self,
+        ticker: str,
+        start_date: date,
+        end_date: date,
+    ) -> list[EarningsSurpriseRecord]:
+        symbol = ticker.strip().upper()
+        crumb = self._ensure_crumb()
+        url = YAHOO_QUOTE_SUMMARY_URL.format(symbol=symbol)
+        params = {"modules": "earningsHistory,calendarEvents", "crumb": crumb}
+        headers = {"User-Agent": YAHOO_USER_AGENT, "Accept": "application/json"}
+        resp = self.session.get(url, params=params, headers=headers, timeout=self.timeout)
+        if resp.status_code >= 400:
+            return []
+        payload = resp.json()
+        results = ((payload or {}).get("quoteSummary") or {}).get("result") or []
+        if not results or not isinstance(results[0], dict):
+            return []
+
+        summary_obj = results[0]
+        history = ((summary_obj.get("earningsHistory") or {}).get("history")) or []
+        cal_earnings = ((summary_obj.get("calendarEvents") or {}).get("earnings")) or {}
+        cal_dates = cal_earnings.get("earningsDate") or []
+        cal_rep_date: date | None = None
+        if isinstance(cal_dates, list) and cal_dates and isinstance(cal_dates[0], dict):
+            fmt_dt = str(cal_dates[0].get("fmt") or "").strip()
+            if fmt_dt:
+                try:
+                    cal_rep_date = date.fromisoformat(fmt_dt)
+                except ValueError:
+                    cal_rep_date = None
+
+        records: list[EarningsSurpriseRecord] = []
+        for idx, item in enumerate(history):
+            if not isinstance(item, dict):
+                continue
+            est = _parse_optional_float((item.get("epsEstimate") or {}).get("raw"))
+            act = _parse_optional_float((item.get("epsActual") or {}).get("raw"))
+            raw_surp = _parse_optional_float((item.get("surprisePercent") or {}).get("raw"))
+            surp_pct = round(raw_surp * 100.0, 2) if raw_surp is not None else None
+            q_fmt = str((item.get("quarter") or {}).get("fmt") or "").strip()
+            p_end: date | None = None
+            q: int | None = None
+            fy: int | None = None
+            fp: str | None = None
+            if q_fmt:
+                try:
+                    p_end = date.fromisoformat(q_fmt)
+                    q = (p_end.month - 1) // 3 + 1
+                    fy = p_end.year
+                    fp = f"{fy}Q{q}"
+                except ValueError:
+                    pass
+            rep_dt = cal_rep_date if idx == len(history) - 1 else None
+            records.append(
+                EarningsSurpriseRecord(
+                    ticker=symbol,
+                    fiscal_period=fp,
+                    report_date=rep_dt,
+                    period_end=p_end,
+                    quarter=q,
+                    fiscal_year=fy,
+                    eps_estimate=est,
+                    eps_actual=act,
+                    surprise_pct=compute_surprise_pct(est, act, surp_pct),
+                )
+            )
         return records
 
 
@@ -774,7 +876,7 @@ def _discover_past_watchlist_earnings(
     past_window = DateWindow(start=window_start, end=yesterday)
     discovered: list[Event] = []
 
-    # 1. US & EU watchlists (Finnhub past window + manual_events)
+    # 1. US & EU watchlists (Finnhub/Yahoo past window + manual_events)
     active_provider = earnings_provider
     if active_provider is None:
         env_key = os.environ.get("FINNHUB_API_KEY", "").strip()
@@ -782,9 +884,15 @@ def _discover_past_watchlist_earnings(
             active_provider = MockEarningsProvider()
         elif env_key:
             try:
-                active_provider = FinnhubProvider(api_key=env_key)
+                active_provider = FallbackEarningsProvider(
+                    primary=FinnhubProvider(api_key=env_key),
+                    fallback=YahooFinanceProvider(),
+                )
             except ProviderError as exc:
-                logger.warning("Skipping API past earnings lookup: %s", exc)
+                logger.warning("Skipping Finnhub past earnings lookup (%s); using YahooFinanceProvider.", exc)
+                active_provider = YahooFinanceProvider()
+        else:
+            active_provider = YahooFinanceProvider()
 
     for api_market_id in ("us", "eu"):
         if api_market_id != "us" and api_market_id not in config.markets:
@@ -943,7 +1051,9 @@ def update_results(
             try:
                 active_surprise = FinnhubSurpriseProvider(api_key=env_key)
             except ProviderError:
-                active_surprise = None
+                active_surprise = YahooSurpriseProvider()
+        else:
+            active_surprise = YahooSurpriseProvider()
 
     # Resolve price provider
     active_price = price_provider

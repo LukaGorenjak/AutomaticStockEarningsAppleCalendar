@@ -7,6 +7,7 @@ import logging
 import subprocess
 import sys
 import unicodedata
+import warnings
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -67,6 +68,13 @@ class ExcelSyncConfig:
     stop_markers: tuple[str, ...] = ("SKUPAJ", "TOTAL")
     ignore_tickers: frozenset[str] = frozenset({"CASH"})
     ignore_name_substrings: tuple[str, ...] = ("etf", "denar")
+    ignore_section_substrings: tuple[str, ...] = (
+        "kripto",
+        "crypto",
+        "binance",
+        "dividende",
+        "nabave",
+    )
     routing: dict[str, TickerRoute] = field(default_factory=dict)
     suffix_markets: dict[str, tuple[str, bool]] = field(
         default_factory=lambda: dict(DEFAULT_SUFFIX_MARKETS)
@@ -181,6 +189,14 @@ def load_sync_config(path: Path | str = DEFAULT_SYNC_CONFIG_PATH) -> ExcelSyncCo
         for x in (raw.get("ignore_name_substrings") or ["ETF", "Denar"])
         if _norm_label(x)
     )
+    ignore_section_substrings = tuple(
+        _norm_label(x)
+        for x in (
+            raw.get("ignore_sections")
+            or ["KRIPTO", "CRYPTO", "BINANCE", "DIVIDENDE", "NABAVE"]
+        )
+        if _norm_label(x)
+    )
 
     routing: dict[str, TickerRoute] = {}
     for raw_key, raw_target in (raw.get("routing") or {}).items():
@@ -231,6 +247,7 @@ def load_sync_config(path: Path | str = DEFAULT_SYNC_CONFIG_PATH) -> ExcelSyncCo
         stop_markers=stop_markers,
         ignore_tickers=ignore_tickers,
         ignore_name_substrings=ignore_name_substrings,
+        ignore_section_substrings=ignore_section_substrings,
         routing=routing,
         suffix_markets=suffix_markets,
         default_market=default_market,
@@ -245,14 +262,14 @@ def _find_header_indices(
     """Return `(ticker_idx, name_idx, qty_idx)` if `row_values` starts a holdings table."""
     norm_cells = [_norm_label(v) for v in row_values]
     ticker_label = _norm_label(sync_config.ticker_column)
-    if ticker_label not in norm_cells:
+    qty_label = _norm_label(sync_config.quantity_column)
+    if ticker_label not in norm_cells or qty_label not in norm_cells:
         return None
 
     ticker_idx = norm_cells.index(ticker_label)
     name_label = _norm_label(sync_config.name_column)
-    qty_label = _norm_label(sync_config.quantity_column)
     name_idx = norm_cells.index(name_label) if name_label in norm_cells else None
-    qty_idx = norm_cells.index(qty_label) if qty_label in norm_cells else None
+    qty_idx = norm_cells.index(qty_label)
     return ticker_idx, name_idx, qty_idx
 
 
@@ -330,33 +347,35 @@ def extract_holdings_from_excel(
     if not wb_path.exists():
         raise ExcelSyncError(f"Portfolio Excel file not found: {wb_path}")
 
-    try:
-        wb = openpyxl.load_workbook(wb_path, data_only=True, read_only=True)
-    except PermissionError as exc:
-        raise ExcelSyncError(
-            f"Cannot open {wb_path} (Permission denied). "
-            "Close Microsoft Excel if the workbook is currently open, or wait for OneDrive sync, then retry."
-        ) from exc
-    except Exception as exc:
-        raise ExcelSyncError(f"Failed to read Excel workbook {wb_path}: {exc}") from exc
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
+        try:
+            wb = openpyxl.load_workbook(wb_path, data_only=True, read_only=True)
+        except PermissionError as exc:
+            raise ExcelSyncError(
+                f"Cannot open {wb_path} (Permission denied). "
+                "Close Microsoft Excel if the workbook is currently open, or wait for OneDrive sync, then retry."
+            ) from exc
+        except Exception as exc:
+            raise ExcelSyncError(f"Failed to read Excel workbook {wb_path}: {exc}") from exc
 
-    try:
-        if sync_config.sheet_name:
-            if sync_config.sheet_name not in wb.sheetnames:
-                raise ExcelSyncError(
-                    f"Sheet {sync_config.sheet_name!r} not found in {wb_path}. "
-                    f"Available sheets: {', '.join(wb.sheetnames)}"
-                )
-            sheets = [wb[sync_config.sheet_name]]
-        else:
-            sheets = list(wb.worksheets)
+        try:
+            if sync_config.sheet_name:
+                if sync_config.sheet_name not in wb.sheetnames:
+                    raise ExcelSyncError(
+                        f"Sheet {sync_config.sheet_name!r} not found in {wb_path}. "
+                        f"Available sheets: {', '.join(wb.sheetnames)}"
+                    )
+                sheets = [wb[sync_config.sheet_name]]
+            else:
+                sheets = list(wb.worksheets)
 
-        all_holdings: list[ExcelHolding] = []
-        for sheet in sheets:
-            all_holdings.extend(_parse_sheet_holdings(sheet, sync_config))
-        return all_holdings
-    finally:
-        wb.close()
+            all_holdings: list[ExcelHolding] = []
+            for sheet in sheets:
+                all_holdings.extend(_parse_sheet_holdings(sheet, sync_config))
+            return all_holdings
+        finally:
+            wb.close()
 
 
 def _route_single_ticker(
@@ -413,6 +432,15 @@ def resolve_portfolio_tickers(
 
     for holding in holdings:
         sym = holding.ticker.strip().upper()
+        norm_section = _norm_label(holding.section_title)
+        norm_sheet = _norm_label(holding.sheet_name)
+        if any(
+            sub in norm_section or sub in norm_sheet
+            for sub in sync_config.ignore_section_substrings
+        ):
+            skipped.append(f"{sym} ({holding.section_title} - ignored section)")
+            continue
+
         if holding.quantity <= sync_config.min_quantity:
             skipped.append(f"{sym} (qty={holding.quantity:g} <= {sync_config.min_quantity:g})")
             continue
@@ -536,19 +564,37 @@ def git_push_tickers_yaml(
     tickers_path: Path | str,
     repo_root: Path | None = None,
     dry_run: bool = False,
+    include_build_outputs: bool = False,
 ) -> bool:
-    """Commit and push ONLY `tickers.yaml` when modified, refusing to sweep unrelated staged files."""
+    """Commit and push `tickers.yaml` (and optional calendar build outputs) when modified."""
     cfg_path = Path(tickers_path).resolve()
     root = (repo_root or cfg_path.parent).resolve()
     rel_cfg = cfg_path.relative_to(root).as_posix()
 
+    allowed_paths = [rel_cfg]
+    if include_build_outputs:
+        for candidate in (
+            "docs/us.ics",
+            "docs/earnings.ics",
+            "docs/ljse.ics",
+            "docs/eu.ics",
+            "docs/macro.ics",
+            "docs/index.html",
+            "docs/status.json",
+            "data/changes.jsonl",
+            "data/results.csv",
+        ):
+            if (root / candidate).exists():
+                allowed_paths.append(candidate)
+
     staged = _run_git(["diff", "--cached", "--name-only"], root)
     if staged.returncode != 0:
         raise ExcelSyncError(f"git diff --cached failed: {staged.stderr.strip()}")
+    allowed_set = set(allowed_paths)
     unrelated_staged = [
         line.strip()
         for line in staged.stdout.splitlines()
-        if line.strip() and line.strip() != rel_cfg
+        if line.strip() and line.strip() not in allowed_set
     ]
     if unrelated_staged:
         raise ExcelSyncError(
@@ -556,21 +602,31 @@ def git_push_tickers_yaml(
             + ", ".join(unrelated_staged)
         )
 
-    diff_check = _run_git(["diff", "--quiet", "--", rel_cfg], root)
-    staged_check = _run_git(["diff", "--cached", "--quiet", "--", rel_cfg], root)
-    if diff_check.returncode == 0 and staged_check.returncode == 0:
-        logger.info("No git changes in %s; skipping commit and push.", rel_cfg)
+    diff_check = _run_git(["diff", "--quiet", "--", *allowed_paths], root)
+    staged_check = _run_git(["diff", "--cached", "--quiet", "--", *allowed_paths], root)
+    untracked_build = [
+        p
+        for p in allowed_paths
+        if _run_git(["ls-files", "--error-unmatch", p], root).returncode != 0
+    ]
+    if diff_check.returncode == 0 and staged_check.returncode == 0 and not untracked_build:
+        logger.info("No git changes in %s; skipping commit and push.", ", ".join(allowed_paths))
         return False
 
     if dry_run:
-        logger.info("[dry-run] Would commit and push %s.", rel_cfg)
+        logger.info("[dry-run] Would commit and push %s.", ", ".join(allowed_paths))
         return True
 
-    add_res = _run_git(["add", rel_cfg], root)
+    add_res = _run_git(["add", *allowed_paths], root)
     if add_res.returncode != 0:
         raise ExcelSyncError(f"git add failed: {add_res.stderr.strip()}")
 
-    commit_res = _run_git(["commit", "-m", "chore: sync tickers from portfolio.xlsx"], root)
+    commit_msg = (
+        "chore: sync portfolio.xlsx and rebuild market calendars"
+        if include_build_outputs
+        else "chore: sync tickers from portfolio.xlsx"
+    )
+    commit_res = _run_git(["commit", "-m", commit_msg], root)
     if commit_res.returncode != 0:
         raise ExcelSyncError(
             f"git commit failed: {(commit_res.stderr or commit_res.stdout).strip()}"
@@ -596,8 +652,9 @@ def sync_portfolio(
     sync_config_path: Path | str = DEFAULT_SYNC_CONFIG_PATH,
     dry_run: bool = False,
     push: bool = False,
+    build: bool = False,
 ) -> tuple[SyncResolution, SyncDiff, bool]:
-    """Run the full Excel -> `tickers.yaml` sync (and optional git commit/push)."""
+    """Run the full Excel -> `tickers.yaml` sync (plus optional local calendar rebuild and git push)."""
     sync_cfg = load_sync_config(sync_config_path)
     target_excel = Path(excel_path) if excel_path is not None else sync_cfg.excel_path
     cfg_path = Path(config_path)
@@ -611,9 +668,19 @@ def sync_portfolio(
     resolution = resolve_portfolio_tickers(holdings, sync_cfg, raw_tickers_cfg)
     diff = apply_sync_to_tickers_yaml(cfg_path, resolution, dry_run=dry_run)
 
+    if build and not dry_run:
+        from earnings_cal.main import run as run_calendar
+
+        logger.info("Rebuilding market calendars (.ics) and docs/index.html...")
+        run_calendar(config_path=cfg_path)
+
     pushed = False
     if push:
-        pushed = git_push_tickers_yaml(cfg_path, dry_run=dry_run)
+        pushed = git_push_tickers_yaml(
+            cfg_path,
+            dry_run=dry_run,
+            include_build_outputs=build,
+        )
 
     return resolution, diff, pushed
 
@@ -624,6 +691,7 @@ def _format_summary(
     diff: SyncDiff,
     pushed: bool,
     dry_run: bool,
+    built: bool = False,
 ) -> str:
     lines = [f"Portfolio sync from: {excel_path}"]
     if dry_run:
@@ -646,12 +714,22 @@ def _format_summary(
     for warn in resolution.warnings:
         lines.append(f"  WARNING: {warn}")
 
-    if not diff.changed:
-        lines.append("Result: tickers.yaml is already up to date.")
-    elif dry_run:
-        lines.append("Result: changes detected (re-run without --dry-run to apply).")
+    if dry_run:
+        if diff.changed:
+            lines.append("Result: changes detected (re-run without --dry-run to apply).")
+        else:
+            lines.append("Result: tickers.yaml is already up to date.")
     elif pushed:
-        lines.append("Result: tickers.yaml updated, committed, and pushed to GitHub.")
+        if built:
+            lines.append(
+                "Result: calendars & static dashboard rebuilt, committed, and pushed to GitHub."
+            )
+        else:
+            lines.append("Result: tickers.yaml updated, committed, and pushed to GitHub.")
+    elif built:
+        lines.append("Result: tickers.yaml and local calendars/dashboard are up to date.")
+    elif not diff.changed:
+        lines.append("Result: tickers.yaml is already up to date.")
     else:
         lines.append("Result: tickers.yaml updated locally (run with --push to trigger GitHub Actions).")
 
@@ -687,9 +765,14 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Preview ticker changes without modifying tickers.yaml or pushing",
     )
     parser.add_argument(
+        "--build",
+        action="store_true",
+        help="Rebuild docs/*.ics and docs/index.html locally after syncing tickers.yaml",
+    )
+    parser.add_argument(
         "--push",
         action="store_true",
-        help="Commit and push tickers.yaml if changed (triggers GitHub Actions calendar rebuild)",
+        help="Commit and push changes to GitHub",
     )
     return parser.parse_args(argv)
 
@@ -706,12 +789,22 @@ def main(argv: Sequence[str] | None = None) -> int:
             sync_config_path=args.sync_config,
             dry_run=args.dry_run,
             push=args.push,
+            build=args.build,
         )
     except ExcelSyncError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    print(_format_summary(target_excel, resolution, diff, pushed, args.dry_run))
+    print(
+        _format_summary(
+            target_excel,
+            resolution,
+            diff,
+            pushed,
+            args.dry_run,
+            built=args.build and not args.dry_run,
+        )
+    )
     return 0
 
 

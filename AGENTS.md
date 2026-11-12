@@ -7,17 +7,18 @@ This file preserves the living architecture description and maintenance rules fo
 **Multi-Market Earnings & Financial Events Calendar (`earnings-cal`)** generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings, corporate actions, and macroeconomic events per market, refreshed daily by GitHub Actions and published via GitHub Pages for Apple Calendar (`webcal://`) and a zero-dependency static dashboard (`docs/index.html`).
 
 - **Markets (`src/earnings_cal/markets/` & `registry.py`):**
-  - `us` (`USMarket`, `docs/us.ics` + legacy alias `docs/earnings.ics`, `America/New_York`, Finnhub + `manual_events`)
+  - `us` (`USMarket`, `docs/us.ics` + legacy alias `docs/earnings.ics`, `America/New_York`, Finnhub + keyless Yahoo Finance fallback + `manual_events`)
   - `ljse` (`LJSEMarket`, `docs/ljse.ics`, `Europe/Ljubljana`, curated `ljse_events.yaml` + weekly `seonet` scrape cache + RSS watcher `src/earnings_cal/seonet/`)
   - `macro` (`MacroMarket`, `docs/macro.ics`, `Europe/Ljubljana`, `data/macro_events.yaml` for `ecb`, `fomc`, `us_cpi`, `ea_hicp` + `--verify-online`)
-  - `eu` (`EUMarket`, `docs/eu.ics`, `Europe/Berlin`, best-effort Finnhub + `manual_events`, `optional_when_unconfigured = True`)
+  - `eu` (`EUMarket`, `docs/eu.ics`, `Europe/Berlin`, Finnhub + keyless Yahoo Finance fallback + `manual_events`, `optional_when_unconfigured = True`)
 - **Core Pipeline (`src/earnings_cal/`):**
   - `models.py`: `Event`, `EventKind`, `EventTiming`, `DateWindow`, `ZoneInfo` local conversion, strict `load_config()` schema validation for `tickers.yaml`.
+  - `fetch.py`: `FinnhubProvider`, keyless `YahooFinanceProvider` (`quoteSummary` `calendarEvents`/`earningsHistory`/`earningsTrend`), and `FallbackEarningsProvider`.
   - `build.py` & `dashboard.py`: deterministic `.ics` serialization and self-contained dark-mode `docs/index.html` with embedded JSON (`<script id="dashboard-data">`).
   - `status.py`: `docs/status.json` health tracking and in-calendar `WARNING: {market} data is stale` `VEVENT` injection.
   - `changes.py`: run-to-run `.ics` diffing (`data/changes.jsonl`), 14-day move notes, commit summaries, and alert issue payloads.
-  - `results.py`: post-earnings EPS surprise + 1-day price reaction log (`data/results.csv`, Yahoo Finance v8 chart + LJSE REST price list).
-  - `sync_excel.py`: local Windows Excel portfolio sync (`portfolio_sync.yaml`, `scripts/sync_portfolio.bat`) mapping stacked tables from `portfolio.xlsx` into `tickers.yaml` (`us.tickers`, `ljse.tickers`, `eu.tickers`).
+  - `results.py`: post-earnings EPS surprise + 1-day price reaction log (`data/results.csv`, Finnhub/Yahoo Finance surprise + Yahoo Finance v8 chart + LJSE REST price list).
+  - `sync_excel.py`: local Windows Excel portfolio sync (`portfolio_sync.yaml`, `scripts/sync_portfolio.bat`) mapping stacked equity tables from `portfolio.xlsx` into `tickers.yaml` (`us.tickers`, `ljse.tickers`, `eu.tickers`), with `--build` to rebuild `docs/*.ics` and `docs/index.html` locally and `--push` to commit and push.
 - **Workflows (`.github/workflows/`):**
   - `update.yml`: daily cron + push to `tickers.yaml` / `ljse_events.yaml` rebuilding feeds, status, changes, results, dashboard, and alert/stale issues.
   - `ljse.yml`: weekly SEOnet scrape updating `state/ljse_cache.json` and rebuilding feeds.

@@ -12,7 +12,7 @@ import requests
 import yaml
 from icalendar import Calendar
 
-from earnings_cal.fetch import FinnhubProvider
+from earnings_cal.fetch import FallbackEarningsProvider, FinnhubProvider, YahooFinanceProvider
 from earnings_cal.main import run
 from earnings_cal.models import load_config
 from earnings_cal.sync_excel import (
@@ -369,3 +369,96 @@ eu:
         today=date(2026, 11, 10),
     )
     assert rc_500 == 1
+
+
+def test_sync_excel_skips_crypto_section_and_non_holdings_sheets(tmp_path: Path) -> None:
+    """Ignore stacked KRIPTO/BINANCE tables and sheets without a Količina column (e.g. Dividende)."""
+    wb_path = tmp_path / "portfolio.xlsx"
+    wb = openpyxl.Workbook()
+    ws_eq = wb.active
+    ws_eq.title = "Delnice"
+    ws_eq.append(["PORTFELJ – DELNICE (HOLDINGS) IBKR"])
+    ws_eq.append(["Ticker", "Ime delnice", "Količina"])
+    ws_eq.append(["MSFT", "Microsoft Corp.", 2])
+    ws_eq.append(["SKUPAJ", None, None])
+    ws_eq.append([])
+    ws_eq.append(["PORTFELJ – KRIPTO (HOLDINGS) BINANCE"])
+    ws_eq.append(["Ticker", "Ime delnice", "Količina"])
+    ws_eq.append(["BTC", "Bitcoin", 0.5])
+    ws_eq.append(["XRP", "Ripple", 100])
+    ws_eq.append(["SKUPAJ", None, None])
+
+    ws_div = wb.create_sheet("Dividende")
+    ws_div.append(["DIVIDENDE PO LETU"])
+    ws_div.append(["Ticker", "2023"])
+    ws_div.append(["VUAA/CSPX", 120.0])
+    wb.save(wb_path)
+    wb.close()
+
+    cfg_path = _write_base_tickers_yaml(tmp_path / "tickers.yaml")
+    sync_cfg_path = _write_sync_config(tmp_path / "portfolio_sync.yaml", wb_path)
+
+    resolution, diff, _ = sync_portfolio(
+        excel_path=wb_path,
+        config_path=cfg_path,
+        sync_config_path=sync_cfg_path,
+    )
+    assert diff.final_by_market["us"] == ["MSFT"]
+    assert any("BTC" in s and "ignored section" in s for s in resolution.skipped)
+    assert any("XRP" in s and "ignored section" in s for s in resolution.skipped)
+
+
+def test_yahoo_finance_provider_and_fallback() -> None:
+    """Verify keyless YahooFinanceProvider parsing and FallbackEarningsProvider fallback on 403."""
+    crumb_resp = MagicMock(spec=requests.Response)
+    crumb_resp.status_code = 200
+    crumb_resp.text = "test-crumb"
+
+    summary_resp = MagicMock(spec=requests.Response)
+    summary_resp.status_code = 200
+    summary_resp.json.return_value = {
+        "quoteSummary": {
+            "result": [
+                {
+                    "calendarEvents": {
+                        "earnings": {
+                            "earningsDate": [{"raw": 1801083600, "fmt": "2027-01-27"}],
+                            "isEarningsDateEstimate": True,
+                            "earningsAverage": {"raw": 4.86},
+                            "revenueAverage": {"raw": 96690000000},
+                        }
+                    },
+                    "earningsTrend": {
+                        "trend": [{"period": "0q", "endDate": "2026-12-31"}]
+                    },
+                    "earningsHistory": {"history": []},
+                }
+            ]
+        }
+    }
+
+    yahoo_session = MagicMock(spec=requests.Session)
+    yahoo_session.get.side_effect = [crumb_resp, crumb_resp, summary_resp]
+    yahoo_provider = YahooFinanceProvider(session=yahoo_session)
+
+    fail_resp = MagicMock(spec=requests.Response)
+    fail_resp.status_code = 403
+    fail_resp.headers = {}
+    fail_resp.text = "Forbidden"
+    finnhub_session = MagicMock(spec=requests.Session)
+    finnhub_session.get.return_value = fail_resp
+    finnhub_provider = FinnhubProvider(api_key="test-key", session=finnhub_session, max_retries=0)
+
+    fallback_provider = FallbackEarningsProvider(primary=finnhub_provider, fallback=yahoo_provider)
+    events = fallback_provider.fetch_earnings(
+        ["MSFT"],
+        start_date=date(2026, 11, 12),
+        end_date=date(2027, 2, 10),
+    )
+    assert len(events) == 1
+    assert events[0].ticker == "MSFT"
+    assert events[0].date == date(2027, 1, 27)
+    assert events[0].hour == "amc"
+    assert events[0].quarter == 4
+    assert events[0].fiscal_year == 2026
+    assert events[0].status == "Estimated"

@@ -16,6 +16,10 @@ permissions:
   contents: write
   issues: write
 
+concurrency:
+  group: calendar-pipeline-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   update-calendars:
     runs-on: ubuntu-latest
@@ -60,7 +64,7 @@ jobs:
             else
               git commit -m "chore: update market calendars and status"
             fi
-            git pull --rebase
+            git pull --rebase --autostash
             git push
           fi
 

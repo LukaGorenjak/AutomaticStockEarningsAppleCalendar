@@ -75,7 +75,13 @@ class EquitiesAPIMarket(Market):
         self.use_mock = use_mock
 
     def _resolve_provider(self) -> EarningsProvider:
-        from earnings_cal.fetch import EarningsProvider, FinnhubProvider, MockEarningsProvider
+        from earnings_cal.fetch import (
+            EarningsProvider,
+            FallbackEarningsProvider,
+            FinnhubProvider,
+            MockEarningsProvider,
+            YahooFinanceProvider,
+        )
 
         if self.provider is not None:
             return self.provider
@@ -88,7 +94,17 @@ class EquitiesAPIMarket(Market):
             logger.info("Using MockEarningsProvider for market '%s'.", self.id)
             return MockEarningsProvider()
 
-        return FinnhubProvider(api_key=env_key)
+        if env_key:
+            return FallbackEarningsProvider(
+                primary=FinnhubProvider(api_key=env_key),
+                fallback=YahooFinanceProvider(),
+            )
+
+        logger.info(
+            "FINNHUB_API_KEY not set; using keyless YahooFinanceProvider for market '%s'.",
+            self.id,
+        )
+        return YahooFinanceProvider()
 
     def _get_tickers(self) -> list[str]:
         raw_tickers = self.config.get("tickers") or []

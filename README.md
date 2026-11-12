@@ -84,27 +84,27 @@ Generates deterministic iCalendar (`.ics`) feeds of upcoming stock earnings and 
 │   ├── macro_events.yaml          # Curated 2026-2027 FOMC, ECB, US CPI, and Euro-area flash HICP schedule
 │   └── results.csv                # Post-earnings EPS surprise & 1-day price reaction log
 ├── scripts/
-│   └── sync_portfolio.bat         # One-click Windows wrapper for `sync_excel --push`
+│   └── sync_portfolio.bat         # One-click Windows wrapper for `sync_excel --build --push`
 ├── src/earnings_cal/
 │   ├── __init__.py
 │   ├── __main__.py                # Entry point for `python -m earnings_cal`
 │   ├── build.py                   # Deterministic iCalendar (.ics) & docs/index.html builder
 │   ├── changes.py                 # Run-to-run .ics diffing & GitHub issue alert payload builder
 │   ├── dashboard.py               # Self-contained static HTML/CSS/JS dashboard generator
-│   ├── fetch.py                   # EarningsProvider interface & FinnhubProvider
+│   ├── fetch.py                   # EarningsProvider interface, FinnhubProvider & keyless YahooFinanceProvider
 │   ├── main.py                    # Multi-market CLI orchestration & failure isolation
 │   ├── models.py                  # Event, EventKind, DateWindow & YAML config loader
 │   ├── results.py                 # Post-earnings surprise/price tracker (data/results.csv) & summary CLI
 │   ├── status.py                  # Health status (docs/status.json) & stale-warning VEVENT injector
-│   ├── sync_excel.py              # Local Excel portfolio -> `tickers.yaml` sync & git push helper
+│   ├── sync_excel.py              # Local Excel portfolio -> `tickers.yaml` sync, local build & git push helper
 │   ├── markets/
 │   │   ├── __init__.py
 │   │   ├── base.py                # Market & EquitiesAPIMarket abstract base classes
 │   │   ├── registry.py            # Central MARKET_REGISTRY
-│   │   ├── us.py                  # USMarket (Finnhub + manual_events)
+│   │   ├── us.py                  # USMarket (Finnhub + Yahoo Finance fallback + manual_events)
 │   │   ├── ljse.py                # LJSEMarket (ljse_events.yaml)
 │   │   ├── macro.py               # MacroMarket (data/macro_events.yaml + online validator)
-│   │   └── eu.py                  # EUMarket (Finnhub best-effort + manual_events)
+│   │   └── eu.py                  # EUMarket (Finnhub + Yahoo Finance fallback + manual_events)
 │   └── seonet/                    # SEOnet RSS watcher & PDF candidate date extractor
 ├── tests/
 │   ├── fixtures/                  # Saved real SEOnet RSS, HTML, and PDF samples
@@ -249,8 +249,8 @@ python -m earnings_cal.results summary
 # Preview ticker updates from your local Excel portfolio workbook without writing
 python -m earnings_cal.sync_excel --dry-run
 
-# Sync tickers from portfolio.xlsx -> tickers.yaml and push to trigger GitHub Actions
-python -m earnings_cal.sync_excel --push
+# Sync tickers from portfolio.xlsx -> tickers.yaml, rebuild docs/*.ics + docs/index.html locally, and push to GitHub
+python -m earnings_cal.sync_excel --build --push
 # (Or double-click scripts\sync_portfolio.bat on Windows; pass --no-pause for Task Scheduler)
 
 # Run the full test suite
