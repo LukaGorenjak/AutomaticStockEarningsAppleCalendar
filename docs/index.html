@@ -187,7 +187,8 @@
     <div class="health-bar" id="health-bar">
       <div class="health-pill health-warn" data-source="api" title="Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(WARN · last update: 2026-11-11)</span></div>
       <div class="health-pill health-ok" data-source="seonet" title="Source healthy"><span class="health-dot"></span><strong>Source: SEONET</strong> <span class="health-meta">(OK · last update: never)</span></div>
-      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 9 upcoming · last update: 2026-11-12)</span></div>
+      <div class="health-pill health-warn" data-market-health="eu" title="Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."><span class="health-dot"></span><strong>Market: EU</strong> <span class="health-meta">(WARN · 0 upcoming · last update: never)</span></div>
+      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 15 upcoming · last update: 2026-11-12)</span></div>
       <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-12)</span></div>
       <div class="health-pill health-warn" data-market-health="us" title="Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(WARN · 9 upcoming · last update: 2026-11-11)</span></div>
     </div>
@@ -229,6 +230,13 @@
             <td><a class="btn-subscribe webcal-link" data-feed="macro.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics">Subscribe (webcal://)</a> <small class="webcal-url-text">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics</small></td>
             <td><a href="macro.ics">macro.ics</a></td>
           </tr>
+          <tr>
+            <td><strong>Europe</strong> (<code>eu</code>)</td>
+            <td><code>Events EU</code></td>
+            <td><code>Europe/Berlin</code></td>
+            <td><a class="btn-subscribe webcal-link" data-feed="eu.ics" href="webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/eu.ics">Subscribe (webcal://)</a> <small class="webcal-url-text">webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/eu.ics</small></td>
+            <td><a href="eu.ics">eu.ics</a></td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -236,15 +244,15 @@
 
   <!-- (2) Upcoming Events Table (Sortable & Filterable by Market and Kind) -->
   <section class="card" id="section-upcoming">
-    <h2>2. Upcoming Events (<span id="upcoming-count">53</span>)</h2>
+    <h2>2. Upcoming Events (<span id="upcoming-count">59</span>)</h2>
     <div class="controls">
       <label for="filter-market">Market:</label>
       <select id="filter-market">
-        <option value="all">All markets</option><option value="us">United States (us)</option><option value="ljse">Ljubljana Stock Exchange (ljse)</option><option value="macro">Macroeconomic Events (macro)</option>
+        <option value="all">All markets</option><option value="us">United States (us)</option><option value="ljse">Ljubljana Stock Exchange (ljse)</option><option value="macro">Macroeconomic Events (macro)</option><option value="eu">Europe (eu)</option>
       </select>
       <label for="filter-kind">Kind:</label>
       <select id="filter-kind">
-        <option value="all">All event kinds</option><option value="agm">agm</option><option value="central_bank_meeting">central bank meeting</option><option value="dividend_payment">dividend payment</option><option value="earnings">earnings</option><option value="ex_dividend">ex dividend</option><option value="inflation_release">inflation release</option>
+        <option value="all">All event kinds</option><option value="agm">agm</option><option value="central_bank_meeting">central bank meeting</option><option value="dividend_payment">dividend payment</option><option value="earnings">earnings</option><option value="ex_dividend">ex dividend</option><option value="inflation_release">inflation release</option><option value="record_date">record date</option>
       </select>
       <label for="filter-search">Search:</label>
       <input type="search" id="filter-search" placeholder="Filter ticker or title...">
@@ -279,12 +287,28 @@
             <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG Q1–Q3 2026 Interim Report</a></td>
             <td><code>08:15 CET</code></td>
           </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-18" data-ticker="ZVTG">
+            <td><code>2026-11-18</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>ZVTG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92028" target="_blank" rel="noopener">ZVTG Q1–Q3 2026 Business Results</a></td>
+            <td><code>08:30 CET</code></td>
+          </tr>
           <tr data-market="ljse" data-kind="earnings" data-date="2026-11-19" data-ticker="LKPG">
             <td><code>2026-11-19</code></td>
             <td><span class="badge badge-market">ljse</span></td>
             <td><strong>LKPG</strong></td>
             <td><span class="badge badge-kind">earnings</span></td>
             <td><a href="https://seonet.ljse.si/?doc_id=92849" target="_blank" rel="noopener">LKPG Q1–Q3 2026 Interim Report</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-20" data-ticker="PETG">
+            <td><code>2026-11-20</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>PETG</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=92350" target="_blank" rel="noopener">PETG Q1–Q3 2026 Interim Report</a></td>
             <td><code>All-day</code></td>
           </tr>
           <tr data-market="us" data-kind="earnings" data-date="2026-11-25" data-ticker="AAPL">
@@ -359,6 +383,14 @@
             <td>META earnings</td>
             <td><code>approx. after 22:00 CET</code></td>
           </tr>
+          <tr data-market="ljse" data-kind="agm" data-date="2026-12-14" data-ticker="NLBR">
+            <td><code>2026-12-14</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-kind">agm</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=93272" target="_blank" rel="noopener">NLBR General Meeting of Shareholders</a></td>
+            <td><code>11:00 CET</code></td>
+          </tr>
           <tr data-market="macro" data-kind="central_bank_meeting" data-date="2026-12-16" data-ticker="ECB">
             <td><code>2026-12-16</code> <small>&rarr; 2026-12-17</small></td>
             <td><span class="badge badge-market">macro</span></td>
@@ -374,6 +406,30 @@
             <td><span class="badge badge-kind">earnings</span></td>
             <td>TSLA earnings</td>
             <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="ex_dividend" data-date="2026-12-18" data-ticker="NLBR">
+            <td><code>2026-12-18</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-kind">ex_dividend</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=93272" target="_blank" rel="noopener">NLBR Ex-Dividend Date (Proposed 2nd Tranche)</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="record_date" data-date="2026-12-21" data-ticker="NLBR">
+            <td><code>2026-12-21</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-kind">record_date</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=93272" target="_blank" rel="noopener">NLBR Dividend Record Date (Proposed 2nd Tranche)</a></td>
+            <td><code>All-day</code></td>
+          </tr>
+          <tr data-market="ljse" data-kind="dividend_payment" data-date="2026-12-22" data-ticker="NLBR">
+            <td><code>2026-12-22</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-kind">dividend_payment</span></td>
+            <td><a href="https://seonet.ljse.si/?doc_id=93272" target="_blank" rel="noopener">NLBR Dividend Payment (Proposed 2nd Tranche)</a></td>
+            <td><code>All-day</code></td>
           </tr>
           <tr data-market="macro" data-kind="inflation_release" data-date="2027-01-06" data-ticker="EA_HICP">
             <td><code>2027-01-06</code></td>
@@ -694,7 +750,7 @@
 
   <!-- (3) Recent Changes from data/changes.jsonl -->
   <section class="card" id="section-changes">
-    <h2>3. Recent Changelog (<span id="changes-count">35</span>)</h2>
+    <h2>3. Recent Changelog (<span id="changes-count">41</span>)</h2>
     <div class="table-wrap">
       <table id="changes-table">
         <thead>
@@ -707,6 +763,48 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>ZVTG</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-11-18</code> (ZVTG Q1–Q3 2026 Business Results)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>PETG</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-11-20</code> (PETG Q1–Q3 2026 Interim Report)</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-22</code> (NLBR Dividend Payment (Proposed 2nd Tranche))</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-21</code> (NLBR Dividend Record Date (Proposed 2nd Tranche))</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-18</code> (NLBR Ex-Dividend Date (Proposed 2nd Tranche))</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>NLBR</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-12-14</code> (NLBR General Meeting of Shareholders)</td>
+          </tr>
           <tr>
             <td><code>2026-11-11</code></td>
             <td><span class="badge badge-market">macro</span></td>
@@ -1068,7 +1166,8 @@
     "dividend_payment",
     "earnings",
     "ex_dividend",
-    "inflation_release"
+    "inflation_release",
+    "record_date"
   ],
   "feeds": [
     {
@@ -1099,9 +1198,96 @@
       "legacy_aliases": [],
       "timezone": "Europe/Ljubljana",
       "webcal_url": "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/macro.ics"
+    },
+    {
+      "calendar_name": "Events EU",
+      "display_name": "Europe",
+      "feed_file": "eu.ics",
+      "id": "eu",
+      "legacy_aliases": [],
+      "timezone": "Europe/Berlin",
+      "webcal_url": "webcal://lukagorenjak.github.io/AutomaticStockEarningsAppleCalendar/eu.ics"
     }
   ],
   "recent_changes": [
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "ljse",
+      "new_date": "2026-11-18",
+      "new_summary": "ZVTG Q1–Q3 2026 Business Results",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "c1df26d98e016a83",
+      "run_date": "2026-11-12",
+      "ticker": "ZVTG",
+      "uid": "ljse-ZVTG-2026-11-18-earnings@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "ljse",
+      "new_date": "2026-11-20",
+      "new_summary": "PETG Q1–Q3 2026 Interim Report",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "29dd1047ff550a94",
+      "run_date": "2026-11-12",
+      "ticker": "PETG",
+      "uid": "ljse-PETG-2026-11-20-earnings@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "ljse",
+      "new_date": "2026-12-22",
+      "new_summary": "NLBR Dividend Payment (Proposed 2nd Tranche)",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "d7e891fab40c6fce",
+      "run_date": "2026-11-12",
+      "ticker": "NLBR",
+      "uid": "ljse-NLBR-2026-12-22-dividend_payment@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "ljse",
+      "new_date": "2026-12-21",
+      "new_summary": "NLBR Dividend Record Date (Proposed 2nd Tranche)",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "d6029d453cd336bc",
+      "run_date": "2026-11-12",
+      "ticker": "NLBR",
+      "uid": "ljse-NLBR-2026-12-21-record_date@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "ljse",
+      "new_date": "2026-12-18",
+      "new_summary": "NLBR Ex-Dividend Date (Proposed 2nd Tranche)",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "45cc6efc120006a6",
+      "run_date": "2026-11-12",
+      "ticker": "NLBR",
+      "uid": "ljse-NLBR-2026-12-18-ex_dividend@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "ljse",
+      "new_date": "2026-12-14",
+      "new_summary": "NLBR General Meeting of Shareholders",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "3c7bbae4b6e97b13",
+      "run_date": "2026-11-12",
+      "ticker": "NLBR",
+      "uid": "ljse-NLBR-2026-12-14-agm@earnings-cal"
+    },
     {
       "change_type": "added",
       "details": null,
@@ -1646,6 +1832,18 @@
   ],
   "status": {
     "markets": {
+      "eu": {
+        "age_days": null,
+        "errors": [
+          "Missing Finnhub API key. Set the FINNHUB_API_KEY environment variable."
+        ],
+        "healthy": false,
+        "last_success_date": null,
+        "max_age_days": 3,
+        "min_upcoming_events": 0,
+        "stale": false,
+        "upcoming_events": 0
+      },
       "ljse": {
         "age_days": 0,
         "errors": [],
@@ -1654,7 +1852,7 @@
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
-        "upcoming_events": 9
+        "upcoming_events": 15
       },
       "macro": {
         "age_days": 0,
@@ -1732,6 +1930,21 @@
       "uid": "ljse-KRKG-2026-11-12-earnings@earnings-cal"
     },
     {
+      "date": "2026-11-18",
+      "description": "Informacija o devetmesečnem poslovanju Zavarovalnice Triglav v letu 2026\nTime: 08:30\nSource: https://seonet.ljse.si/?doc_id=92028\nLocal Time: 2026-11-18 08:30 CET (Europe/Ljubljana)\nMarket Time: 2026-11-18 08:30 CET (Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "earnings",
+      "local_time": "08:30 CET",
+      "market": "ljse",
+      "sort_time": "08:30",
+      "source_url": "https://seonet.ljse.si/?doc_id=92028",
+      "summary": "ZVTG Q1–Q3 2026 Business Results",
+      "ticker": "ZVTG",
+      "title": "ZVTG Q1–Q3 2026 Business Results",
+      "uid": "ljse-ZVTG-2026-11-18-earnings@earnings-cal"
+    },
+    {
       "date": "2026-11-19",
       "description": "Objava nerevidiranega poročila o poslovanju Skupine in družbe Luka Koper, d. d., za obdobje januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=92849\nTiming: Unknown (all-day; market date: 2026-11-19, market timezone: Europe/Ljubljana)",
       "end_date": null,
@@ -1745,6 +1958,21 @@
       "ticker": "LKPG",
       "title": "LKPG Q1–Q3 2026 Interim Report",
       "uid": "ljse-LKPG-2026-11-19-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-11-20",
+      "description": "Javna objava poročila o poslovanju družbe Petrol d.d., Ljubljana v prvih devetih mesecih leta 2026\nSource: https://seonet.ljse.si/?doc_id=92350\nTiming: Unknown (all-day; market date: 2026-11-20, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=92350",
+      "summary": "PETG Q1–Q3 2026 Interim Report",
+      "ticker": "PETG",
+      "title": "PETG Q1–Q3 2026 Interim Report",
+      "uid": "ljse-PETG-2026-11-20-earnings@earnings-cal"
     },
     {
       "date": "2026-11-25",
@@ -1882,6 +2110,21 @@
       "uid": "us-META-2026Q4-earnings@earnings-cal"
     },
     {
+      "date": "2026-12-14",
+      "description": "Sklic skupščine delničarjev NLB, d. d., Ljubljana (predlog 2. tranše dividende)\nTime: 11:00\nSource: https://seonet.ljse.si/?doc_id=93272\nLocal Time: 2026-12-14 11:00 CET (Europe/Ljubljana)\nMarket Time: 2026-12-14 11:00 CET (Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": true,
+      "kind": "agm",
+      "local_time": "11:00 CET",
+      "market": "ljse",
+      "sort_time": "11:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=93272",
+      "summary": "NLBR General Meeting of Shareholders",
+      "ticker": "NLBR",
+      "title": "NLBR General Meeting of Shareholders",
+      "uid": "ljse-NLBR-2026-12-14-agm@earnings-cal"
+    },
+    {
       "date": "2026-12-16",
       "description": "ECB Governing Council monetary policy meeting in Frankfurt with macroeconomic projections (Dec 16-17, 2026). Decision Day: 2026-12-17.\nMeeting Dates: 2026-12-16 to 2026-12-17\nDecision Day: 2026-12-17\nSource: https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html\nDecision Release Time: 2026-12-17 14:15 CET (Europe/Ljubljana) / 2026-12-17 14:15 CET (Europe/Berlin)",
       "end_date": "2026-12-17",
@@ -1910,6 +2153,51 @@
       "ticker": "TSLA",
       "title": "TSLA earnings",
       "uid": "us-TSLA-2026Q4-earnings@earnings-cal"
+    },
+    {
+      "date": "2026-12-18",
+      "description": "Prvi trgovalni dan brez upravičenja do dividende (Ljubljanska borza)\nDividend Amount: 6.92 EUR per share\nSource: https://seonet.ljse.si/?doc_id=93272\nTiming: Unknown (all-day; market date: 2026-12-18, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "ex_dividend",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=93272",
+      "summary": "NLBR Ex-Dividend Date (Proposed 2nd Tranche)",
+      "ticker": "NLBR",
+      "title": "NLBR Ex-Dividend Date (Proposed 2nd Tranche)",
+      "uid": "ljse-NLBR-2026-12-18-ex_dividend@earnings-cal"
+    },
+    {
+      "date": "2026-12-21",
+      "description": "Presečni dan v delniški knjigi za upravičenost do dividende\nDividend Amount: 6.92 EUR per share\nSource: https://seonet.ljse.si/?doc_id=93272\nTiming: Unknown (all-day; market date: 2026-12-21, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "record_date",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=93272",
+      "summary": "NLBR Dividend Record Date (Proposed 2nd Tranche)",
+      "ticker": "NLBR",
+      "title": "NLBR Dividend Record Date (Proposed 2nd Tranche)",
+      "uid": "ljse-NLBR-2026-12-21-record_date@earnings-cal"
+    },
+    {
+      "date": "2026-12-22",
+      "description": "Datum začetka izplačil druge tranše dividende NLB, d. d.\nDividend Amount: 6.92 EUR per share\nSource: https://seonet.ljse.si/?doc_id=93272\nTiming: Unknown (all-day; market date: 2026-12-22, market timezone: Europe/Ljubljana)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "dividend_payment",
+      "local_time": "All-day",
+      "market": "ljse",
+      "sort_time": "00:00",
+      "source_url": "https://seonet.ljse.si/?doc_id=93272",
+      "summary": "NLBR Dividend Payment (Proposed 2nd Tranche)",
+      "ticker": "NLBR",
+      "title": "NLBR Dividend Payment (Proposed 2nd Tranche)",
+      "uid": "ljse-NLBR-2026-12-22-dividend_payment@earnings-cal"
     },
     {
       "date": "2027-01-06",

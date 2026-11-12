@@ -44,6 +44,24 @@ TRIGGER:-PT30M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
+SUMMARY:ZVTG Q1–Q3 2026 Business Results
+DTSTART;TZID=Europe/Ljubljana:20261118T083000
+DTEND;TZID=Europe/Ljubljana:20261118T093000
+DTSTAMP:20260101T000000Z
+UID:ljse-ZVTG-2026-11-18-earnings@earnings-cal
+DESCRIPTION:Informacija o devetmesečnem poslovanju Zavarovalnice Triglav 
+ v letu 2026\nTime: 08:30\nSource: https://seonet.ljse.si/?doc_id=92028\nLo
+ cal Time: 2026-11-18 08:30 CET (Europe/Ljubljana)\nMarket Time: 2026-11-18
+  08:30 CET (Europe/Ljubljana)
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92028
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ZVTG Q1–Q3 2026 Business Results
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
 SUMMARY:LKPG Q1–Q3 2026 Interim Report
 DTSTART;VALUE=DATE:20261119
 DTEND;VALUE=DATE:20261120
@@ -58,6 +76,96 @@ URL:https://seonet.ljse.si/?doc_id=92849
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Reminder: LKPG Q1–Q3 2026 Interim Report
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:PETG Q1–Q3 2026 Interim Report
+DTSTART;VALUE=DATE:20261120
+DTEND;VALUE=DATE:20261121
+DTSTAMP:20260101T000000Z
+UID:ljse-PETG-2026-11-20-earnings@earnings-cal
+DESCRIPTION:Javna objava poročila o poslovanju družbe Petrol d.d.\, Ljub
+ ljana v prvih devetih mesecih leta 2026\nSource: https://seonet.ljse.si/?d
+ oc_id=92350\nTiming: Unknown (all-day\; market date: 2026-11-20\, market t
+ imezone: Europe/Ljubljana)
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=92350
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: PETG Q1–Q3 2026 Interim Report
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:NLBR General Meeting of Shareholders
+DTSTART;TZID=Europe/Ljubljana:20261214T110000
+DTEND;TZID=Europe/Ljubljana:20261214T120000
+DTSTAMP:20260101T000000Z
+UID:ljse-NLBR-2026-12-14-agm@earnings-cal
+DESCRIPTION:Sklic skupščine delničarjev NLB\, d. d.\, Ljubljana (predlo
+ g 2. tranše dividende)\nTime: 11:00\nSource: https://seonet.ljse.si/?doc_
+ id=93272\nLocal Time: 2026-12-14 11:00 CET (Europe/Ljubljana)\nMarket Time
+ : 2026-12-14 11:00 CET (Europe/Ljubljana)
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=93272
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: NLBR General Meeting of Shareholders
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:NLBR Ex-Dividend Date (Proposed 2nd Tranche)
+DTSTART;VALUE=DATE:20261218
+DTEND;VALUE=DATE:20261219
+DTSTAMP:20260101T000000Z
+UID:ljse-NLBR-2026-12-18-ex_dividend@earnings-cal
+DESCRIPTION:Prvi trgovalni dan brez upravičenja do dividende (Ljubljanska
+  borza)\nDividend Amount: 6.92 EUR per share\nSource: https://seonet.ljse.
+ si/?doc_id=93272\nTiming: Unknown (all-day\; market date: 2026-12-18\, mar
+ ket timezone: Europe/Ljubljana)
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=93272
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: NLBR Ex-Dividend Date (Proposed 2nd Tranche)
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:NLBR Dividend Record Date (Proposed 2nd Tranche)
+DTSTART;VALUE=DATE:20261221
+DTEND;VALUE=DATE:20261222
+DTSTAMP:20260101T000000Z
+UID:ljse-NLBR-2026-12-21-record_date@earnings-cal
+DESCRIPTION:Presečni dan v delniški knjigi za upravičenost do dividende
+ \nDividend Amount: 6.92 EUR per share\nSource: https://seonet.ljse.si/?doc
+ _id=93272\nTiming: Unknown (all-day\; market date: 2026-12-21\, market tim
+ ezone: Europe/Ljubljana)
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=93272
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: NLBR Dividend Record Date (Proposed 2nd Tranche)
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:NLBR Dividend Payment (Proposed 2nd Tranche)
+DTSTART;VALUE=DATE:20261222
+DTEND;VALUE=DATE:20261223
+DTSTAMP:20260101T000000Z
+UID:ljse-NLBR-2026-12-22-dividend_payment@earnings-cal
+DESCRIPTION:Datum začetka izplačil druge tranše dividende NLB\, d. d.\n
+ Dividend Amount: 6.92 EUR per share\nSource: https://seonet.ljse.si/?doc_i
+ d=93272\nTiming: Unknown (all-day\; market date: 2026-12-22\, market timez
+ one: Europe/Ljubljana)
+TRANSP:TRANSPARENT
+URL:https://seonet.ljse.si/?doc_id=93272
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: NLBR Dividend Payment (Proposed 2nd Tranche)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT
