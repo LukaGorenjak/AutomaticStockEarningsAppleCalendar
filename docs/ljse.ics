@@ -8,42 +8,6 @@ REFRESH-INTERVAL;VALUE=DURATION:P1D
 X-PUBLISHED-TTL:P1D
 X-WR-TIMEZONE:Europe/Ljubljana
 BEGIN:VEVENT
-SUMMARY:TLSG Q1–Q3 2026 Interim Report
-DTSTART;VALUE=DATE:20261112
-DTEND;VALUE=DATE:20261113
-DTSTAMP:20260101T000000Z
-UID:ljse-TLSG-2026-11-12-earnings@earnings-cal
-DESCRIPTION:Objava nerevidiranega poročila o poslovanju Skupine Telekom S
- lovenije in družbe Telekom Slovenije\, d.d.\, za obdobje januar - septemb
- er 2026\nSource: https://seonet.ljse.si/?doc_id=92747\nTiming: Unknown (al
- l-day\; market date: 2026-11-12\, market timezone: Europe/Ljubljana)
-TRANSP:TRANSPARENT
-URL:https://seonet.ljse.si/?doc_id=92747
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Reminder: TLSG Q1–Q3 2026 Interim Report
-TRIGGER:-PT15H
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:KRKG Q1–Q3 2026 Interim Report
-DTSTART;TZID=Europe/Ljubljana:20261112T081500
-DTEND;TZID=Europe/Ljubljana:20261112T091500
-DTSTAMP:20260101T000000Z
-UID:ljse-KRKG-2026-11-12-earnings@earnings-cal
-DESCRIPTION:Objava poročila o poslovanju skupine Krka in družbe Krka za 
- obdobje januar - september 2026\nTime: 08:15\nSource: https://seonet.ljse.
- si/?doc_id=92042\nLocal Time: 2026-11-12 08:15 CET (Europe/Ljubljana)\nMar
- ket Time: 2026-11-12 08:15 CET (Europe/Ljubljana)
-TRANSP:TRANSPARENT
-URL:https://seonet.ljse.si/?doc_id=92042
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Reminder: KRKG Q1–Q3 2026 Interim Report
-TRIGGER:-PT30M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 SUMMARY:ZVTG Q1–Q3 2026 Business Results
 DTSTART;TZID=Europe/Ljubljana:20261118T083000
 DTEND;TZID=Europe/Ljubljana:20261118T093000

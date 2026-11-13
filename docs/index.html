@@ -185,12 +185,12 @@
     <p class="subtitle">Subscribe in Apple Calendar (macOS / iOS) via <code>webcal://</code>. All event times are shown in <code>Europe/Ljubljana</code>.</p>
     <!-- (5) Data Health Bar from docs/status.json -->
     <div class="health-bar" id="health-bar">
-      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-12)</span></div>
+      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-13)</span></div>
       <div class="health-pill health-ok" data-source="seonet" title="Source healthy"><span class="health-dot"></span><strong>Source: SEONET</strong> <span class="health-meta">(OK · last update: 2026-11-12)</span></div>
-      <div class="health-pill health-ok" data-market-health="eu" title="Market feed healthy"><span class="health-dot"></span><strong>Market: EU</strong> <span class="health-meta">(OK · 0 upcoming · last update: 2026-11-12)</span></div>
-      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 15 upcoming · last update: 2026-11-12)</span></div>
-      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-12)</span></div>
-      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 5 upcoming · last update: 2026-11-12)</span></div>
+      <div class="health-pill health-ok" data-market-health="eu" title="Market feed healthy"><span class="health-dot"></span><strong>Market: EU</strong> <span class="health-meta">(OK · 0 upcoming · last update: 2026-11-13)</span></div>
+      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 13 upcoming · last update: 2026-11-13)</span></div>
+      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-13)</span></div>
+      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 5 upcoming · last update: 2026-11-13)</span></div>
     </div>
   </header>
 
@@ -244,7 +244,7 @@
 
   <!-- (2) Upcoming Events Table (Sortable & Filterable by Market and Kind) -->
   <section class="card" id="section-upcoming">
-    <h2>2. Upcoming Events (<span id="upcoming-count">55</span>)</h2>
+    <h2>2. Upcoming Events (<span id="upcoming-count">53</span>)</h2>
     <div class="controls">
       <label for="filter-market">Market:</label>
       <select id="filter-market">
@@ -271,22 +271,6 @@
           </tr>
         </thead>
         <tbody id="upcoming-tbody">
-          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-12" data-ticker="TLSG">
-            <td><code>2026-11-12</code></td>
-            <td><span class="badge badge-market">ljse</span></td>
-            <td><strong>TLSG</strong></td>
-            <td><span class="badge badge-kind">earnings</span></td>
-            <td><a href="https://seonet.ljse.si/?doc_id=92747" target="_blank" rel="noopener">TLSG Q1–Q3 2026 Interim Report</a></td>
-            <td><code>All-day</code></td>
-          </tr>
-          <tr data-market="ljse" data-kind="earnings" data-date="2026-11-12" data-ticker="KRKG">
-            <td><code>2026-11-12</code></td>
-            <td><span class="badge badge-market">ljse</span></td>
-            <td><strong>KRKG</strong></td>
-            <td><span class="badge badge-kind">earnings</span></td>
-            <td><a href="https://seonet.ljse.si/?doc_id=92042" target="_blank" rel="noopener">KRKG Q1–Q3 2026 Interim Report</a></td>
-            <td><code>08:15 CET</code></td>
-          </tr>
           <tr data-market="us" data-kind="earnings" data-date="2026-11-13" data-ticker="ABAT">
             <td><code>2026-11-13</code></td>
             <td><span class="badge badge-market">us</span></td>
@@ -718,7 +702,7 @@
 
   <!-- (3) Recent Changes from data/changes.jsonl -->
   <section class="card" id="section-changes">
-    <h2>3. Recent Changelog (<span id="changes-count">46</span>)</h2>
+    <h2>3. Recent Changelog (<span id="changes-count">48</span>)</h2>
     <div class="table-wrap">
       <table id="changes-table">
         <thead>
@@ -731,6 +715,20 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td><code>2026-11-13</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>ABAT</strong></td>
+            <td><span class="badge badge-change badge-removed">removed</span></td>
+            <td>Removed future event (was <code>2026-11-13</code> · ABAT earnings (approx. before 15:30 CET))</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-13</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>ABAT</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2026-11-13</code> (ABAT earnings (approx. before 15:30 CET))</td>
+          </tr>
           <tr>
             <td><code>2026-11-12</code></td>
             <td><span class="badge badge-market">us</span></td>
@@ -1060,7 +1058,7 @@
 
   <!-- (4) Post-Earnings Results History from data/results.csv -->
   <section class="card" id="section-results">
-    <h2>4. Post-Earnings Results History (<span id="results-count">3</span>)</h2>
+    <h2>4. Post-Earnings Results History (<span id="results-count">5</span>)</h2>
     <div class="table-wrap">
       <table id="results-table">
         <thead>
@@ -1077,6 +1075,28 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>TLSG</strong></td>
+            <td><code>2026Q1-Q3</code></td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td><span class="num-pos">+0.71%</span></td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-12</code></td>
+            <td><span class="badge badge-market">ljse</span></td>
+            <td><strong>KRKG</strong></td>
+            <td><code>2026Q1-Q3</code></td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td><span class="num-pos">+2.67%</span></td>
+            <td>&mdash;</td>
+          </tr>
           <tr>
             <td><code>2026-11-11</code></td>
             <td><span class="badge badge-market">ljse</span></td>
@@ -1169,6 +1189,32 @@
     }
   ],
   "recent_changes": [
+    {
+      "change_type": "removed",
+      "details": null,
+      "market": "us",
+      "new_date": null,
+      "new_summary": null,
+      "old_date": "2026-11-13",
+      "old_summary": "ABAT earnings (approx. before 15:30 CET)",
+      "record_id": "523fcb633a222a1b",
+      "run_date": "2026-11-13",
+      "ticker": "ABAT",
+      "uid": "us-ABAT-2026Q3-earnings@earnings-cal"
+    },
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "us",
+      "new_date": "2026-11-13",
+      "new_summary": "ABAT earnings (approx. before 15:30 CET)",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "2b4fd325a3336443",
+      "run_date": "2026-11-13",
+      "ticker": "ABAT",
+      "uid": "us-ABAT-2026Q4-earnings@earnings-cal"
+    },
     {
       "change_type": "added",
       "details": null,
@@ -1775,6 +1821,30 @@
       "fiscal_period": "2026Q1-Q3",
       "manual_notes": "",
       "market": "ljse",
+      "price_move_1d_pct": 0.71,
+      "recorded_at": "2026-11-13T13:40:39Z",
+      "report_date": "2026-11-12",
+      "surprise_pct": null,
+      "ticker": "TLSG"
+    },
+    {
+      "eps_actual": null,
+      "eps_estimate": null,
+      "fiscal_period": "2026Q1-Q3",
+      "manual_notes": "",
+      "market": "ljse",
+      "price_move_1d_pct": 2.67,
+      "recorded_at": "2026-11-13T13:40:39Z",
+      "report_date": "2026-11-12",
+      "surprise_pct": null,
+      "ticker": "KRKG"
+    },
+    {
+      "eps_actual": null,
+      "eps_estimate": null,
+      "fiscal_period": "2026Q1-Q3",
+      "manual_notes": "",
+      "market": "ljse",
       "price_move_1d_pct": -1.1,
       "recorded_at": "2026-11-12T14:19:49Z",
       "report_date": "2026-11-11",
@@ -1812,7 +1882,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-12",
+        "last_success_date": "2026-11-13",
         "max_age_days": 3,
         "min_upcoming_events": 0,
         "stale": false,
@@ -1822,17 +1892,17 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-12",
+        "last_success_date": "2026-11-13",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
-        "upcoming_events": 15
+        "upcoming_events": 13
       },
       "macro": {
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-12",
+        "last_success_date": "2026-11-13",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1842,7 +1912,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-12",
+        "last_success_date": "2026-11-13",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1854,7 +1924,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-12",
+        "last_success_date": "2026-11-13",
         "max_age_days": 3,
         "stale": false
       },
@@ -1870,38 +1940,8 @@
   },
   "upcoming_events": [
     {
-      "date": "2026-11-12",
-      "description": "Objava nerevidiranega poročila o poslovanju Skupine Telekom Slovenije in družbe Telekom Slovenije, d.d., za obdobje januar - september 2026\nSource: https://seonet.ljse.si/?doc_id=92747\nTiming: Unknown (all-day; market date: 2026-11-12, market timezone: Europe/Ljubljana)",
-      "end_date": null,
-      "is_timed": false,
-      "kind": "earnings",
-      "local_time": "All-day",
-      "market": "ljse",
-      "sort_time": "00:00",
-      "source_url": "https://seonet.ljse.si/?doc_id=92747",
-      "summary": "TLSG Q1–Q3 2026 Interim Report",
-      "ticker": "TLSG",
-      "title": "TLSG Q1–Q3 2026 Interim Report",
-      "uid": "ljse-TLSG-2026-11-12-earnings@earnings-cal"
-    },
-    {
-      "date": "2026-11-12",
-      "description": "Objava poročila o poslovanju skupine Krka in družbe Krka za obdobje januar - september 2026\nTime: 08:15\nSource: https://seonet.ljse.si/?doc_id=92042\nLocal Time: 2026-11-12 08:15 CET (Europe/Ljubljana)\nMarket Time: 2026-11-12 08:15 CET (Europe/Ljubljana)",
-      "end_date": null,
-      "is_timed": true,
-      "kind": "earnings",
-      "local_time": "08:15 CET",
-      "market": "ljse",
-      "sort_time": "08:15",
-      "source_url": "https://seonet.ljse.si/?doc_id=92042",
-      "summary": "KRKG Q1–Q3 2026 Interim Report",
-      "ticker": "KRKG",
-      "title": "KRKG Q1–Q3 2026 Interim Report",
-      "uid": "ljse-KRKG-2026-11-12-earnings@earnings-cal"
-    },
-    {
       "date": "2026-11-13",
-      "description": "Fiscal Period: Q3 2026\nStatus: Estimated\nTiming: approx. before 15:30 CET (Europe/Ljubljana) — approx., typical pre-market release (before 09:30 EST America/New_York; not a confirmed exact time)",
+      "description": "Fiscal Period: Q4 2026\nStatus: Estimated\nTiming: approx. before 15:30 CET (Europe/Ljubljana) — approx., typical pre-market release (before 09:30 EST America/New_York; not a confirmed exact time)",
       "end_date": null,
       "is_timed": false,
       "kind": "earnings",
@@ -1912,7 +1952,7 @@
       "summary": "ABAT earnings (approx. before 15:30 CET)",
       "ticker": "ABAT",
       "title": "ABAT earnings",
-      "uid": "us-ABAT-2026Q3-earnings@earnings-cal"
+      "uid": "us-ABAT-2026Q4-earnings@earnings-cal"
     },
     {
       "date": "2026-11-18",
