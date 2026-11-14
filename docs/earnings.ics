@@ -8,22 +8,6 @@ REFRESH-INTERVAL;VALUE=DURATION:P1D
 X-PUBLISHED-TTL:P1D
 X-WR-TIMEZONE:Europe/Ljubljana
 BEGIN:VEVENT
-SUMMARY:ABAT earnings (approx. before 15:30 CET)
-DTSTART;VALUE=DATE:20261113
-DTEND;VALUE=DATE:20261114
-DTSTAMP:20260101T000000Z
-UID:us-ABAT-2026Q4-earnings@earnings-cal
-DESCRIPTION:Fiscal Period: Q4 2026\nStatus: Estimated\nTiming: approx. bef
- ore 15:30 CET (Europe/Ljubljana) — approx.\, typical pre-market release 
- (before 09:30 EST America/New_York\; not a confirmed exact time)
-TRANSP:TRANSPARENT
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Reminder: ABAT earnings (approx. before 15:30 CET)
-TRIGGER:-PT15H
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 SUMMARY:MSFT earnings (approx. after 22:00 CET)
 DTSTART;VALUE=DATE:20270127
 DTEND;VALUE=DATE:20270128
@@ -88,6 +72,23 @@ TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Reminder: TTWO earnings (approx. after 22:00 CET)
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:ABAT earnings (approx. before 15:30 CET)
+DTSTART;VALUE=DATE:20270211
+DTEND;VALUE=DATE:20270212
+DTSTAMP:20260101T000000Z
+UID:us-ABAT-2026Q4-earnings@earnings-cal
+DESCRIPTION:Fiscal Period: Q4 2026\nStatus: Estimated\nTiming: approx. bef
+ ore 15:30 CET (Europe/Ljubljana) — approx.\, typical pre-market release 
+ (before 09:30 EST America/New_York\; not a confirmed exact time)\nDate cha
+ nged from 2026-11-13 on 2026-11-14
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Reminder: ABAT earnings (approx. before 15:30 CET)
 TRIGGER:-PT15H
 END:VALARM
 END:VEVENT

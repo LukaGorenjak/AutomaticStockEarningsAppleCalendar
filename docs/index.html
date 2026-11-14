@@ -185,12 +185,12 @@
     <p class="subtitle">Subscribe in Apple Calendar (macOS / iOS) via <code>webcal://</code>. All event times are shown in <code>Europe/Ljubljana</code>.</p>
     <!-- (5) Data Health Bar from docs/status.json -->
     <div class="health-bar" id="health-bar">
-      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-13)</span></div>
+      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-14)</span></div>
       <div class="health-pill health-ok" data-source="seonet" title="Source healthy"><span class="health-dot"></span><strong>Source: SEONET</strong> <span class="health-meta">(OK · last update: 2026-11-12)</span></div>
-      <div class="health-pill health-ok" data-market-health="eu" title="Market feed healthy"><span class="health-dot"></span><strong>Market: EU</strong> <span class="health-meta">(OK · 0 upcoming · last update: 2026-11-13)</span></div>
-      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 13 upcoming · last update: 2026-11-13)</span></div>
-      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-13)</span></div>
-      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 5 upcoming · last update: 2026-11-13)</span></div>
+      <div class="health-pill health-ok" data-market-health="eu" title="Market feed healthy"><span class="health-dot"></span><strong>Market: EU</strong> <span class="health-meta">(OK · 0 upcoming · last update: 2026-11-14)</span></div>
+      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 13 upcoming · last update: 2026-11-14)</span></div>
+      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-14)</span></div>
+      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 5 upcoming · last update: 2026-11-14)</span></div>
     </div>
   </header>
 
@@ -271,14 +271,6 @@
           </tr>
         </thead>
         <tbody id="upcoming-tbody">
-          <tr data-market="us" data-kind="earnings" data-date="2026-11-13" data-ticker="ABAT">
-            <td><code>2026-11-13</code></td>
-            <td><span class="badge badge-market">us</span></td>
-            <td><strong>ABAT</strong></td>
-            <td><span class="badge badge-kind">earnings</span></td>
-            <td>ABAT earnings</td>
-            <td><code>approx. before 15:30 CET</code></td>
-          </tr>
           <tr data-market="ljse" data-kind="earnings" data-date="2026-11-18" data-ticker="ZVTG">
             <td><code>2026-11-18</code></td>
             <td><span class="badge badge-market">ljse</span></td>
@@ -446,6 +438,14 @@
             <td><span class="badge badge-kind">earnings</span></td>
             <td>TTWO earnings</td>
             <td><code>approx. after 22:00 CET</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2027-02-11" data-ticker="ABAT">
+            <td><code>2027-02-11</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>ABAT</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>ABAT earnings</td>
+            <td><code>approx. before 15:30 CET</code></td>
           </tr>
           <tr data-market="macro" data-kind="inflation_release" data-date="2027-02-11" data-ticker="US_CPI">
             <td><code>2027-02-11</code></td>
@@ -702,7 +702,7 @@
 
   <!-- (3) Recent Changes from data/changes.jsonl -->
   <section class="card" id="section-changes">
-    <h2>3. Recent Changelog (<span id="changes-count">48</span>)</h2>
+    <h2>3. Recent Changelog (<span id="changes-count">49</span>)</h2>
     <div class="table-wrap">
       <table id="changes-table">
         <thead>
@@ -715,6 +715,13 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td><code>2026-11-14</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>ABAT</strong></td>
+            <td><span class="badge badge-change badge-date_changed">date_changed</span></td>
+            <td><strong>2026-11-13 &rarr; 2027-02-11</strong> (ABAT earnings (approx. before 15:30 CET))</td>
+          </tr>
           <tr>
             <td><code>2026-11-13</code></td>
             <td><span class="badge badge-market">us</span></td>
@@ -1189,6 +1196,19 @@
     }
   ],
   "recent_changes": [
+    {
+      "change_type": "date_changed",
+      "details": null,
+      "market": "us",
+      "new_date": "2027-02-11",
+      "new_summary": "ABAT earnings (approx. before 15:30 CET)",
+      "old_date": "2026-11-13",
+      "old_summary": "ABAT earnings (approx. before 15:30 CET)",
+      "record_id": "103398080d3c9c6d",
+      "run_date": "2026-11-14",
+      "ticker": "ABAT",
+      "uid": "us-ABAT-2026Q4-earnings@earnings-cal"
+    },
     {
       "change_type": "removed",
       "details": null,
@@ -1882,7 +1902,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-13",
+        "last_success_date": "2026-11-14",
         "max_age_days": 3,
         "min_upcoming_events": 0,
         "stale": false,
@@ -1892,7 +1912,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-13",
+        "last_success_date": "2026-11-14",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1902,7 +1922,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-13",
+        "last_success_date": "2026-11-14",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1912,7 +1932,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-13",
+        "last_success_date": "2026-11-14",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1924,12 +1944,12 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-13",
+        "last_success_date": "2026-11-14",
         "max_age_days": 3,
         "stale": false
       },
       "seonet": {
-        "age_days": 0,
+        "age_days": 1,
         "errors": [],
         "healthy": true,
         "last_success_date": "2026-11-12",
@@ -1939,21 +1959,6 @@
     }
   },
   "upcoming_events": [
-    {
-      "date": "2026-11-13",
-      "description": "Fiscal Period: Q4 2026\nStatus: Estimated\nTiming: approx. before 15:30 CET (Europe/Ljubljana) — approx., typical pre-market release (before 09:30 EST America/New_York; not a confirmed exact time)",
-      "end_date": null,
-      "is_timed": false,
-      "kind": "earnings",
-      "local_time": "approx. before 15:30 CET",
-      "market": "us",
-      "sort_time": "12:00",
-      "source_url": "",
-      "summary": "ABAT earnings (approx. before 15:30 CET)",
-      "ticker": "ABAT",
-      "title": "ABAT earnings",
-      "uid": "us-ABAT-2026Q4-earnings@earnings-cal"
-    },
     {
       "date": "2026-11-18",
       "description": "Informacija o devetmesečnem poslovanju Zavarovalnice Triglav v letu 2026\nTime: 08:30\nSource: https://seonet.ljse.si/?doc_id=92028\nLocal Time: 2026-11-18 08:30 CET (Europe/Ljubljana)\nMarket Time: 2026-11-18 08:30 CET (Europe/Ljubljana)",
@@ -2268,6 +2273,21 @@
       "ticker": "TTWO",
       "title": "TTWO earnings",
       "uid": "us-TTWO-2026Q3-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-02-11",
+      "description": "Fiscal Period: Q4 2026\nStatus: Estimated\nTiming: approx. before 15:30 CET (Europe/Ljubljana) — approx., typical pre-market release (before 09:30 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. before 15:30 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "ABAT earnings (approx. before 15:30 CET)",
+      "ticker": "ABAT",
+      "title": "ABAT earnings",
+      "uid": "us-ABAT-2026Q4-earnings@earnings-cal"
     },
     {
       "date": "2027-02-11",
