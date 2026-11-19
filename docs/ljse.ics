@@ -8,24 +8,6 @@ REFRESH-INTERVAL;VALUE=DURATION:P1D
 X-PUBLISHED-TTL:P1D
 X-WR-TIMEZONE:Europe/Ljubljana
 BEGIN:VEVENT
-SUMMARY:ZVTG Q1–Q3 2026 Business Results
-DTSTART;TZID=Europe/Ljubljana:20261118T083000
-DTEND;TZID=Europe/Ljubljana:20261118T093000
-DTSTAMP:20260101T000000Z
-UID:ljse-ZVTG-2026-11-18-earnings@earnings-cal
-DESCRIPTION:Informacija o devetmesečnem poslovanju Zavarovalnice Triglav 
- v letu 2026\nTime: 08:30\nSource: https://seonet.ljse.si/?doc_id=92028\nLo
- cal Time: 2026-11-18 08:30 CET (Europe/Ljubljana)\nMarket Time: 2026-11-18
-  08:30 CET (Europe/Ljubljana)
-TRANSP:TRANSPARENT
-URL:https://seonet.ljse.si/?doc_id=92028
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Reminder: ZVTG Q1–Q3 2026 Business Results
-TRIGGER:-PT30M
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 SUMMARY:LKPG Q1–Q3 2026 Interim Report
 DTSTART;VALUE=DATE:20261119
 DTEND;VALUE=DATE:20261120
