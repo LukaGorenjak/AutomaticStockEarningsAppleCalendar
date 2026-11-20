@@ -8,24 +8,6 @@ REFRESH-INTERVAL;VALUE=DURATION:P1D
 X-PUBLISHED-TTL:P1D
 X-WR-TIMEZONE:Europe/Ljubljana
 BEGIN:VEVENT
-SUMMARY:LKPG Q1–Q3 2026 Interim Report
-DTSTART;VALUE=DATE:20261119
-DTEND;VALUE=DATE:20261120
-DTSTAMP:20260101T000000Z
-UID:ljse-LKPG-2026-11-19-earnings@earnings-cal
-DESCRIPTION:Objava nerevidiranega poročila o poslovanju Skupine in družb
- e Luka Koper\, d. d.\, za obdobje januar - september 2026\nSource: https:/
- /seonet.ljse.si/?doc_id=92849\nTiming: Unknown (all-day\; market date: 202
- 6-11-19\, market timezone: Europe/Ljubljana)
-TRANSP:TRANSPARENT
-URL:https://seonet.ljse.si/?doc_id=92849
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Reminder: LKPG Q1–Q3 2026 Interim Report
-TRIGGER:-PT15H
-END:VALARM
-END:VEVENT
-BEGIN:VEVENT
 SUMMARY:PETG Q1–Q3 2026 Interim Report
 DTSTART;VALUE=DATE:20261120
 DTEND;VALUE=DATE:20261121
