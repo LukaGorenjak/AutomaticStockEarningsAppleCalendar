@@ -185,12 +185,12 @@
     <p class="subtitle">Subscribe in Apple Calendar (macOS / iOS) via <code>webcal://</code>. All event times are shown in <code>Europe/Ljubljana</code>.</p>
     <!-- (5) Data Health Bar from docs/status.json -->
     <div class="health-bar" id="health-bar">
-      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-23)</span></div>
+      <div class="health-pill health-ok" data-source="api" title="Source healthy"><span class="health-dot"></span><strong>Source: API</strong> <span class="health-meta">(OK · last update: 2026-11-24)</span></div>
       <div class="health-pill health-ok" data-source="seonet" title="Source healthy"><span class="health-dot"></span><strong>Source: SEONET</strong> <span class="health-meta">(OK · last update: 2026-11-23)</span></div>
-      <div class="health-pill health-ok" data-market-health="eu" title="Market feed healthy"><span class="health-dot"></span><strong>Market: EU</strong> <span class="health-meta">(OK · 0 upcoming · last update: 2026-11-23)</span></div>
-      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 10 upcoming · last update: 2026-11-23)</span></div>
-      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-23)</span></div>
-      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 5 upcoming · last update: 2026-11-23)</span></div>
+      <div class="health-pill health-ok" data-market-health="eu" title="Market feed healthy"><span class="health-dot"></span><strong>Market: EU</strong> <span class="health-meta">(OK · 0 upcoming · last update: 2026-11-24)</span></div>
+      <div class="health-pill health-ok" data-market-health="ljse" title="Market feed healthy"><span class="health-dot"></span><strong>Market: LJSE</strong> <span class="health-meta">(OK · 10 upcoming · last update: 2026-11-24)</span></div>
+      <div class="health-pill health-ok" data-market-health="macro" title="Market feed healthy"><span class="health-dot"></span><strong>Market: MACRO</strong> <span class="health-meta">(OK · 35 upcoming · last update: 2026-11-24)</span></div>
+      <div class="health-pill health-ok" data-market-health="us" title="Market feed healthy"><span class="health-dot"></span><strong>Market: US</strong> <span class="health-meta">(OK · 6 upcoming · last update: 2026-11-24)</span></div>
     </div>
   </header>
 
@@ -244,7 +244,7 @@
 
   <!-- (2) Upcoming Events Table (Sortable & Filterable by Market and Kind) -->
   <section class="card" id="section-upcoming">
-    <h2>2. Upcoming Events (<span id="upcoming-count">50</span>)</h2>
+    <h2>2. Upcoming Events (<span id="upcoming-count">51</span>)</h2>
     <div class="controls">
       <label for="filter-market">Market:</label>
       <select id="filter-market">
@@ -421,6 +421,14 @@
             <td><strong>ABAT</strong></td>
             <td><span class="badge badge-kind">earnings</span></td>
             <td>ABAT earnings</td>
+            <td><code>approx. before 15:30 CET</code></td>
+          </tr>
+          <tr data-market="us" data-kind="earnings" data-date="2027-02-11" data-ticker="MCD">
+            <td><code>2027-02-11</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>MCD</strong></td>
+            <td><span class="badge badge-kind">earnings</span></td>
+            <td>MCD earnings</td>
             <td><code>approx. before 15:30 CET</code></td>
           </tr>
           <tr data-market="macro" data-kind="inflation_release" data-date="2027-02-11" data-ticker="US_CPI">
@@ -678,7 +686,7 @@
 
   <!-- (3) Recent Changes from data/changes.jsonl -->
   <section class="card" id="section-changes">
-    <h2>3. Recent Changelog (<span id="changes-count">49</span>)</h2>
+    <h2>3. Recent Changelog (<span id="changes-count">50</span>)</h2>
     <div class="table-wrap">
       <table id="changes-table">
         <thead>
@@ -691,6 +699,27 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td><code>2026-11-24</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>MCD</strong></td>
+            <td><span class="badge badge-change badge-added">added</span></td>
+            <td>Added on <code>2027-02-11</code> (MCD earnings (approx. before 15:30 CET))</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-24</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>TTWO</strong></td>
+            <td><span class="badge badge-change badge-details_changed">details_changed</span></td>
+            <td>Updated on <code>2027-02-09</code> [description] (TTWO earnings (approx. after 22:00 CET))</td>
+          </tr>
+          <tr>
+            <td><code>2026-11-24</code></td>
+            <td><span class="badge badge-market">us</span></td>
+            <td><strong>MSFT</strong></td>
+            <td><span class="badge badge-change badge-details_changed">details_changed</span></td>
+            <td>Updated on <code>2027-01-27</code> [description] (MSFT earnings (approx. after 22:00 CET))</td>
+          </tr>
           <tr>
             <td><code>2026-11-14</code></td>
             <td><span class="badge badge-market">us</span></td>
@@ -1020,20 +1049,6 @@
             <td><span class="badge badge-change badge-added">added</span></td>
             <td>Added on <code>2027-02-02</code> (Euro area flash HICP)</td>
           </tr>
-          <tr>
-            <td><code>2026-11-11</code></td>
-            <td><span class="badge badge-market">macro</span></td>
-            <td><strong>EA_HICP</strong></td>
-            <td><span class="badge badge-change badge-added">added</span></td>
-            <td>Added on <code>2027-01-06</code> (Euro area flash HICP)</td>
-          </tr>
-          <tr>
-            <td><code>2026-11-11</code></td>
-            <td><span class="badge badge-market">macro</span></td>
-            <td><strong>EA_HICP</strong></td>
-            <td><span class="badge badge-change badge-added">added</span></td>
-            <td>Added on <code>2026-12-01</code> (Euro area flash HICP)</td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -1205,6 +1220,45 @@
     }
   ],
   "recent_changes": [
+    {
+      "change_type": "added",
+      "details": null,
+      "market": "us",
+      "new_date": "2027-02-11",
+      "new_summary": "MCD earnings (approx. before 15:30 CET)",
+      "old_date": null,
+      "old_summary": null,
+      "record_id": "6c5d3dcebb29219d",
+      "run_date": "2026-11-24",
+      "ticker": "MCD",
+      "uid": "us-MCD-2026Q4-earnings@earnings-cal"
+    },
+    {
+      "change_type": "details_changed",
+      "details": "description",
+      "market": "us",
+      "new_date": "2027-02-09",
+      "new_summary": "TTWO earnings (approx. after 22:00 CET)",
+      "old_date": "2027-02-09",
+      "old_summary": "TTWO earnings (approx. after 22:00 CET)",
+      "record_id": "ca0def29674f316f",
+      "run_date": "2026-11-24",
+      "ticker": "TTWO",
+      "uid": "us-TTWO-2026Q3-earnings@earnings-cal"
+    },
+    {
+      "change_type": "details_changed",
+      "details": "description",
+      "market": "us",
+      "new_date": "2027-01-27",
+      "new_summary": "MSFT earnings (approx. after 22:00 CET)",
+      "old_date": "2027-01-27",
+      "old_summary": "MSFT earnings (approx. after 22:00 CET)",
+      "record_id": "454726aa5983c454",
+      "run_date": "2026-11-24",
+      "ticker": "MSFT",
+      "uid": "us-MSFT-2026Q4-earnings@earnings-cal"
+    },
     {
       "change_type": "date_changed",
       "details": null,
@@ -1815,32 +1869,6 @@
       "run_date": "2026-11-11",
       "ticker": "EA_HICP",
       "uid": "macro-EA_HICP-2027-02-02-inflation_release@earnings-cal"
-    },
-    {
-      "change_type": "added",
-      "details": null,
-      "market": "macro",
-      "new_date": "2027-01-06",
-      "new_summary": "Euro area flash HICP",
-      "old_date": null,
-      "old_summary": null,
-      "record_id": "c28854bfa82f97f1",
-      "run_date": "2026-11-11",
-      "ticker": "EA_HICP",
-      "uid": "macro-EA_HICP-2027-01-06-inflation_release@earnings-cal"
-    },
-    {
-      "change_type": "added",
-      "details": null,
-      "market": "macro",
-      "new_date": "2026-12-01",
-      "new_summary": "Euro area flash HICP",
-      "old_date": null,
-      "old_summary": null,
-      "record_id": "cb76959b6c815a1d",
-      "run_date": "2026-11-11",
-      "ticker": "EA_HICP",
-      "uid": "macro-EA_HICP-2026-12-01-inflation_release@earnings-cal"
     }
   ],
   "results": [
@@ -1947,7 +1975,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-23",
+        "last_success_date": "2026-11-24",
         "max_age_days": 3,
         "min_upcoming_events": 0,
         "stale": false,
@@ -1957,7 +1985,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-23",
+        "last_success_date": "2026-11-24",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1967,7 +1995,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-23",
+        "last_success_date": "2026-11-24",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
@@ -1977,11 +2005,11 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-23",
+        "last_success_date": "2026-11-24",
         "max_age_days": 3,
         "min_upcoming_events": 1,
         "stale": false,
-        "upcoming_events": 5
+        "upcoming_events": 6
       }
     },
     "sources": {
@@ -1989,7 +2017,7 @@
         "age_days": 0,
         "errors": [],
         "healthy": true,
-        "last_success_date": "2026-11-23",
+        "last_success_date": "2026-11-24",
         "max_age_days": 3,
         "stale": false
       },
@@ -2171,7 +2199,7 @@
     },
     {
       "date": "2027-01-27",
-      "description": "Fiscal Period: Q4 2026\nEPS Estimate: $4.86\nStatus: Estimated\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "description": "Fiscal Period: Q4 2026\nEPS Estimate: $4.85\nStatus: Estimated\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
       "end_date": null,
       "is_timed": false,
       "kind": "earnings",
@@ -2261,7 +2289,7 @@
     },
     {
       "date": "2027-02-09",
-      "description": "Fiscal Period: Q3 2026\nEPS Estimate: $0.97\nStatus: Estimated\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
+      "description": "Fiscal Period: Q3 2026\nEPS Estimate: $0.97\nStatus: Confirmed\nTiming: approx. after 22:00 CET (Europe/Ljubljana) — approx., typical after-close release (after 16:00 EST America/New_York; not a confirmed exact time)",
       "end_date": null,
       "is_timed": false,
       "kind": "earnings",
@@ -2288,6 +2316,21 @@
       "ticker": "ABAT",
       "title": "ABAT earnings",
       "uid": "us-ABAT-2026Q4-earnings@earnings-cal"
+    },
+    {
+      "date": "2027-02-11",
+      "description": "Fiscal Period: Q4 2026\nEPS Estimate: $3.17\nStatus: Estimated\nTiming: approx. before 15:30 CET (Europe/Ljubljana) — approx., typical pre-market release (before 09:30 EST America/New_York; not a confirmed exact time)",
+      "end_date": null,
+      "is_timed": false,
+      "kind": "earnings",
+      "local_time": "approx. before 15:30 CET",
+      "market": "us",
+      "sort_time": "12:00",
+      "source_url": "",
+      "summary": "MCD earnings (approx. before 15:30 CET)",
+      "ticker": "MCD",
+      "title": "MCD earnings",
+      "uid": "us-MCD-2026Q4-earnings@earnings-cal"
     },
     {
       "date": "2027-02-11",
